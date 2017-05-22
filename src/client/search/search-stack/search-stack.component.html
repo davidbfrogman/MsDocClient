@@ -1,0 +1,10 @@
+<div *ngFor="let searchStack of searchStackEventBus.searchStacks" class="row search-stack-item">
+  <label>Free Text Search: {{searchStack?.freeTextSearchOperand}}</label>
+  <label>Entity: {{searchStack?.entity?.name}}</label>
+  <label>attribute: {{searchStack?.attribute?.name}}</label>
+  <label>operator: {{searchStack?.operation?.name }}</label>
+  <!--You only want to show the operand if there is one, for example bools don't use an operand-->
+  <label *ngIf="searchStack?.operand">operand: {{searchStack?.operandName?.length <= 0 ? searchStack?.operand : searchStack?.operandName}}</label>
+  <button soho-button (click)="onEditStack(searchStack)">Edit</button>
+  <button soho-button (click)="onDeleteStack(searchStack)">Remove</button>
+</div>

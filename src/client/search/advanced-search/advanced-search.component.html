@@ -1,0 +1,11 @@
+<div class="row">
+  <form>
+    <span class="code-tag">{{ translator.constants.ADVANCED | translate }}</span>
+    <div class="field">
+      <textarea soho-textarea [attr.id]="advancedSearchTextarea" name="advancedSearchTextarea" [(ngModel)]="xQuery" [resizable]="true" name="taAdvancedSearchQuery"></textarea>
+    </div>
+    <div class="row">
+      <button soho-button="primary" (click)="onClickSearch($event)">{{ translator.constants.SEARCH | translate }}</button>
+    </div>
+  </form>
+</div>

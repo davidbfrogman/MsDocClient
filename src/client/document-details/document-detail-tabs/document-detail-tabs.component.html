@@ -1,0 +1,129 @@
+<div *ngIf="item">
+    <div soho-tabs>
+        <ul soho-tab-list>
+            <!-- Inserting tabId since soho-tab requires tabId to be unique -->
+            <li soho-tab selected="true"><a soho-tab-title tabId="tabs-properties-{{tabId}}">{{translator.constants.TAB_PROPERTIES | translate}}</a></li>
+            <li soho-tab><a soho-tab-title tabId="tabs-attributes-{{tabId}}">{{translator.constants.TAB_ATTRIBUTES | translate}}</a></li>
+            <li soho-tab><a soho-tab-title tabId="tabs-file-{{tabId}}">{{translator.constants.FILE | translate}}</a></li>
+            <li soho-tab><a soho-tab-title tabId="tabs-security-{{ tabId }}">{{translator.constants.TAB_SECURITY | translate}}</a></li>
+                    <li soho-tab (click)="retrieveVersions()" *ngIf="item.pid">
+                      <a soho-tab-title tabId="tabs-history-{{tabId}}">
+                        {{translator.constants.HISTORY | translate}}
+                      </a>
+                    </li>
+        </ul>
+        
+        <div soho-tab-panel tabId="tabs-properties-{{tabId}}">
+            <form id="example-summary-field-form">
+                <div class="row">
+                    <!--<div class="full column">-->
+                    <div class="three columns">
+                        <div class="summary-form">
+                            <div class="field">
+                            <span class="label">{{translator.constants.ENTITY_NAME | translate}}</span>
+                            <span class="data">{{item.entityName}}</span>
+                            </div>
+
+                            <div class="field">
+                            <span class="label">{{translator.constants.VERSION | translate}}</span>
+                            <span class="data">{{item.version}}</span>
+                            </div>
+                
+                            <div class="field">
+                            <span class="label">{{translator.constants.CHECKED_OUT_BY | translate}}</span>
+                            <span *ngIf="item.checkedOutByName" class="data">{{item.checkedOutByName}}</span>
+                            <span *ngIf="!item.checkedOutByName" class="data">-</span>
+                            </div>
+
+                            <div class="field">
+                            <span class="label">{{translator.constants.LAST_CHANGED_BY | translate}}y</span>
+                            <span class="data">{{item.lastChangedByName}}</span>
+                            </div>
+
+                            <div class="field">
+                            <span class="label">{{translator.constants.CREATED_BY | translate}}</span>
+                            <span class="data">{{item.createdByName}}</span>
+                            </div>
+                            
+                            <div class="field">
+                            <span class="label">{{translator.constants.FILE_NAME | translate}}</span>
+                            <span class="data">{{item.filename}}</span>
+                            </div>
+                        </div>      
+                    </div>
+                    <div class="nine columns">
+                        <div class="summary-form">
+                            <div class="field">
+                            <span class="label">{{translator.constants.ID | translate}}</span>
+                            <span class="data">{{item.id}}</span>
+                            </div>
+                
+                            <div class="field">
+                            <span class="label"><br></span>
+                            <span class="data"><br></span>
+                            </div>
+
+                            <div class="field">
+                            <span class="label">{{translator.constants.CHECKED_OUT_TIMESTAMP | translate}}</span>
+                            <span *ngIf="item.checkedOutTs" class="data">{{item.checkedOutTS}}</span>
+                            <span *ngIf="!item.checkedOutTs" class="data">-</span>
+                            </div>
+
+                            <div class="field">
+                            <span class="label">{{translator.constants.LAST_CHANGED_TIMESTAMP | translate}}</span>
+                            <span class="data">{{item.lastChangedTS}}</span>
+                            </div>
+
+                            <div class="field">
+                            <span class="label">{{translator.constants.CREATED_TIMESTAMP | translate}}</span>
+                            <span class="data">{{item.createdTS}}</span>
+                            </div>
+
+                            <div class="field">
+                            <span class="label">{{translator.constants.SIZE | translate}}</span>
+                            <span class="data">{{fileSize}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+
+        <div soho-tab-panel tabId="tabs-attributes-{{tabId}}">
+            <idm-document-attributes [item]="item"></idm-document-attributes>
+        </div>
+
+        <div soho-tab-panel tabId="tabs-file-{{tabId}}">
+            <idm-add-file [(item)]="item"></idm-add-file>
+        </div>
+
+        <div soho-tab-panel tabId="tabs-security-{{tabId}}">
+            <div class="row">
+            <div class="four columns l-right-text">
+                <p class="acl-title">
+                <strong>{{translator.constants.ACCESS_CONTROL_LIST | translate}}</strong>
+                </p>
+            </div>
+            <div class="eight columns">
+                <dropdown-async 
+                [data]="acls" 
+                [model]="item.acl" 
+                [id]="item.pid"></dropdown-async>
+            </div>
+            </div>                  
+        </div>
+
+        <div soho-tab-panel tabId="tabs-history-{{tabId}}">
+            <p>{{translator.constants.HISTORY | translate}}</p>
+            <div *ngIf="itemVersions">
+                <div *ngFor="let version of itemVersions">
+                    <div>
+                    <button soho-button (click)="showVersion(version.version)">{{translator.constants.VERSION | translate}} {{version.version}}</button>
+                    <p>Pid: {{version.pid}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="field">
+  <select 
+    soho-dropdown
+    soho-busyindicator 
+    displayDelay="0"
+    noSearch
+    [(ngModel)]="model.name"
+    [name]="name">
+    <option *ngFor="let item of (dropdownItemsSource | async)" [value]="item.name">
+      {{ item.name }}
+    </option>
+  </select>
+</div>

@@ -1,0 +1,26 @@
+:host {
+    border: 1px solid #AAA;
+
+  /deep/ .row {
+    // Apply to all row descendants
+    padding-right: 0px; // Override Soho style
+  }
+}
+
+.acl-title {
+  padding: 5px;
+}
+
+/*
+ * For some reason, sohoxi dropdown still shows search input event when
+ * noSearch attribute is present, and it overlaps other text. 
+ */
+.dropdown-list input[readonly] {
+  background-color: transparent;
+  text-indent: -9999px;
+}
+
+.tab-container {
+  font-size: 10px;
+}
+

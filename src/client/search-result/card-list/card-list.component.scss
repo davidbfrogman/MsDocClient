@@ -1,0 +1,17 @@
+:host {
+
+    .card-list-row {
+        display: flex;
+        margin-left: 10px;
+
+        .image-content{
+            min-width: 96px;
+            min-height: 96px;
+        }
+
+        .card-list-columns {
+            display: inline;
+            margin-left: 20px;
+        }
+    }
+}

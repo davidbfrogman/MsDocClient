@@ -1,0 +1,44 @@
+<div class="row" id="new-document-modal-header">
+  <h3>New Document</h3>
+</div>
+<div class="row" id="new-document-modal-content">
+  <div class="add-document-container">
+    <div class="document-types four columns">
+      <h3>Document Types</h3>
+      <soho-listview [dataset]="entityList" [searchable]="true" selectable="single">
+        <input soho-searchfield placeholder="Document Types" [clearable]="true">
+        <!--The bottom border here should be on only the last item.-->
+        <li class="documentTypes" soho-listview-item *ngFor="let entity of entityList" (click)="onEntitySelected(entity)">
+          <p soho-listview-header style="min-width: 200px;">{{entity.name}}</p>
+          <p soho-listview-subheader>{{entity.desc}}</p>
+          <!--<p soho-listview-micro>Attributes: {{entity.attributes}}</p>-->
+        </li>
+      </soho-listview>
+    </div>
+    <div class="eight columns">
+      <div class="empty-templates-contaner" *ngIf="!isDocumentSelected">
+        <h3>Select a document type</h3>
+      </div>
+      <div class="templates-container" *ngIf="isDocumentSelected">
+        <h3>Templates</h3>
+        <soho-listview [dataset]="templateList" [searchable]="true" selectable="single">
+          <input soho-searchfield placeholder="Templates" [clearable]="true">
+          <!--The bottom border here should be on only the last item.-->
+          <li soho-listview-item *ngFor="let template of templateList" (click)="onItemSelected(template)">
+            <div class="two columns fill">
+              <img [attr.src]="template.templateThumbnail" class="tpl-thumb" title="{{ template.templateName }}" (click)="onItemOpened($event, template)">
+            </div>
+            <div class="ten columns">
+              <span soho-listview-header class="titleText">
+                <a href="" title="{{ template.templateName }}" (click)="onItemOpened($event, template)">
+                  {{ template.templateName }}
+                </a>
+              </span><br>
+              <span soho-listview-subheader style="max-width:100%;overflow:hidden;">{{template.templateDescription}}</span>
+            </div>
+          </li>
+        </soho-listview>
+      </div>
+    </div>
+  </div>
+</div>

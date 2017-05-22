@@ -1,0 +1,23 @@
+@import '../../../styles';
+
+.item-attributes {
+  input {
+    background-color: $color-white;
+  }
+
+  .label {
+    color: $font-color;
+    font-family: $font-family-label;
+    font-size: $font-size-label;
+  }
+
+  .label.disabled {
+    color: $font-color-lighter;
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .row {
+    margin-bottom: 5px;
+  }
+}

@@ -1,0 +1,29 @@
+@import '../../styles.scss';
+
+.error-container {
+    border: 1px solid $color-border-error;
+    display:block;
+    padding: 5px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.error-container a.hide-details {
+    color:$color-hide-details;
+    cursor: hand;
+}
+
+.error-container h3 {
+    border-bottom: 1px solid $color-border-error;
+    display:block;
+}
+
+.error-container .error-description {
+
+    overflow: hidden;
+}
+
+.close-error{
+    color: $color-close-error;
+    margin-top: 20px;
+}

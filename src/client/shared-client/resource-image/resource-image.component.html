@@ -1,0 +1,8 @@
+<div soho-busyindicator text=" ">
+  <div *ngIf="imgUrl">
+    <img [src]="imgUrl">
+  </div>
+  <div *ngIf="!imgUrl">
+    <div class="emptyContainer"></div>
+  </div>
+</div>

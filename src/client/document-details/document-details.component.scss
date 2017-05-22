@@ -1,0 +1,19 @@
+.details-container {
+    .image-container {
+        .filename {
+            text-align: center;
+            font-size: 1.4rem;
+            color: #1a1a1a;
+            line-height: 2rem;
+            margin-top: 0.5rem;
+        }
+    }
+}
+
+.toolbar-container {
+    flex-direction: row-reverse;
+
+    soho-toolbar {
+        display: inline-flex !important; // Fix for Soho, otherwise the buttons wrap in the flexbox
+    }
+}

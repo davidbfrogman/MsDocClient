@@ -1,0 +1,36 @@
+<div soho-tabs (activated)="onTabActivated($event)" (afterClose)="onTabClose($event)">
+  <ul soho-tab-list>
+        <li soho-tab selected="true"><a soho-tab-title tabId="tabs-documents">{{ translator.constants.MAIN_WINDOW_TAB_DOCUMENTS | translate }}</a></li>
+    <li soho-tab *ngFor="let item of itemTabsEventBus.openTabs" dismissible="true">
+      <a soho-tab-title [tabId]="item.tabId">{{item.title}}</a> <!--IF no display name use translation NoName-->
+    </li>
+    <li soho-tab dismissible="true"><a soho-tab-title tabId="tabs-dismissible-cc">Control Center</a></li>
+  </ul>
+
+  <div soho-tab-panel tabId="tabs-documents" id="search-tab">
+    <div class="container">
+        <div class="search-container">
+            <button id="add-btn" soho-button="primary" (click)="openAddDocumentComponent()">{{ translator.constants.ADD_NEW_DOCUMENT | translate }}</button>
+            <idm-search></idm-search>
+        </div>
+        <div class="result-container">
+          <idm-search-result></idm-search-result>
+        </div>
+    </div>
+  </div>
+  
+  <div soho-tab-panel *ngFor="let item of itemTabsEventBus.openTabs" [tabId]="item.tabId">
+    <idm-document-details [item]="item.item"></idm-document-details>
+  </div>
+  <div soho-tab-panel tabId="tabs-dismissible-cc">
+    <idm-control-center></idm-control-center>
+  </div>
+</div>
+
+<div #addDocumentDialogPlaceholder>
+
+<!--<div class="row">
+  <div class="columns">
+    <idm-service-utility></idm-service-utility>
+  </div>
+</div>-->

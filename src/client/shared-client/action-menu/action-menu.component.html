@@ -1,0 +1,28 @@
+<ng-template ngFor let-button [ngForOf]="actionButtons">
+    <button [soho-button]=buttonType 
+        [icon]="button.icon" 
+        *ngIf="button.visible && !button.isMenuButton" 
+        (click)="onAction(button.action)"
+        [title]="button.translationCode" 
+        [id]=button.id
+        [disabled]=!button.enabled> <!--Todo: use translations-->
+            <span *ngIf="showButtonTitle">{{button.translationCode}}</span><!--todo: Add translation-->
+    </button>
+    <button soho-menu-button 
+        [icon]="button.icon" 
+        *ngIf="button.visible && button.isMenuButton" 
+        (click)="onAction(button.action)" 
+        [menu]=button.id 
+        [id]=button.id
+        [disabled]=!button.enabled
+        [title]="button.translationCode"> <!--Todo: use translations-->
+            <span *ngIf="showButtonTitle">{{button.translationCode}}</span><!--todo: Add translation-->
+    </button>
+    <ul soho-popupmenu 
+        *ngIf="button.visible && button.isMenuButton" 
+        [id]=button.id>
+            <li soho-popupmenu-item *ngFor="let menu of button.menu">
+                <a soho-popupmenu-label (click)="onAction(menu.action)">{{menu.translationCode}}</a><!--todo: Add translation-->
+            </li>
+    </ul>
+</ng-template>

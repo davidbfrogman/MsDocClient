@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="summary-form">
+    <div class="field">
+        <soho-fileupload [name]="name" [label]="text" (change)="onFileUploadChange($event)" ngDefaultControl></soho-fileupload>
+    </div>
+    <div class="field">
+      <span class="label">Filename</span>
+      <span class="data">{{filename}}</span>
+    </div>
+    <div class="field">
+      <span class="label">Size</span>
+      <span class="data">{{size}} KB</span>
+    </div>
+    <div class="field">
+      <span class="label">MIME Type</span>
+      <span class="data">{{mimetype}}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+#add-btn {
+  margin-bottom: 18px;
+}
+
+.container {
+  display: flex;
+  height: calc(100% - 50px);
+
+  .search-container {
+    border-right: 1px solid #bdbdbd;
+    display: inline-block;
+    padding-left: 20px;
+    padding-top: 20px;
+  }
+
+  .result-container {
+    width: 100%;
+    margin-left: 20px;
+
+    idm-search-result {
+      width: 100%;
+    }
+  }
+}
+
+.tab-panel {
+  padding-top: 0px; // Override SoHo style
+}
+
+.tab-container.horizontal { // Soho tab-container
+  height: 100%;
+  overflow: hidden;
+  margin-bottom: 0px;
+
+  div[soho-tab-panel] {
+    height: 100%;
+  }
+}

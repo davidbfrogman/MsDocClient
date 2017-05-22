@@ -1,0 +1,12 @@
+<div class="error-container" *ngIf="errorTriggered && !isClosedFromUser">
+    <h3>{{title}}</h3>
+	<div>{{errorMessage}} </div>
+	<a soho-hyperlink class="hide-details" *ngIf="!showDetails  && errorDescription" (click)="changeShowDetails()">Show details</a>
+	<a soho-hyperlink class="hide-details" *ngIf="showDetails" (click)="changeShowDetails()">Hide details</a>
+	<div class="error-description" *ngIf="showDetails && errorDescription">
+		{{errorDescription}}
+	</div>
+	<div class="close-error">
+	<a soho-hyperlink class="close-error" (click)="closeError()"><span>Close Error</span></a>
+	</div>
+</div>

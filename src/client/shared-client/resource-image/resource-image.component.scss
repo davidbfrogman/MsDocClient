@@ -1,0 +1,15 @@
+:host {
+    // Setting font size since busyIndicator size is controlled by it (em)
+    font-size: 12px;
+
+    .emptyContainer {
+        // Used for positiononing busyIndicator correctly before image is loaded
+        min-height: 96px;
+    }
+
+    img {
+        display:block;
+        margin-left:auto;
+        margin-right:auto;
+    }
+}

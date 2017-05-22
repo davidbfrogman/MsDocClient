@@ -1,0 +1,14 @@
+<div class="row" class="item-attributes">
+  <form>
+    <div class="row" *ngFor="let attribute of attributes">
+      <div class="flexbox" *ngIf="attributeVisible(attribute)">
+        <div class="three columns text-right flex-item-centered label">
+          {{ attribute.name }}
+        </div>
+        <div class="nine columns">
+          <idm-attribute-field [attribute]="attribute" [editable]="isItemEditable"></idm-attribute-field>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

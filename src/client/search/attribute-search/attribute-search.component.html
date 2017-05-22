@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="field">
+    <input soho-searchfield [attr.id]="freeTextSearch" type="text " name="freeTextSearch" [(ngModel)]="freeTextSearch" placeholder="{{ translator.constants.FREE_TEXT_SEARCH | translate }}" /> 
+  </div>
+</div>
+<div class="row">
+  <select soho-dropdown soho-busyindicator noSearch [(ngModel)]="selectedEntity" name="ddlEntities" (change)="onSelectedEntityChanged(selectedEntity)">
+    <option selected [value]="selectedEntity">&lt;{{ translator.constants.SELECT_DOCUMENT_TYPES | translate }}&gt;</option>
+    <option *ngFor="let entity of entityList" [ngValue]="entity">{{entity.name}}</option>
+  </select>
+</div>
+<div class="row">
+  <select soho-dropdown soho-busyindicator noSearch [(ngModel)]="selectedAttribute" name="ddlAttributes" (change)="onSelectedAttributeChanged(selectedAttribute)">
+    <option selected disabled [value]="selectedAttribute">&lt;{{ translator.constants.SELECT_ATTRIBUTE | translate }}&gt;</option>
+    <option *ngFor="let attribute of attributeList" [ngValue]="attribute">{{attribute.name}}</option>
+  </select>
+</div>
+<div class="row">
+  <select soho-dropdown soho-busyindicator noSearch [(ngModel)]="selectedOperation" name="ddlOperators" (change)="onOperandChange(selectedOperation)">
+    <option selected disabled [value]="selectedOperation">
+      &lt;{{ translator.constants.SELECT_OPERATION | translate }}&gt;
+    </option>
+    <option *ngFor="let operator of operatorList" [ngValue]="operator">
+      {{operator.sign}}{{operator.name | translate}}
+    </option>
+  </select>
+</div>
+<div class="row">
+  <idm-attribute-field *ngIf="selectedAttribute && !selectedAttribute.isUserForSearching" [attribute]="selectedAttribute" [editable]="true" [placeholder]="attributeFieldPlaceholder"></idm-attribute-field> 
+  <idm-attribute-field *ngIf="!selectedAttribute" [attribute]="selectedAttributeEmpty" [editable]="true" [placeholder]="attributeFieldPlaceholder"></idm-attribute-field>
+  <soho-listview *ngIf="selectedAttribute && selectedAttribute.isUserForSearching" class="user-list-view"  [dataset]="userList" [searchable]="true" [selectable]="single" [selectOnFocus]="true" >
+    <input soho-searchfield [formControl]="searchUserFormControl"  placeholder="Users" [clearable]="true"  [(ngModel)]="selectedAttribute.value" >
+    <!--The bottom border here should be on only the last item.-->
+    <li  soho-listview-item class="user-item" *ngFor="let user of usersList" (click)="onUserSelected(user)">
+      <p soho-listview-header>{{user.name}}</p>
+      <p soho-listview-subheader>{{user.email}}</p>
+    </li>
+  </soho-listview>
+  <!-- This spacer is used by the user search, because we're putting it absolute positioned. -->
+  <div *ngIf="selectedAttribute && selectedAttribute.isUserForSearching" style="height:30px;"></div> 
+</div>
+
+<div class="row buttons">
+  <button *ngIf="!isEditingSearchStack" soho-button (click)="onClickReset($event)" class="btn-grow">{{ translator.constants.RESET | translate }}</button>
+  <button *ngIf="!isEditingSearchStack" soho-button="primary" (click)="onClickSearch($event)" class="btn-grow">{{ translator.constants.SEARCH | translate }}</button>
+  <button *ngIf="!isEditingSearchStack" soho-button (click)="onClickAddStack($event)" class="btn-plus">+</button>
+  <button *ngIf="isEditingSearchStack" soho-button (click)="onClickSaveStack($event)">{{ translator.constants.SAVE | translate }}</button>
+  <button *ngIf="isEditingSearchStack" soho-button (click)="onClickCancel($event)">{{ translator.constants.CANCEL | translate }}</button>
+</div>

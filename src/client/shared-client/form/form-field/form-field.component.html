@@ -1,0 +1,44 @@
+<span *ngIf="showReadonly" class="label disabled">
+  {{ value || '&lt;empty&gt;' }}
+</span>
+<input type="text" *ngIf="showString"
+  name="{{name}}" placeholder="{{placeholder}}"
+  [(ngModel)]="value" disabled="{{ disabled }}"
+/>
+<input type="number" *ngIf="showNumber"
+  name="{{name}}" placeholder="{{placeholder}}"
+  maxlength="{{maxLength}}"
+  [(ngModel)]="value"
+/>
+<select *ngIf="showBoolean" soho-dropdown soho-busyindicator noSearch 
+  [(ngModel)]="value" name="{{name}}"
+>
+  <option selected disabled [value]="value">&lt;Value&gt;</option>
+  <option *ngFor="let value of booleanValueset.value" [ngValue]="value.name">{{value.desc}}</option>
+</select>
+<select *ngIf="showDropdown" soho-dropdown soho-busyindicator noSearch 
+  [(ngModel)]="value" name="{{name}}"
+>
+  <option selected disabled [value]="value">&lt;Value&gt;</option>
+  <option *ngFor="let value of valueset.value" [ngValue]="value.name">{{value.desc}}</option>
+</select>
+<input soho-datepicker *ngIf="showDatePicker"
+  name="{{name}}" placeholder="{{SOHO_DATEPICKER_DATE_FORMAT}}"
+  dateFormat="{{SOHO_DATEPICKER_DATE_FORMAT}}" 
+  mode="standard"
+  [(ngModel)]="value"
+/>
+<input soho-timepicker *ngIf="showTimePicker"
+  name="{{name}}" placeholder="{{SOHO_DATEPICKER_TIME_FORMAT}}"
+  timeFormat="{{SOHO_DATEPICKER_TIME_FORMAT}}" 
+  showTime="true" mode="standard"
+  [(ngModel)]="value"
+  (change)="onTimePickerChange($event)"
+/>
+<input soho-datepicker *ngIf="showDateTimePicker" 
+  name="{{name}}" placeholder="{{SOHO_DATEPICKER_DATE_FORMAT}}"
+  dateFormat="{{SOHO_DATEPICKER_DATE_FORMAT}}"
+  timeFormat="{{SOHO_DATEPICKER_TIME_FORMAT}}" 
+  showTime="true" mode="standard" 
+  [(ngModel)]="value"
+/>

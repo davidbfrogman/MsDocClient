@@ -1,0 +1,35 @@
+@import '../../../styles.scss';
+
+:host {
+  display:block;
+
+  select {
+    min-width: 300px;
+  }
+}
+
+.buttons {
+    display: flex;
+    padding-top:20px;
+    
+    .btn-grow {
+        flex-grow: 1;
+    }
+
+    button.btn-plus {
+        min-width: 30px;
+    }
+}
+
+.user-list-view{
+    position: absolute;
+    width: 300px;
+    z-index: 20;
+    left: 20px;
+    background-color: $color-off-white;
+}
+
+.user-item{
+    border-right: 1px solid $color-border-grey;
+    border-left: 1px solid $color-border-grey;
+}

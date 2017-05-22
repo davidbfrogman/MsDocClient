@@ -1,0 +1,142 @@
+<soho-expandable-area *ngIf="isDevelopment">
+  <soho-expandable-header>
+    <svg class="icon" focusable="false" aria-hidden="true" role="presentation">
+      <use xlink:href="#icon-url"></use>
+    </svg>
+    Service Utility
+  </soho-expandable-header>
+  <soho-expandable-pane fixed="false">
+    <div class="row">
+      <form>
+        <div class="row">
+          <h3>Test cache</h3>
+          <div class="column">
+              <hr/>
+              <div style="max-height:100px; overflow:auto;">{{cacheEvent | json}}</div>
+              <hr/>
+          </div>
+        </div>
+        <div class="row">
+          <h4>Users</h4>
+          <div class="column" *ngFor="let user of users">
+              <hr/>
+              <div style="max-height:100px; overflow:auto;"> {{user | json}}</div>
+              <hr/>
+          </div>
+        </div>
+        <div class="field">
+          <br/>
+          <button soho-button (click)="onClickGetUsersCached($event)">Cached Users</button>
+          <button soho-button (click)="onClickGetUsersNotCached($event)">Not Cached Users</button>
+          <button soho-button (click)="onClickClearUsersCache($event)">Clear Users Cache</button>
+          <br/><br/>
+        </div>
+        <div class="row">
+          <h4>Items</h4>
+          <div class="column" *ngFor="let item of items">
+              <hr/>
+              <div style="max-height:100px; overflow:auto;"> {{item | json}}</div>
+              <hr/>
+          </div>
+        </div>
+        <div class="field">
+          <br/>
+          
+          <button soho-button (click)="onClickPerformanceTest($event)">Performance Test</button>
+          <button soho-button (click)="onClickGetItemsCached($event)">Cached Items</button>
+          <button soho-button (click)="onClickGetItemsNotCached($event)">Not Cached Items</button>
+          <button soho-button (click)="onClickClearItemsCache($event)">Clear Items Cache</button>
+          <br/><br/>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <form>
+        <div class="row">
+          <h3>Test configuration property</h3>
+          <div class="column">
+              <hr/>
+              <div style="max-height:100px; overflow:auto;">{{ionEntitiesFilterTimestamp}}</div>
+              <hr/>
+          </div>
+        </div>
+        <div class="field">
+          <br/>
+          <button soho-button (click)="onClickGetProperties($event)">Get ionEntitiesFilterTimestamp</button>
+          <br/><br/>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <form>
+         <div class="row">
+          <h3>File Upload</h3>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label [attr.for]="nameField" class="label" soho-label>Name</label>
+            <input [attr.id]="nameField" type="text " name="name-input" [(ngModel)]="fileName" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <soho-fileupload [name]="name1" [label]="text" (change)="onFileUploadChange($event)" ngDefaultControl></soho-fileupload>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label [attr.for]="templateNameField" class="label" soho-label>Template Name</label>
+            <input [attr.id]="templateNameField" type="text " name="name-input" [(ngModel)]="templateName" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label [attr.for]="templateDescField" class="label" soho-label>Template Description</label>
+            <input [attr.id]="templateDescField" type="text " name="name-input" [(ngModel)]="templateDescription" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <button soho-button (click)="onClickUpload($event)">Upload</button>
+          </div>
+          <div *ngIf="status">
+            <label>{{status}}</label>
+          </div>
+        </div>
+        
+      </form>
+      <br/><br/>
+    </div>
+    <!--<div class="row">
+        <form>
+          <idm-attribute-field name="attributeStringReadonly" [(attribute)]="attributeString" [editable]="false"></idm-attribute-field>
+          <br/><br/>
+          
+          <idm-attribute-field name="attributeStringEditable" [(attribute)]="attributeString" [editable]="true"></idm-attribute-field>
+          <br/><br/>
+          
+          <idm-attribute-field name="attributeNumber" [(attribute)]="attributeNumber" [editable]="true"></idm-attribute-field>
+          <br/><br/>
+
+          <idm-attribute-field name="attributeBoolean" [(attribute)]="attributeBoolean" [editable]="true"></idm-attribute-field>
+          <br/><br/>
+          
+          <idm-attribute-field name="attributeValueset" [(attribute)]="attributeValueset" [editable]="true"></idm-attribute-field>
+          <br/><br/>
+
+          <idm-attribute-field name="attributeDatePicker" [(attribute)]="attributeDatePicker" [editable]="true"></idm-attribute-field>
+          <br/><br/>
+
+          <idm-attribute-field name="attributeTimePicker" [(attribute)]="attributeTimePicker" [editable]="true"></idm-attribute-field>
+          <br/><br/>
+
+          <idm-attribute-field name="attributeDateTimePicker" [(attribute)]="attributeDateTimePicker" [editable]="true"></idm-attribute-field>
+          <br/><br/>
+        </form>
+    </div>-->
+
+    <button soho-button="primary" class="btn-primary" (click)="openInfoModal()">Modal (info)</button>
+    <button soho-button="primary" class="btn-primary" (click)="openErrorModal()">Modal (error)</button>
+
+  </soho-expandable-pane>
+</soho-expandable-area>
