@@ -13,9 +13,9 @@ export enum OperationType {
   False = 12
 }
 
-export enum SearchStyleType{
-  String =1,
-  Boolean =2,
+export enum SearchStyleType {
+  String = 1,
+  Boolean = 2,
   Date = 3,
   Timestamp = 4,
   Time = 5,
@@ -59,11 +59,11 @@ export enum FormFieldType {
 
 // Map item resource type from API
 export const ItemResourceType = {
-    Thumbnail: "Thumbnail",
-    SmallPreview: "SmallPreview",
-    Preview: "Preview",
-    Main: ""
-}
+    Thumbnail: 'Thumbnail',
+    SmallPreview: 'SmallPreview',
+    Preview: 'Preview',
+    Main: ''
+};
 
 export enum CacheEventType {
     Set = 1,

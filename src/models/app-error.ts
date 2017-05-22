@@ -7,9 +7,9 @@ export class AppError extends Error {
 export class ComponentError extends AppError {
     public name: string = 'ComponentError';
 }
-export class EventBusError extends AppError { 
+export class EventBusError extends AppError {
     public name: string = 'EventBusError';
 }
-export class ServiceError extends AppError { 
+export class ServiceError extends AppError {
     public name: string = 'ServiceError';
 }

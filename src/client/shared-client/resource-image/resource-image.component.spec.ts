@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
 import { ElementRef } from '@angular/core';
 import { ResourceImageComponent } from './resource-image.component';
-import { HttpModule } from "@angular/http";
+import { HttpModule } from '@angular/http';
 import { ResourceService, ItemData } from 'services';
 import { CacheEventBus, ErrorEventBus, ResourceQueueEventBus } from 'event-buses';
 import { SohoBusyIndicatorDirective, SohoBusyIndicatorModule } from '@infor/sohoxi-angular';
@@ -40,7 +40,7 @@ describe('ResourceImageComponent', () => {
     // Given
     spyOn(resourceService, 'getResourceStream').and.returnValue(Observable.of(ResourceData200));
     component.item = ItemData;
-    component.type = "Preview";
+    component.type = 'Preview';
 
     // When
     fixture.detectChanges();
@@ -49,7 +49,7 @@ describe('ResourceImageComponent', () => {
     // Then
     expect(resourceService.getResourceStream).toHaveBeenCalledTimes(1);
     expect(component.imgUrl).toBeDefined();
-    
+
   }));
 
   it('should should use the queue when useQueue is set', fakeAsync(() => {
@@ -57,7 +57,7 @@ describe('ResourceImageComponent', () => {
     spyOn(resourceService, 'getResourceStream').and.returnValue(Observable.of(ResourceData200));
     spyOn(resourceQueueEventBus, 'addImage').and.callThrough();
     component.item = ItemData;
-    component.type = "Preview";
+    component.type = 'Preview';
     component.useQueue = true;
 
     // When
@@ -74,7 +74,7 @@ describe('ResourceImageComponent', () => {
     // Given
     spyOn(resourceService, 'getResourceStream').and.returnValue(Observable.of(ResourceData202));
     component.item = ItemData;
-    component.type = "Preview";
+    component.type = 'Preview';
 
     // When
     fixture.detectChanges();
@@ -88,7 +88,7 @@ describe('ResourceImageComponent', () => {
     // Given
     spyOn(resourceService, 'getResourceStream').and.returnValue(Observable.of(ResourceData202));
     component.item = ItemData;
-    component.type = "Preview";
+    component.type = 'Preview';
     component.useQueue = true;
 
     // When

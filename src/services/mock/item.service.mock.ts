@@ -10,7 +10,7 @@ import { EntitiesWithAttributes } from './mock-data/entities-with-attributes.dat
 import { ItemsWithTemplates } from './mock-data/items-with-templates.data';
 
 @Injectable()
-export class ItemServiceMock extends ItemService{
+export class ItemServiceMock extends ItemService {
   public static getMockItem(): Item {
     return ItemData;
   }

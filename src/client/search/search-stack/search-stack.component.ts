@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import * as moment from "moment";
+import * as moment from 'moment';
 import { Constants } from '../../../constants';
 import { SearchStyleType, AttributeType, OperationType } from 'enumerations';
 import { SearchStackEventBus } from 'event-buses';
@@ -19,13 +19,13 @@ export class SearchStackComponent {
   }
 
   public onDeleteStack(searchStack: SearchStack) {
-    // This will send out a search stack onto the service bus for anyone who is subscribed 
-    // to the delete observable 
+    // This will send out a search stack onto the service bus for anyone who is subscribed
+    // to the delete observable
     this.searchStackEventBus.deleteSearchStack(searchStack);
   }
 
-  public onEditStack(searchStack: SearchStack){
-    // This will send out a search stack to anyone who is subscribed to the 
+  public onEditStack(searchStack: SearchStack) {
+    // This will send out a search stack to anyone who is subscribed to the
     // edit stack search observable
     this.searchStackEventBus.editSearchStack(searchStack);
   }

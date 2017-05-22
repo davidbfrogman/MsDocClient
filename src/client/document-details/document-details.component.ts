@@ -39,7 +39,6 @@ export class DocumentDetailsComponent {
   @Input()
   set item(item: Item) {
     this._item = item;
-
     if (this.item.size) {
       this.fileSize = ItemUtility.formatBytes(Number(this.item.size));
     }

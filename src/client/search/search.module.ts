@@ -11,7 +11,7 @@ import {AttributeSearchComponent} from './attribute-search/attribute-search.comp
 import {ShortcutsComponent} from './shortcuts/shortcuts.component';
 import { SearchStackComponent } from './search-stack/search-stack.component';
 import { SearchStackEventBus, ResourceQueueEventBus } from '../../event-buses';
-import { PipesModule } from "pipes/pipes.module";
+import { PipesModule } from 'pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -22,7 +22,7 @@ import { PipesModule } from "pipes/pipes.module";
     SharedClientModule,
     PipesModule,
   ],
-  declarations: [  
+  declarations: [
     SearchComponent,
     AdvancedSearchComponent,
     AttributeSearchComponent,

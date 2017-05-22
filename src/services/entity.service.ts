@@ -6,13 +6,13 @@ import { CacheEventBus } from 'event-buses';
 import { Entity, Item } from 'models';
 import { BaseService, ServiceConfig } from 'services';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { ItemUtility } from "utility";
+import { ItemUtility } from 'utility';
 
 
 @Injectable()
 export class EntityService extends BaseService<Entity> {
   constructor(protected http: Http, protected cacheEventBus: CacheEventBus) {
-    super(http, Entity, { 
+    super(http, Entity, {
       rootApiUrl: environment.restUrls.ca,
       urlSuffix: 'entity',
       urlSuffixPlural: 'entities',
@@ -21,7 +21,6 @@ export class EntityService extends BaseService<Entity> {
       cacheConfig: {
         tag: 'EntityService',
         cache: true,
-        
       }
     },
     cacheEventBus);
@@ -36,7 +35,7 @@ export class EntityService extends BaseService<Entity> {
     return this.http.get(url, this.reqOptions)
       .map((res: Response) => {
         const responseObject = res.json();
-        return res.json()[Object.keys(responseObject)[0]]["item"];
+        return res.json()[Object.keys(responseObject)[0]]['item'];
       })
       .map((items: Item[]) => {
         if (items && items.length > 0) {

@@ -11,10 +11,10 @@ export class XQueryEventBus {
 
     // Observable Search xQuery Sources
     private xQueryChangedSource = new Subject<string>();
-    
+
     // Observable Search xQuery Streams
     public xQueryChanged$ = this.xQueryChangedSource.asObservable();
-    
+
     changexQuery(xQuery: string) {
         this.xQuery = xQuery;
         this.xQueryChangedSource.next(xQuery);

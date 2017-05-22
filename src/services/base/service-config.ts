@@ -5,9 +5,9 @@ export class ServiceConfig {
     urlSuffix: string;
     urlSuffixPlural: string;
     urlPrefix: string;
-    
+
     // This property is used to tell the base class whether we should encode the id on requests
-    // this can happen due to spaces not being properly encoded. 
+    // this can happen due to spaces not being properly encoded.
     encodeId: boolean = false;
     listUsesPlural: boolean = true;
 
@@ -25,7 +25,7 @@ export class ServiceConfig {
         return this;
     }
 
-    setDefaultCacheConfig(){
+    setDefaultCacheConfig() {
         this.cacheConfig = {
             cache: true,
             tag: 'BaseService',
@@ -41,7 +41,7 @@ export class ServiceConfig {
     }
 
     overwriteCacheConfig(cacheConfig: CacheServiceConfigType, config?: CacheServiceConfigType) {
-        if(config !== undefined) {
+        if (config !== undefined) {
             cacheConfig.cache = config.cache !== undefined ? config.cache : cacheConfig.cache;
             cacheConfig.tag = config.tag !== undefined ? config.tag : cacheConfig.tag;
             cacheConfig.expires = config.expires !== undefined ? config.expires : cacheConfig.expires;
@@ -61,12 +61,12 @@ export class ServiceConfig {
     }
 }
 
-export declare type ServiceConfigType = {
-    rootApiUrl: string,
-    urlSuffix: string,
-    urlSuffixPlural: string,
-    urlPrefix?: string,
-    encodeId?: boolean,
-    listUsesPlural?: boolean,
-    cacheConfig?: CacheServiceConfigType
+export interface ServiceConfigType {
+    rootApiUrl: string;
+    urlSuffix: string;
+    urlSuffixPlural: string;
+    urlPrefix?: string;
+    encodeId?: boolean;
+    listUsesPlural?: boolean;
+    cacheConfig?: CacheServiceConfigType;
 };

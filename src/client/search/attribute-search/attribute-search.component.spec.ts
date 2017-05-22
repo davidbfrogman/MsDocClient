@@ -13,36 +13,27 @@ describe('AttributeSearchComponent', () => {
   let entityService: EntityService;
   let userService: UserService;
   let searchStackForTesting: SearchStack;
-  
 
   beforeAll(() => {
-    console.time('configure');
-
     TestBed.configureTestingModule({
       imports: [
         TestingModule
       ]
     });
 
-    console.timeEnd('configure');
-
-    console.time('create component');
-
     fixture = TestBed.createComponent(AttributeSearchComponent);
-
-    console.timeEnd('create component');
     component = fixture.componentInstance;
     entityService = fixture.debugElement.injector.get(EntityService);
     userService = fixture.debugElement.injector.get(UserService);
 
-    // We need to set the debounce timing to 0, because we want our tests to be fast. 
+    // We need to set the debounce timing to 0, because we want our tests to be fast.
     component.userSearchDebounceTiming = 0;
     component.initializeTypeAheadUserSearching();
 
     entityService.getList().subscribe((entities: Entity[]) => {
-      let entityList = entities; //Get Some entities
+      const entityList = entities; // Get Some entities
       if (entityList && entityList.length > 0) {
-        //Build a search stack to use for testing
+        // Build a search stack to use for testing
         searchStackForTesting = new SearchStack(
           entityList[0], entityList[0].attrs.attr[0],
           new SearchOperationFactory().findOperationByType(OperationType.EqualTo),
@@ -131,7 +122,7 @@ describe('AttributeSearchComponent', () => {
     // to search mode, so we can click search.
     component.onClickSaveStack();
 
-    //Now we can click search, with a UI that has all the fields filled out.
+    // Now we can click search, with a UI that has all the fields filled out.
     component.onClickSearch();
 
     expect(component.xQuery).toBeTruthy();
@@ -142,7 +133,7 @@ describe('AttributeSearchComponent', () => {
     component.populateEntitiesList();
     component.selectedEntity = component.entityList[2];
 
-    component.onSelectedEntityChanged(component.selectedEntity)
+    component.onSelectedEntityChanged(component.selectedEntity);
     component.selectedEntity.comprehensiveAttributes.forEach(attribute => {
       component.selectedAttribute = attribute;
       component.onSelectedAttributeChanged(component.selectedAttribute);
@@ -159,16 +150,16 @@ describe('AttributeSearchComponent', () => {
     component.selectedEntity = component.entityList[2];
     spyOn(userService, 'search').and.callThrough();
 
-    component.onSelectedEntityChanged(component.selectedEntity)
-    let userSearchAttribute: Attribute = component.selectedEntity.comprehensiveAttributes.find((attributeToFind) => {
+    component.onSelectedEntityChanged(component.selectedEntity);
+    const userSearchAttribute: Attribute = component.selectedEntity.comprehensiveAttributes.find((attributeToFind) => {
       return attributeToFind.isUserForSearching === true;
-    })
+    });
 
     component.selectedAttribute = userSearchAttribute;
     component.onSelectedAttributeChanged(userSearchAttribute);
 
     component.isUserSearchingActive = true;
-    //Remember this search method is just returning the mock data, and not actually doing any smart searching.
+    // Remember this search method is just returning the mock data, and not actually doing any smart searching.
     component.searchForUsers('');
     tick();
     expect(userService.search).toHaveBeenCalled();

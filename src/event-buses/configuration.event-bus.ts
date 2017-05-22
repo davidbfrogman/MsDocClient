@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Subject } from 'rxjs/Subject';
-import { CacheServiceConfigType } from 'services'
+import { CacheServiceConfigType } from 'services';
 import { ConfigurationEventType } from 'enumerations';
 import { ConfigurationEvent } from '../services/configuration.event';
 import { Configuration, Property } from 'models';
@@ -16,24 +16,24 @@ export class ConfigurationEventBus {
     public configurationChangedEvent$ = this.configurationChangedSource.asObservable();
 
     public constructor() { }
-    
+
     setProperties(properties: Property[]) {
         let propertiesAreDirty = false;
         this.properties = properties;
         this.properties.forEach(property => {
-            if(this.configuration[property.name] !== property.value) {
+            if (this.configuration[property.name] !== property.value) {
                 propertiesAreDirty = true;
                 this.configuration[property.name] = property.value;
             }
         });
-        if(propertiesAreDirty) {
+        if (propertiesAreDirty) {
             this.triggerConfigurationChangedEvent(ConfigurationEventType.SetProperties);
         }
         return this;
     }
 
     getConfiguration(name: string): string {
-        if(this.configuration.hasOwnProperty(name)) {
+        if (this.configuration.hasOwnProperty(name)) {
             return this.configuration[name];
         } else {
             return null;

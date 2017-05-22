@@ -4,7 +4,7 @@ import { AppError } from 'models';
 
 @Injectable()
 export class AppErrorHandler extends ErrorHandler {
-   constructor(private errorEventBus: ErrorEventBus) { 
+   constructor(private errorEventBus: ErrorEventBus) {
      super();
    }
 

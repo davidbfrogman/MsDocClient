@@ -42,7 +42,7 @@ describe('ActionMenuComponent', () => {
   });
 
   // State is leaked here, from the previous test, so the toggling of a selected item
-  // has already been done by the previous test.  TODO: Shouldn't 'selected' just be a property on the item? 
+  // has already been done by the previous test.  TODO: Shouldn't 'selected' just be a property on the item?
   it('action menu should not be visible on item deselected', () => {
     // Given
     component.actionView = ActionViewsType.SearchResult;
@@ -76,7 +76,7 @@ describe('ActionMenuComponent', () => {
       expect(action.action).toEqual(ActionsType.Display);
       expect(action.affectedItems.length === 1).toBe(true);
     });
-    
+
     // When
     component.onAction(ActionsType.Display);
   });
@@ -89,7 +89,7 @@ describe('ActionMenuComponent', () => {
 
     expect(component.isVisible()).toBe(true);
   });
-  
+
   it('should display at least one button for item depending on input binding', () => {
     // Given
     component.item = testItem;
@@ -119,7 +119,7 @@ describe('ActionMenuComponent', () => {
       expect(action.action).toEqual(ActionsType.Save);
       expect(action.affectedItems.length > 0).toBeTruthy();
     });
-    
+
     component.onAction(ActionsType.Save);
   });
 

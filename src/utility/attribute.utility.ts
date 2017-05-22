@@ -1,65 +1,72 @@
 import { Attribute, IAttributable, Valueset } from 'models';
 import { AttributeType, FormFieldType } from 'enumerations';
 import { Constants } from '../constants';
-import * as moment from "moment";
+import * as moment from 'moment';
 
 export class AttributeUtility {
 
     public static mapAttributeTypeEnumeration(attribute: Attribute): Attribute {
-        //TODO: Figure out what short should map to.
-        //there seems to be a conflict between short, and valueset
+        // TODO: Figure out what short should map to.
+        // there seems to be a conflict between short, and valueset
       if (!attribute.isAttributeTypeMapped) {
         switch (attribute.type) {
-            case "1": //String
+            case '1': // String
                 attribute.attributeType = AttributeType.String;
                 break;
-            case "4": //Long
+            case '4': // Long
                 attribute.attributeType = AttributeType.Long;
                 break;
-            case "6": //Decimal
+            case '6': // Decimal
                 attribute.attributeType = AttributeType.Decimal;
                 break;
-            case "10": //Double
+            case '10': // Double
                 attribute.attributeType = AttributeType.Double;
                 break;
-            case "7": //Date
+            case '7': // Date
                 attribute.attributeType = AttributeType.Date;
                 break;
-            case "8": //Time
+            case '8': // Time
                 attribute.attributeType = AttributeType.Time;
                 break;
-            case "9": //Timestamp
+            case '9': // Timestamp
                 attribute.attributeType = AttributeType.Timestamp;
                 break;
-            case "20": //Boolean
+            case '20': // Boolean
                 attribute.attributeType = AttributeType.Boolean;
                 break;
-            case "3": //Short
+            case '3': // Short
                 attribute.attributeType = AttributeType.Short;
                 break;
-            case "21": //GUID
+            case '21': // GUID
                 attribute.attributeType = AttributeType.GUID;
                 break;
             default:
-                break;  
+                break;
         }
         attribute.isAttributeTypeMapped = true;
       }
       return attribute;
     }
-    
-    public static buildDefaultAttribute(name: string, description: string, qualifyer: string,  isUserForSearching: boolean, attributeType: AttributeType, isValueset: boolean, value?: any): Attribute{
-        let attribute = new Attribute();
+
+    public static buildDefaultAttribute(
+        name: string, description: string,
+        qualifyer: string,
+        isUserForSearching: boolean,
+        attributeType: AttributeType,
+        isValueset: boolean,
+        value?: any
+    ): Attribute {
+        const attribute = new Attribute();
         attribute.attributeType = attributeType;
         attribute.isUserForSearching = isUserForSearching;
-        if(isValueset) {
+        if (isValueset) {
             attribute.vsEntity = 'vsEntity';
         }
         attribute.isMultiValue = false;
         attribute.name = name;
         attribute.desc = description;
         attribute.qual = qualifyer;
-        if(value === undefined) {
+        if (value === undefined) {
             value = AttributeUtility.computeDefaultValue(attribute);
         }
         attribute.value = value;
@@ -74,7 +81,7 @@ export class AttributeUtility {
             case AttributeType.Short:
             case AttributeType.Long:
             case AttributeType.Decimal:
-            case AttributeType.Double: 
+            case AttributeType.Double:
             case AttributeType.String:
             case AttributeType.MultiValue:
                 attributeValue = '';
@@ -84,6 +91,7 @@ export class AttributeUtility {
             break;
             case AttributeType.Time:
                 attributeValue = moment().format(Constants.MOMENT_API_TIME_FORMAT);
+            break;
             case AttributeType.Timestamp:
                 attributeValue = moment().format(Constants.MOMENT_API_DATETIME_FORMAT);
         }
@@ -91,15 +99,17 @@ export class AttributeUtility {
         return attributeValue;
     }
 
-    public static getAttributeBasedOnName(item: IAttributable, name: string): Attribute{
-		return item.attrs.attr.find((attribute) => {
-			return attribute.name === name;
-		})
-	}
+    public static getAttributeBasedOnName(item: IAttributable, name: string): Attribute {
+        return item.attrs.attr.find((attribute) => {
+            return attribute.name === name;
+        });
+    }
 
     public static getFormFieldType(attribute: Attribute): number {
         let attributeFieldType: number = null;
-        if(AttributeUtility.isValueset(attribute))  return FormFieldType.Dropdown;
+        if (AttributeUtility.isValueset(attribute)) {
+            return FormFieldType.Dropdown;
+        }
         switch (attribute.attributeType) {
             case AttributeType.Boolean:
                 attributeFieldType = FormFieldType.Boolean;
@@ -131,8 +141,7 @@ export class AttributeUtility {
 
     public static getApiValue(attribute: Attribute, value?: string): string {
         let stringValue: string = undefined;
-        let booleanValue: boolean = undefined;
-        if(value === undefined) {
+        if (value === undefined) {
             value = attribute.value;
         }
         switch (attribute.attributeType) {
@@ -165,8 +174,7 @@ export class AttributeUtility {
     public static getFormValue(attribute: Attribute): string {
         let stringValue: string = undefined;
         let attributeValue: string = undefined;
-        let booleanValue: boolean = undefined;
-        if(attribute.value === undefined) {
+        if (attribute.value === undefined) {
             attributeValue = attribute.default;
         } else {
             attributeValue = attribute.value;
@@ -212,19 +220,19 @@ export class AttributeUtility {
 
     public static getBooleanValueset(): Valueset {
         return {
-            value: [{name: 'true',  'desc':'true'}, {name: 'false',  desc:'false'}]
+            value: [{name: 'true',  'desc': 'true'}, {name: 'false',  desc: 'false'}]
         };
     }
 
     public static isValueset(attribute: Attribute): boolean {
-        if(attribute.vsEntity) {
+        if (attribute.vsEntity) {
             return true;
         }
         return false;
     }
 
     public static getValueset(attribute: Attribute): Valueset {
-        if(AttributeUtility.isValueset(attribute)) {
+        if (AttributeUtility.isValueset(attribute)) {
             return attribute.valueset;
         }
         return undefined;

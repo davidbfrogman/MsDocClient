@@ -41,7 +41,7 @@ describe('EntityService', () => {
   });
 
   it('should return an Observable<Array<Entitys>> when searching', async(() => {
-    const mockResponse = EntitiesWithAttributes
+    const mockResponse = EntitiesWithAttributes;
 
     mockBackend.connections.subscribe((connection: MockConnection) => {
       connection.mockRespond(new Response(new ResponseOptions({
@@ -56,8 +56,7 @@ describe('EntityService', () => {
         expect(entities.length).toBeGreaterThan(0);
         expect(entities[0].attrs).toBeTruthy();
         expect(entities[0].attrs.attr.length).toBeGreaterThan(0);
-      }),
-      err => console.log(`There was an error getting Entitys:${err}`);
+      });
   }));
 
 });

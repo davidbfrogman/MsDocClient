@@ -4,7 +4,7 @@ import { Http } from '@angular/http';
 import { ConfigurationService } from 'services';
 
 @Injectable()
-export class ConfigurationServiceMock extends ConfigurationService{
+export class ConfigurationServiceMock extends ConfigurationService {
   constructor(protected http: Http) {
     super(http);
   }

@@ -64,9 +64,9 @@ export class SearchResultComponent {
     });
     this.itemsList = newItemList;
   }
-  
+
   private search(): void {
-    if(this.xQuery.length > 0) {
+    if (this.xQuery.length > 0) {
       this.itemService.search(this.xQuery, 0, 10).subscribe((items: Item[]) => { // TODO: How do we get limit from grid and pagination stuff
         this.itemsList = items['item'];
       }, error => {

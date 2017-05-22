@@ -55,7 +55,6 @@ describe('RestUrlBuilder', () => {
     expect(urlBuilt).toEqual(urltoBuild);
   }));
 
-  
   it('should create url with plural url suffix', async(() => {
     const rootApiUrl = environment.restUrls['ca'];
     const builder = new RestUrlBuilder();

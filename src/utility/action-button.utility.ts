@@ -31,7 +31,7 @@ export class ActionButtonUtility {
         // this.saveToIdm,
         // this.print,
         // this.delete,
-        // this.copy 
+        // this.copy
         ];
     } else if (actionView === ActionViewsType.Details) {
       // If button should be visible on Document Details add button here
@@ -46,7 +46,7 @@ export class ActionButtonUtility {
         // this.delete,
         // this.copy,
         // this.refresh,
-        // this.startWorkflow 
+        // this.startWorkflow
         ];
     }
     actionButtons.forEach(button => {

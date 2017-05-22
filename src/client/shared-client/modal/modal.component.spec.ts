@@ -6,7 +6,7 @@ import { InfoEventBus, ErrorEventBus } from 'event-buses';
 describe('DocumentDetailsComponent', () => {
   let fixture: ComponentFixture<ModalComponent>;
   let component: ModalComponent;
-  
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [],

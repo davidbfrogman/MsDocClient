@@ -16,8 +16,8 @@ import { SharedClientModule } from '../client/shared-client/shared-client.module
 import { ConfigurationEventBus, CacheEventBus, ErrorEventBus, InfoEventBus } from 'event-buses';
 import { ConfigurationService, EntityService, ItemService, Locale, TranslationService, UserService, Translator } from 'services';
 import { ConfigurationLoader, TranslationLoader } from './config/config.loader';
-import { PipesModule } from "pipes/pipes.module";
-import { TranslatePipe } from "pipes/translate.pipe";
+import { PipesModule } from 'pipes/pipes.module';
+import { TranslatePipe } from 'pipes/translate.pipe';
 
 @NgModule({
   declarations: [

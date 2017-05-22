@@ -13,7 +13,7 @@ export class Translator {
         return this;
     }
 
-    setCurrentLocale(locale:string) {
+    setCurrentLocale(locale: string) {
         this.currentLocale = locale;
         return this;
     }
@@ -24,14 +24,14 @@ export class Translator {
     }
 
     translate(name: string, ...args:  any[]): string {
-        if(this.translationDictionary) {
+        if (this.translationDictionary) {
             let translation: string = this.translationDictionary[name];
-            if(translation !== undefined) {
-                for(let i: number = 1; i < arguments.length; i++) {
-                    translation = translation.replace('{'+(i-1)+'}', arguments[i]);
+            if (translation !== undefined) {
+                for (let i: number = 1; i < arguments.length; i++) {
+                    translation = translation.replace('{' + (i - 1) + '}', arguments[i]);
                 }
             }
-            if(translation !== undefined) {
+            if (translation !== undefined) {
                 return translation;
             }
         }

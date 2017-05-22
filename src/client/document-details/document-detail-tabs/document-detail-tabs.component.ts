@@ -50,7 +50,7 @@ export class DocumentDetailTabsComponent implements OnInit {
     }
   }
 
-  retrieveVersions(){
+  retrieveVersions() {
     if (this.item.pid) {
       this.itemService.getVersions(this.item.pid).subscribe((itemResult: Item[]) => {
         this.itemVersions = itemResult['item'];
@@ -60,9 +60,9 @@ export class DocumentDetailTabsComponent implements OnInit {
     }
   }
 
-  showVersion(version){
-    this.itemService.getVersion(this.item.pid, version).subscribe((itemResult: Item) =>{
+  showVersion(version) {
+    this.itemService.getVersion(this.item.pid, version).subscribe((itemResult: Item) => {
       this.itemTabsEventBus.openItemTab(itemResult);
-    })
+    });
   }
 }

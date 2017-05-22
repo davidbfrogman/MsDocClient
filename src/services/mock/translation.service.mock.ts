@@ -6,7 +6,7 @@ import { TranslationDictionary } from 'models';
 import { TranslationsDataENUS } from './mock-data/translations-en-us';
 
 @Injectable()
-export class TranslationServiceMock extends TranslationService{
+export class TranslationServiceMock extends TranslationService {
   constructor(protected http: Http) {
     super(http);
   }

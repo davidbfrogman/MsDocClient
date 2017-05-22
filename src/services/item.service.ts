@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { environment } from '../environments/environment';
-import { Constants } from "../constants";
+import { Constants } from '../constants';
 import { CacheEventBus } from 'event-buses';
 import { Item } from 'models';
 import { BaseService, CacheServiceConfigType } from 'services';
@@ -55,11 +55,11 @@ export class ItemService extends BaseService<Item> {
 
   // This is an example of how to cache the result of a searchPost
   // TODO: implement corectly the Items search that POST an object with query options
-  searchPost(query: string, offset: number, limit: number, cacheConfig?: CacheServiceConfigType): Observable<Item[]>{
+  searchPost(query: string, offset: number, limit: number, cacheConfig?: CacheServiceConfigType): Observable<Item[]> {
     const url = this.buildUrl({operation: 'search', query: {'$offset': offset, '$limit': limit}});
     const body = {queries: {query: '$query'}};
     const cachedData: any = this.getCache(url, body, cacheConfig);
-    if(cachedData) {
+    if (cachedData) {
         return Observable.of(cachedData);
     } else {
         return this.http.post(url, body, this.reqOptions).map((res: Response) => {
@@ -71,15 +71,15 @@ export class ItemService extends BaseService<Item> {
     }
   }
 
-  public createItemFromTemplate(item: Item): Observable<Item>{
-    if(!item){
-      throw('Supplied item was undefined. Item should not be null to create from a template item.')
+  public createItemFromTemplate(item: Item): Observable<Item> {
+    if (!item) {
+      throw new Error('Supplied item was undefined. Item should not be null to create from a template item.');
     }
     item.id = null;
      item.pid = null;
      item.version = null;
-     ItemUtility.getAttributeBasedOnName(item,Constants.TEMPLATE_ATTRIBUTE_NAME).value = null;
-     ItemUtility.getAttributeBasedOnName(item,Constants.TEMPLATE_ATTRIBUTE_DESCRIPTION).value = null;
-     return this.create(item);  
+     ItemUtility.getAttributeBasedOnName(item, Constants.TEMPLATE_ATTRIBUTE_NAME).value = null;
+     ItemUtility.getAttributeBasedOnName(item, Constants.TEMPLATE_ATTRIBUTE_DESCRIPTION).value = null;
+     return this.create(item);
   }
 }

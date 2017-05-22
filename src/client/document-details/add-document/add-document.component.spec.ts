@@ -71,7 +71,7 @@ describe('AddDocumentComponent', () => {
   });
 
   it('should open document', () => {
-    let clickEvent = new ClickEvent();
+    const clickEvent = new ClickEvent();
     spyOn(clickEvent, 'preventDefault');
     spyOn(clickEvent, 'stopPropagation');
     spyOn(documentsEventBus, 'closeDocumentModal');

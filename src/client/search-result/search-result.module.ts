@@ -9,7 +9,7 @@ import { DetailListComponent } from './detail-list/detail-list.component';
 import { ThumbnailListComponent } from './thumbnail-list/thumbnail-list.component';
 import { ListViewSelectorComponent } from './list-view-selector/list-view-selector.component';
 import { ViewSelectorEventBus } from 'event-buses';
-import { PipesModule } from "pipes/pipes.module";
+import { PipesModule } from 'pipes/pipes.module';
 
 @NgModule({
   imports: [

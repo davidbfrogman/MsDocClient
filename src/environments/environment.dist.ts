@@ -7,7 +7,7 @@ import { EnvironmentType } from '../enumerations';
 export const environment = {
   production: false,
   environmentType: EnvironmentType.Dev,
-  //TODO: Fill in the correct urls for dev
+  // TODO: Fill in the correct urls for dev
   restUrls: {
     ca: 'https://localhost:25000/ca/api/',
     cc: 'https://localhost:25000/cc/api/',

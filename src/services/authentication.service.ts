@@ -1,6 +1,6 @@
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { environment } from '../environments/environment';
 import { CacheEventBus } from 'event-buses';
@@ -10,7 +10,7 @@ import { BaseService, CacheServiceConfigType } from 'services';
 @Injectable()
 export class AuthenticationService extends BaseService<Property> {
   constructor(protected http: Http) {
-    super(http, Property, { 
+    super(http, Property, {
       rootApiUrl: environment.restUrls.ca,
       urlSuffix: 'connection',
       urlSuffixPlural: 'connection',

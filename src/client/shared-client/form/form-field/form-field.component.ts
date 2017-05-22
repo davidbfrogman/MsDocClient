@@ -1,15 +1,15 @@
-import { 
-  AfterViewInit, 
-  ChangeDetectorRef, 
-  Component, 
-  ElementRef, 
-  EventEmitter, 
-  HostBinding, 
-  OnDestroy, 
-  Input, 
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  OnDestroy,
+  Input,
   Output,
-  OnChanges, 
-  ViewChild 
+  OnChanges,
+  ViewChild
 } from '@angular/core';
 import { SohoDatePickerComponent, SohoTimePickerComponent } from '@infor/sohoxi-angular';
 import { Constants } from '../../../../constants';
@@ -17,7 +17,7 @@ import { FormFieldType, AttributeType, OperationType, SearchStyleType } from 'en
 import { Attribute, Value, Valueset } from 'models';
 import { AttributeUtility } from 'utility';
 import { BaseControlValueAccessor, provideControlValueAccessor } from '../';
-import * as moment from "moment";
+import * as moment from 'moment';
 
 @Component({
   selector: 'idm-form-field',
@@ -38,10 +38,6 @@ export class FormFieldComponent extends BaseControlValueAccessor<any> implements
   @Input() valueset: Valueset;
   @Input() disabled: boolean;
 
-  constructor(private element: ElementRef, private changeDetectionRef: ChangeDetectorRef) {
-    super(changeDetectionRef);
-  }
-
   public dataValidate: string;
   public ariaRequired: string;
   public showReadonly: boolean;
@@ -58,7 +54,11 @@ export class FormFieldComponent extends BaseControlValueAccessor<any> implements
   public SOHO_DATEPICKER_DATETIME_FORMAT: string = Constants.SOHO_DATEPICKER_DATETIME_FORMAT;
   public booleanValueset = AttributeUtility.getBooleanValueset();
 
-  ngOnChanges() { 
+  constructor(private element: ElementRef, private changeDetectionRef: ChangeDetectorRef) {
+    super(changeDetectionRef);
+  }
+
+  ngOnChanges() {
     this.computeFieldType();
   }
 

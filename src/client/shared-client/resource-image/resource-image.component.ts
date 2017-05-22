@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
 import { Item, ResourceData, ResourceImageQueueItem } from 'models';
 import { ResourceService } from 'services';
 import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
@@ -12,7 +12,7 @@ import { SohoBusyIndicatorDirective } from '@infor/sohoxi-angular';
   styleUrls: ['./resource-image.component.scss'],
   providers: [ResourceService]
 })
-export class ResourceImageComponent implements OnInit {
+export class ResourceImageComponent implements OnInit, AfterViewInit {
   @Input() item: Item;
   @Input() type: string;
   @Input() useQueue: boolean = false;
@@ -24,7 +24,7 @@ export class ResourceImageComponent implements OnInit {
   private queueItem: ResourceImageQueueItem;
 
   constructor(
-    private resourceService: ResourceService, 
+    private resourceService: ResourceService,
     private sanitizer: DomSanitizer,
     private errorEventBus: ErrorEventBus,
     private resourceQueueEventBus: ResourceQueueEventBus
@@ -32,19 +32,18 @@ export class ResourceImageComponent implements OnInit {
 
   ngOnInit() {
     if (this.item && this.item.resrs) {
-      if (this.useQueue){
+      if (this.useQueue) {
         this.initSubscriptions();
         this.queueItem = new ResourceImageQueueItem(this.item.pid, this.type);
         this.resourceQueueEventBus.addImage(this.queueItem);
-      }
-      else {
+      } else {
         this.fetch();
       }
     }
   }
 
   ngAfterViewInit() {
-    if(this.item && this.item.resrs) {
+    if (this.item && this.item.resrs) {
       this.busyIndicator.activated = true;
     }
   }
@@ -52,17 +51,14 @@ export class ResourceImageComponent implements OnInit {
   public fetch() {
     this.resourceService.getResourceStream(this.item.pid, this.type)
     .subscribe((resource: ResourceData) => {
-      
       this.setImage(resource);
 
-      if(resource.httpStatus === 200) {
+      if (resource.httpStatus === 200) {
         this.resourceReady();
-      }
-      else {
-        if(this.useQueue){
+      } else {
+        if (this.useQueue) {
           this.resourceQueueEventBus.retryImage(this.queueItem);
-        }
-        else {
+        } else {
           this.retryFetch();
         }
       }
@@ -78,12 +74,12 @@ export class ResourceImageComponent implements OnInit {
 
       this.setImage(resource);
 
-      if(resource.httpStatus === 200 || this.retryCount >= this.retryMax){
+      if (resource.httpStatus === 200 || this.retryCount >= this.retryMax) {
         this.resourceReady();
       }
 
-      if(resource.httpStatus !== 200 && this.retryCount < this.retryMax) {
-        
+      if (resource.httpStatus !== 200 && this.retryCount < this.retryMax) {
+
         // Try again in 3 seconds
         setTimeout(() => {
           this.retryFetch();
@@ -108,7 +104,7 @@ export class ResourceImageComponent implements OnInit {
 
   private resourceReady() {
     this.busyIndicator.activated = false;
-    if(this.useQueue) {
+    if (this.useQueue) {
       this.resourceQueueEventBus.imageCompleted(this.queueItem);
     }
   }

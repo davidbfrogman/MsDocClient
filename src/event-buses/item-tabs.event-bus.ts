@@ -27,22 +27,21 @@ export class ItemTabsEventBus {
             return value.tabId === this.getItemTabId(item);
         });
 
-        if(indexOfExistingTab > -1) {
+        if (indexOfExistingTab > -1) {
             const existingTab = this.openTabs[indexOfExistingTab];
-            if(existingTab.item.version !== item.version) {
+            if (existingTab.item.version !== item.version) {
                 // Another version of the item is already opened, update item
                 existingTab.item = item;
                 existingTab.title = this.getItemTabTitle(item, true);
             }
             this.itemTabOpenedSource.next(existingTab);
-        } 
-        else {
+        } else {
             // Open new item
             const newItemTab = {
                 tabId: this.getItemTabId(item),
                 title: this.getItemTabTitle(item, true),
                 item: item
-            }
+            };
             this.openTabs.push(newItemTab);
             this.itemTabOpenedSource.next(newItemTab);
         }
@@ -58,7 +57,7 @@ export class ItemTabsEventBus {
             tabId: this.getItemTabId(item, true),
             title: this.getItemTabTitle(item, true),
             item: item
-        }
+        };
         this.openTabs.push(newItemTab);
         this.itemTabOpenedSource.next(newItemTab);
     }

@@ -39,8 +39,8 @@ export const EntityData = {
   versioning: 'true',
   acls: {
     acl: [
-      { name: "Public" }, 
-      { name: "Private" }
+      { name: 'Public' },
+      { name: 'Private' }
     ]
   },
   attrs: {

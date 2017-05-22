@@ -49,5 +49,4 @@ describe('DocumentDetailTabsComponent', () => {
       expect(component.item.acl.name).toEqual(option.nativeElement.textContent);
     });
   });
-
 });

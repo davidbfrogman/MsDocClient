@@ -17,7 +17,7 @@ import { ClientComponent } from './client.component';
 import { ServiceUtilityComponent } from '../client/service-utility/service-utility.component';
 import { ModalComponent } from './shared-client/modal/modal.component';
 import { XQueryEventBus, ItemTabsEventBus, ActionEventBus, SelectedItemsEventBus, DocumentsEventBus } from 'event-buses';
-import { PipesModule } from "pipes/pipes.module";
+import { PipesModule } from 'pipes/pipes.module';
 @NgModule({
   declarations: [
     ClientComponent,

@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
 import { SearchStyleType, AttributeType, OperationType } from 'enumerations';
 import { SearchOperationFactory } from '../search-operation-factory';
-import * as moment from "moment";
+import * as moment from 'moment';
 import { SohoDatePickerComponent, SohoDropDownComponent, SohoTimePickerComponent } from '@infor/sohoxi-angular';
 import { Constants } from '../../../constants';
 import { ErrorEventBus, SearchStackEventBus, XQueryEventBus } from 'event-buses';
@@ -34,9 +34,9 @@ export class AttributeSearchComponent implements OnInit {
   public selectedAttributeEmpty: Attribute = this.buildDefaultAttribute();
   public selectedOperation: Operation;
   public searchUserFormControl = new FormControl();
-  public userSearchDebounceTiming = 400; //A value in milliseconds to wait before executing a user search from a user typing.
+  public userSearchDebounceTiming = 400; // A value in milliseconds to wait before executing a user search from a user typing.
 
-  // We basically stop the searching whenever someone selects a user for one 'cycle'.  
+  // We basically stop the searching whenever someone selects a user for one 'cycle'.
   // We just turn it off, to skip the searching, and then turn it back on.
   public isUserSearchingActive = true;
 
@@ -66,7 +66,7 @@ export class AttributeSearchComponent implements OnInit {
   }
 
   public populateEntitiesList() {
-    //When this control starts, go get the entities.
+    // When this control starts, go get the entities.
     this.entityService.getList<Entity>().subscribe(entities => {
       this.entityList = entities;
     }, error => {
@@ -100,8 +100,7 @@ export class AttributeSearchComponent implements OnInit {
       }, error => {
         this.errorEventBus.throw(error);
       });
-    }
-    else {
+    } else {
       // We turn searching back on, so the user can delete the text in the box, and searching will work again.
       this.isUserSearchingActive = true;
     }
@@ -117,7 +116,7 @@ export class AttributeSearchComponent implements OnInit {
 
       if (searchStack.operation) {
         this.selectedOperation = this.operatorList.find((operator) => {
-          return operator.operationType == searchStack.operation.operationType;
+          return operator.operationType === searchStack.operation.operationType;
         });
       }
       this.freeTextSearch = searchStack.freeTextSearchOperand;
@@ -140,7 +139,7 @@ export class AttributeSearchComponent implements OnInit {
       entity: this.selectedEntity,
       attribute: this.selectedAttribute,
       operation: this.selectedOperation,
-      operand: this.getOperand(), //this will get the value out of dropdown/textbox/datepicker for us
+      operand: this.getOperand(), // this will get the value out of dropdown/textbox/datepicker for us
       freeTextSearchOperand: this.freeTextSearch,
       searchStacks: this.searchStackEventBus.searchStacks,
     }).build();
@@ -148,7 +147,7 @@ export class AttributeSearchComponent implements OnInit {
   }
 
   public onClickSaveStack() {
-    let stackToSave = this.getSearchStackFromUI();
+    const stackToSave = this.getSearchStackFromUI();
     stackToSave.id = this.currentSearchStack.id;
 
     this.searchStackEventBus.saveSearchStack(stackToSave);
@@ -183,7 +182,7 @@ export class AttributeSearchComponent implements OnInit {
   public onSelectedEntityChanged(entity?: Entity) {
     this.resetAttributeControlls();
     if (entity && entity.attrs) {
-      //Here we need to load the attr list from the entity, and populate the attribute drop down list
+      // Here we need to load the attr list from the entity, and populate the attribute drop down list
       this.attributeList = EntityUtility.BuildComprehensiveAttributes(entity).comprehensiveAttributes;
       this.attributeList.forEach(attribute => {
         if (attribute.isDefault) {

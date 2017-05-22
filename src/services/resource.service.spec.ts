@@ -16,10 +16,10 @@ describe('ResourceService', () => {
         MockBackend,
         BaseRequestOptions,
         CacheEventBus,
-        { 
+        {
           provide: Http,
           useFactory: (backend, options) => new Http(backend, options),
-          deps: [MockBackend, BaseRequestOptions] 
+          deps: [MockBackend, BaseRequestOptions]
         }
       ]
     });
@@ -33,7 +33,7 @@ describe('ResourceService', () => {
     inject([ResourceService, MockBackend], (service: ResourceService, mockBackend: MockBackend) => {
 
       mockBackend.connections.subscribe((connection: MockConnection) => {
-        connection.mockRespond(ResourceResponse)
+        connection.mockRespond(ResourceResponse);
       });
 
       service
@@ -44,8 +44,7 @@ describe('ResourceService', () => {
           expect(resourceData.mimeType).toBe('image/png');
           expect(resourceData.data).toBeDefined();
           expect(resourceData.httpStatus).toBe(200);
-        }),
-        err => console.log(`There was an error getting resourceData: ${err}`);
+        });
     })
   ));
 

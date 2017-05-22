@@ -31,7 +31,7 @@ export class SelectedItemsEventBus {
             this.selectedItemsSource.next(this.selectedItems);
         }
     }
-    
+
     updateSelectedItem(updatedItemItem: Item) {
         const newSelectedItems: Item[] = new Array<Item>();
         this.selectedItems.forEach(item => {

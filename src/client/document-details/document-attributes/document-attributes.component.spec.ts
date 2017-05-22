@@ -43,5 +43,4 @@ describe('DocumentAttributesComponent', () => {
     });
     expect(component.attributeVisible(component.attributes[0])).toBeTruthy();
   });
-
 });

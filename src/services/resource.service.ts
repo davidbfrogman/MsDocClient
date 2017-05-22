@@ -28,7 +28,7 @@ export class ResourceService extends BaseService<ResourceData> {
         withCredentials: true
     });
     const url = this.buildUrl({id: pid, operation: `resource/${conversion}/stream`});
-    
+
     return this.http
         .get(url, reqOptions)
         .map((res: Response) => {
@@ -39,8 +39,8 @@ export class ResourceService extends BaseService<ResourceData> {
 
   /**
    * Overriding to handle arrayBuffer response
-   * 
-   * @param errorResponse 
+   *
+   * @param errorResponse
    */
   protected handleError(errorResponse: Response | any) {
       // TODO: Implement Real Logging infrastructure.
@@ -49,18 +49,17 @@ export class ResourceService extends BaseService<ResourceData> {
       if (errorResponse instanceof Response) {
           const body = errorResponse.arrayBuffer();
           const text = String.fromCharCode.apply(null, new Uint8Array(body));
-          const xml = new DOMParser().parseFromString(text, "text/xml");
-          
-          if (xml.getElementsByTagName("message")[0] && xml.getElementsByTagName("detail")[0]) {
-            appError.message = xml.getElementsByTagName("message")[0].firstChild.nodeValue;
-            appError.description =  xml.getElementsByTagName("detail")[0].firstChild.nodeValue;
-          }
-          else if (errorResponse.status === 0) {
+          const xml = new DOMParser().parseFromString(text, 'text/xml');
+
+          if (xml.getElementsByTagName('message')[0] && xml.getElementsByTagName('detail')[0]) {
+            appError.message = xml.getElementsByTagName('message')[0].firstChild.nodeValue;
+            appError.description =  xml.getElementsByTagName('detail')[0].firstChild.nodeValue;
+          } else if (errorResponse.status === 0) {
               appError.message = `API call failed`;
           }  else {
               appError.message = `${errorResponse.status} - ${errorResponse.statusText || ''}`;
           }
-          
+
           appError.statusCode = errorResponse.status;
           appError.statusText = errorResponse.statusText;
           return Observable.throw(appError);

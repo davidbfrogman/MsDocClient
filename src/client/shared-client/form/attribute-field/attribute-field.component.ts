@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, OnChanges } fr
 import { Attribute, Valueset } from 'models';
 import { AttributeUtility } from 'utility';
 import { BaseControlValueAccessor, provideControlValueAccessor } from '../';
-import * as moment from "moment";
+import * as moment from 'moment';
 
 @Component({
   selector: 'idm-attribute-field',

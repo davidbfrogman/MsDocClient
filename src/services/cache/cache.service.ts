@@ -6,7 +6,7 @@ import {StorageValueInterface} from './storage-value.interface';
 
 @Injectable()
 export class CacheService {
-    
+
     /**
      * Default cache options
      * @type CacheServiceConfigType
@@ -38,7 +38,7 @@ export class CacheService {
      * @param options
      */
     public set(key: string, value: any, options?: CacheServiceConfigType) {
-        let storageKey = this.toStorageKey(key);
+        const storageKey = this.toStorageKey(key);
         options = options ? options : this.defaultOptions;
         if (this.storage.setItem(storageKey, this.toStorageValue(value, options))) {
             if (!this.isSystemKey(key) && options.tag) {
@@ -56,8 +56,8 @@ export class CacheService {
      * @returns {any}
      */
     public get(key: string): any {
-        let storageValue = this.storage.getItem(this.toStorageKey(key)),
-            value: any = null;
+        const storageValue = this.storage.getItem(this.toStorageKey(key));
+        let value: any = null;
         if (storageValue) {
             if (this.validateStorageValue(storageValue)) {
                 value = storageValue.value;
@@ -99,11 +99,11 @@ export class CacheService {
      * @returns {Array}
      */
     public getTagData(tag: string) {
-        let tags = this.get(this.tagsStorageKey()) || {},
-            result : {[key: string]: any} = {};
+        const tags = this.get(this.tagsStorageKey()) || {},
+            result: {[key: string]: any} = {};
         if (tags[tag]) {
             tags[tag].forEach((key: string) => {
-                let data = this.get(this.fromStorageKey(key));
+                const data = this.get(this.fromStorageKey(key));
                 if (data) {
                     result[this.fromStorageKey(key)] = data;
                 }
@@ -117,7 +117,7 @@ export class CacheService {
      * @param tag
      */
     public removeTag(tag: string) {
-        let tags = this.get(this.tagsStorageKey()) || {};
+        const tags = this.get(this.tagsStorageKey()) || {};
         if (tags[tag]) {
             tags[tag].forEach((key: string) => {
                 this.storage.removeItem(key);
@@ -133,9 +133,9 @@ export class CacheService {
      * @private
      */
     private removeFromTag(key: string) {
-        let tags = this.get(this.tagsStorageKey()) || {},
-            index: number;
-        for (let tag in tags) {
+        const tags = this.get(this.tagsStorageKey()) || {};
+        let index: number;
+        for (const tag in tags) {
             index = tags[tag].indexOf(key);
             if (index !== -1) {
                 tags[tag].splice(index, 1);
@@ -174,7 +174,7 @@ export class CacheService {
      * @private
      */
     private toStorageOptions(options: CacheServiceConfigType): CacheServiceConfigType {
-        var storageOptions: CacheServiceConfigType = {};
+        const storageOptions: CacheServiceConfigType = {};
         storageOptions.expires = options.expires ? options.expires :
             (options.maxAge ? Date.now() + (options.maxAge) : this.defaultOptions.expires);
         storageOptions.maxAge = options.maxAge ? options.maxAge : this.defaultOptions.maxAge;
@@ -208,7 +208,7 @@ export class CacheService {
      * @private
      */
     private saveTag(tag: string, key: string) {
-        let tags = this.get(this.tagsStorageKey()) || {};
+        const tags = this.get(this.tagsStorageKey()) || {};
         if (!tags[tag]) {
             tags[tag] = [key];
         } else {

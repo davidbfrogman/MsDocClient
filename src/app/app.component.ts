@@ -1,14 +1,14 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { environment } from '../environments/environment'
-import { ConfigurationEventBus, CacheEventBus, InfoEventBus }  from 'event-buses';
+import { environment } from '../environments/environment';
+import { ConfigurationEventBus, CacheEventBus, InfoEventBus } from 'event-buses';
 import { AppInfoModal, AppInfoAction, Property } from 'models';
 import { ConfigurationService, Translator } from 'services';
 
 @Component({
   selector: 'idm-root',
-  templateUrl: './app.component.html',  
+  templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit  {
 
@@ -44,22 +44,22 @@ export class AppComponent implements OnInit  {
   protected subscribeToConfigurationChangedEvent() {
     this.configurationEventBus.configurationChangedEvent$.subscribe((configurationEvent) => {
       this.cacheEventBus.removeAll();
-      if(configurationEvent.counter > 1) {
+      if (configurationEvent.counter > 1) {
         this.openConfigurationChangedInfoModal();
       }
     });
   }
 
   openConfigurationChangedInfoModal() {
-    let info = new AppInfoModal();
-    let alertAction = new AppInfoAction();
+    const info = new AppInfoModal();
+    const alertAction = new AppInfoAction();
 
     info.title = 'Configuration changed';
     info.message = 'Application configuration changed.';
-    alertAction.text = "Reload application";
+    alertAction.text = 'Reload application';
     alertAction.run = () => location.reload();
     info.actions = [alertAction];
-    
+
     this.infoEventBus.throwModal(info);
   }
 }

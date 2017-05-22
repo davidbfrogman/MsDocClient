@@ -22,7 +22,8 @@ export class Attribute {
     isAttributeTypeMapped?: boolean;
     isMultiValue?: boolean;
     isUserForSearching?: boolean;
-    //used to check if this attribute is build as a default attribute
+
+    // used to check if this attribute is build as a default attribute
     isDefault?: boolean;
 }
 

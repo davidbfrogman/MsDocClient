@@ -16,6 +16,6 @@ export { ResourceData } from './resource-data';
 export { AttributeCollection } from './attributes-collection';
 export { IAttributable } from './interfaces/IAttributable';
 export { Action } from './action';
-export { Configuration } from "./configuration";
+export { Configuration } from './configuration';
 export { ResourceImageQueueItem } from './resource-image-queue-item';
-export { TranslationDictionary } from "./translation-dictionary";
+export { TranslationDictionary } from './translation-dictionary';

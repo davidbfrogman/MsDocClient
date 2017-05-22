@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  ViewChild, 
+  ViewChild,
 } from '@angular/core';
 import {
   SohoBusyIndicatorDirective,
@@ -13,7 +13,7 @@ import { Subject } from 'rxjs/Rx';
 import { DropdownItem } from './dropdown-item.interface';
 
 @Component({
-  selector: 'dropdown-async',
+  selector: 'idm-dropdown-async',
   templateUrl: './dropdown-async.component.html'
 })
 export class DropdownAsyncComponent implements AfterViewInit {
@@ -24,7 +24,7 @@ export class DropdownAsyncComponent implements AfterViewInit {
   private _id: string;
   private dropdownItemsData: DropdownItem[];
   private dropdownRendered: boolean;
-  
+
   public dropdownItemsSource: Subject<DropdownItem[]> = new Subject<DropdownItem[]>();
   public name: string;
 

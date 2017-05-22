@@ -12,7 +12,7 @@ export class Constants {
     public static SOHO_DATEPICKER_DATETIME_FORMAT: string = 'yyyy-MM-dd HH:mm:ss';
     public static MOMENT_FORM_DATETIME_FORMAT: string = 'YYYY-MM-DD HH:mm:ss';
     public static MOMENT_API_DATETIME_FORMAT: string = 'YYYY-MM-DD[T]HH:mm:ss[Z]';
-    
+
     public static SEARCH_INITIAL_XQUERY: string = '/MDS_GenericDocument';
     public static SEARCH_QUERY_CHECKOUT_BY_ME = '/MDS_File';
     public static SEARCH_QUERY_CREATED_BY_ME = '/MDS_GenericDocument';
@@ -161,8 +161,8 @@ export class TranslationConstants {
     public static BUTTON_CARDS: string = 'MenuCard';
     public static ENTITY_NAME: string = 'EntityName';
     public static CREATED_BY: string = 'CreatedBy';
-    public static CREATED_TIMESTAMP: string = 'CreatedTS'
-    public static LAST_CHANGED_TIMESTAMP: string = 'LastChangedTS'
+    public static CREATED_TIMESTAMP: string = 'CreatedTS';
+    public static LAST_CHANGED_TIMESTAMP: string = 'LastChangedTS';
     public static CHECKED_OUT_BY: string = 'CheckedOutBy';
     public static NO_NAME: string = 'NoName';
     public static DISPLAY: string = 'Display';
@@ -179,11 +179,11 @@ export class TranslationConstants {
     public static END: string = 'End';
     public static SELECT_ALL: string = 'SelectAll';
     public static SELECT_A_DOCUMENT_TYPE = 'SelectADocType';
-    public static DOWNLOAD_PDF: string = 'DownloadPdf'
+    public static DOWNLOAD_PDF: string = 'DownloadPdf';
     public static PRINT: string = 'Print';
-    public static SAVE_TO_IDM: string = 'SaveToIdm'
+    public static SAVE_TO_IDM: string = 'SaveToIdm';
 
-    //Tabs
+    // Tabs
     public static CLOSE: string = 'MenuItemClose';
     public static MORE: string = 'More';
     public static CHANGES_IN_CC_MESSAGE: string = 'ChangesInCCMessage';
@@ -206,17 +206,17 @@ export class TranslationConstants {
     public static UNKNOWN_ERROR: string = 'AnnotationsError';
     public static NO_DOCUMENT_TYPES_COULD_BE_ADDED: string = 'NoDocumentTypesCouldBeAdded';
 
-    //Workflow
+    // Workflow
     public static WORKFLOW_START_NAME: string = 'WorkflowStartName';
     public static WORKFLOW_STARTED_TITLE: string = 'WorkflowStartedTitle';
     public static WORKFLOW_STARTED_DETAIL: string = 'WorkflowStartedDetail';
     public static WORKFLOW_SELECT_TITLE: string = 'WorkflowSelectTitle';
 
-    //Add new document
+    // Add new document
     public static BLANK_DOCUMENT: string = 'BlankDocument';
     public static CREATE_BLANK_DOCUMENT: string = 'CreateBlankDocument';
     public static CREATE_DOCUMENT: string = 'CreateDocument';
 
-    //Error message
+    // Error message
     public static ERROR_RETRIEVE_ITEM: string = 'ErrorApiRetrieveItem';
 }

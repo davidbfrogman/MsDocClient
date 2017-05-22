@@ -1,11 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
-import { environment } from "environments/environment";
-import { EnvironmentType } from "enumerations";
+import { environment } from 'environments/environment';
+import { EnvironmentType } from 'enumerations';
 import { ErrorEventBus, DocumentsEventBus, ConfigurationEventBus } from 'event-buses';
 import { Attribute, Entity, Item, Acl, AttributeCollection } from 'models';
 import { EntityService, ItemService } from 'services';
-import { AttributeUtility, EntityUtility, ItemUtility } from "utility";
+import { AttributeUtility, EntityUtility, ItemUtility } from 'utility';
 import { Constants } from '../../../constants';
 
 @Component({
@@ -21,8 +21,8 @@ export class AddDocumentComponent implements OnInit {
   public isSaveEnabled: boolean;
 
   constructor(
-    public entityService: EntityService, 
-    public itemService: ItemService, 
+    public entityService: EntityService,
+    public itemService: ItemService,
     public errorEventBus: ErrorEventBus,
     private documentsEventBus: DocumentsEventBus,
     private configuration: ConfigurationEventBus
@@ -55,7 +55,7 @@ export class AddDocumentComponent implements OnInit {
           if (items && items.length > 0) {
             this.templateList = this.templateList.concat(items);
           }
-        }, 
+        },
         error => {
           this.errorEventBus.throw(error);
         });
@@ -64,13 +64,13 @@ export class AddDocumentComponent implements OnInit {
   }
 
   private buildBlankTemplate(entity: Entity): void {
-    let blankTemplate = new Item();
+    const blankTemplate = new Item();
     blankTemplate.acl = new Acl();
     blankTemplate.acl.name = entity.defaultAcl;
     blankTemplate.entityName = entity.name;
-    blankTemplate.templateName = "Blank";
-    blankTemplate.displayName = "[New Document]";
-    blankTemplate.templateDescription = "Create a blank document of the selected document type.";
+    blankTemplate.templateName = 'Blank';
+    blankTemplate.displayName = '[New Document]';
+    blankTemplate.templateDescription = 'Create a blank document of the selected document type.';
     blankTemplate.templateThumbnail = 'assets/images/defaultBlankDocumentThumbnail.png';
     blankTemplate.checkedOutBy = this.configuration.getConfiguration(Constants.PROP_CONNECTION_USERNAME);
     blankTemplate.attrs = new AttributeCollection();

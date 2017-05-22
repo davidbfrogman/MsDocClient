@@ -8,7 +8,7 @@ import { ResourceImageComponent } from './resource-image/resource-image.componen
 import { IdmIconsComponent } from './idm-icons.component';
 import { FormFieldComponent  } from './form/form-field/form-field.component';
 import { AttributeFieldComponent  } from './form/attribute-field/attribute-field.component';
-import { PipesModule } from "pipes/pipes.module";
+import { PipesModule } from 'pipes/pipes.module';
 
 @NgModule({
   imports: [

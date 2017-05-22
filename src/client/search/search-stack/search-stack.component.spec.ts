@@ -25,7 +25,7 @@ describe('SearchStackComponent', () => {
     searchStackEventBus = fixture.debugElement.injector.get(SearchStackEventBus);
 
     mockEntityService.getList().subscribe((entities: Entity[]) => {
-      //Build a search stack to use for testing
+      // Build a search stack to use for testing
       searchStackForTesting = new SearchStack(
         entities[0], entities[0].attrs.attr[0],
         new SearchOperationFactory().findOperationByType(OperationType.EqualTo),

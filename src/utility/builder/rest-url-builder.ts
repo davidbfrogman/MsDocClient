@@ -81,7 +81,7 @@ export class RestUrlBuilder {
         if (this.rootApiUrl.lastIndexOf('/') !== this.rootApiUrl.length - 1) {
              urlParts.push('/');
         }
-        if(this.urlPrefix !== null){
+        if (this.urlPrefix !== null) {
             urlParts.push(this.urlPrefix);
             urlParts.push('/');
         }
@@ -154,13 +154,13 @@ export class RestUrlBuilder {
     };
 }
 
-export declare type RestUrlConfigType = {
-    rootApiUrl?: string,
-    urlSuffix?: string,
-    urlSuffixPlural?: string,
-    urlPrefix?: string,
-    usePlural?: boolean,
-    id?: string,
-    operation?: string,
-    query?: Object
+export interface RestUrlConfigType {
+    rootApiUrl?: string;
+    urlSuffix?: string;
+    urlSuffixPlural?: string;
+    urlPrefix?: string;
+    usePlural?: boolean;
+    id?: string;
+    operation?: string;
+    query?: Object;
 };

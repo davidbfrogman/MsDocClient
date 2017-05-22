@@ -1,6 +1,6 @@
 import {} from 'jasmine';
 import { TestBed, async, inject } from '@angular/core/testing';
-import { Translator } from 'services'
+import { Translator } from 'services';
 import { TranslationDictionaryData } from 'services/mock';
 import { Constants, TranslationConstants } from '../../constants';
 

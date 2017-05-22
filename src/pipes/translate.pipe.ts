@@ -8,13 +8,15 @@ import { TranslationConstants } from '../constants';
 })
 
 export class TranslatePipe implements PipeTransform {
-	public constants = TranslationConstants;
-	
-	constructor(private translation: Translator) { }
+    public constants = TranslationConstants;
 
-	public transform(value: string, args?: string | string[]): any {
-		if (!value) return '';
-		
-		return this.translation.translate(value, args);
-	}
+    constructor(private translation: Translator) { }
+
+    public transform(value: string, args?: string | string[]): any {
+        if (!value) {
+            return '';
+        }
+
+        return this.translation.translate(value, args);
+    }
 }

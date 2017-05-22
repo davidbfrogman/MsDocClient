@@ -4,7 +4,7 @@ import { InfoEventBus, ErrorEventBus } from 'event-buses';
 import { AppInfoModal, AppInfoAction, AppError } from 'models';
 
 class AppInfoActionClickable extends AppInfoAction {
- public click: (message, modal) => void; 
+ public click: (message, modal) => void;
 }
 
 @Component({
@@ -40,9 +40,9 @@ export class ModalComponent implements OnInit {
     } else {
       actions = [this.defaultButton];
     }
-    
+
     actions.forEach((action) => {
-      let button = <AppInfoActionClickable>action;
+      const button = <AppInfoActionClickable>action;
       button.click = (message, modal) => {
         if (button.run) {
           button.run();

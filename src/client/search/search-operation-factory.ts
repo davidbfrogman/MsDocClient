@@ -3,14 +3,14 @@ import { Attribute,  Operation } from 'models';
 import { AttributeUtility } from 'utility';
 
 
-//TODO: The Text in these operation's needs to be translated.
+// TODO: The Text in these operation's needs to be translated.
 export class SearchOperationFactory {
 
   public getOperations(attribute: Attribute): Array<Operation> {
     attribute = AttributeUtility.mapAttributeTypeEnumeration(attribute);
-    let searchOperations = new Array<Operation>();
+    const searchOperations = new Array<Operation>();
 
-    if(AttributeUtility.isValueset(attribute)) {
+    if (AttributeUtility.isValueset(attribute)) {
       searchOperations.push(
           this.findOperationByType(OperationType.EqualTo),
           this.findOperationByType(OperationType.NotEqual),
@@ -65,7 +65,7 @@ export class SearchOperationFactory {
 
   public findOperationByType(operationType: OperationType): Operation {
     return Operation.standardSearchOperations.find((operation: Operation) => {
-      return operation.operationType == operationType;
+      return operation.operationType === operationType;
     });
   }
 }

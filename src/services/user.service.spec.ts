@@ -1,12 +1,12 @@
 import { } from 'jasmine';
-import { HttpModule, Http, BaseRequestOptions, XHRBackend, Response, ResponseOptions, RequestMethod } from "@angular/http";
+import { HttpModule, Http, BaseRequestOptions, XHRBackend, Response, ResponseOptions, RequestMethod } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { Observable } from 'rxjs/Observable';
 import { TestBed, async, inject, fakeAsync } from '@angular/core/testing';
 import { environment } from '../environments/environment';
 import { UsersWithEmails } from './mock/mock-data/users-with-emails.data';
 import 'rxjs/add/operator/map';
-import { UserService } from "services";
+import { UserService } from 'services';
 import { CacheEventBus } from 'event-buses';
 
 describe('UserService', () => {
@@ -39,7 +39,7 @@ describe('UserService', () => {
 
   it('should return an Observable<Array<Users>> when searching', async(
     inject([UserService, MockBackend], (service: UserService, mockBackend: MockBackend) => {
-      const mockResponse = UsersWithEmails
+      const mockResponse = UsersWithEmails;
 
       mockBackend.connections.subscribe((connection: MockConnection) => {
         connection.mockRespond(new Response(new ResponseOptions({
@@ -49,12 +49,11 @@ describe('UserService', () => {
       });
 
       service
-        .search("dbrown", 20)
+        .search('dbrown', 20)
         .subscribe((users) => {
           expect(users).toBeTruthy();
           expect(users.length).toBeGreaterThan(0);
-        }),
-        err => console.log(`There was an error getting users:${err}`);
+        });
     })));
 });
 

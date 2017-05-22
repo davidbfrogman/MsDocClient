@@ -38,8 +38,8 @@ export class SearchStackEventBus {
     }
 
     saveSearchStack(searchStack: SearchStack) {
-        let indexToReplace = this.searchStacks.findIndex((searchStackFind) => {
-            return searchStackFind.id == searchStack.id;
+        const indexToReplace = this.searchStacks.findIndex((searchStackFind) => {
+            return searchStackFind.id === searchStack.id;
         });
         this.searchStacks[indexToReplace] = searchStack;
         this.searchStackSavedSource.next(searchStack);

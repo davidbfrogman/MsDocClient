@@ -1,5 +1,5 @@
-import { Attribute } from "models";
+import { Attribute } from 'models';
 
 export class AttributeCollection {
-	public attr: Attribute[];	
+    public attr: Attribute[];
 }

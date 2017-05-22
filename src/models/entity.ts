@@ -1,6 +1,6 @@
 import { Attribute, BaseModel, IAttributable, AttributeCollection } from 'models';
 import { AttributeType } from 'enumerations';
-import { Constants } from "../constants";
+import { Constants } from '../constants';
 import { AttributeUtility } from 'utility';
 import { Acls } from './acls';
 
@@ -15,7 +15,10 @@ export class Entity extends BaseModel implements IAttributable {
     public title: string;
     public id: string;
     public versioning: string;
-    public templateEnabled: string; //Keep in mind this property doesn't get set on entity retrieval.  Only on entity creation.
+
+    // Keep in mind this property doesn't get set on entity retrieval.
+    // Only on entity creation.
+    public templateEnabled: string;
     public caseSensitive: string;
     public externalIdEnabled: string;
     public localization?: any;
@@ -31,9 +34,15 @@ export class Entity extends BaseModel implements IAttributable {
     public acls: Acls;
     public entities: Entity;
     public entity: Entity[];
-    public multiValueAttributes: Attribute[];  //A list of multivalue attributes that is built by entity utility
-    public comprehensiveAttributes: Attribute[];  //A comprehnsive list of attributes( MultiValue + Regular ), that must be built by Entity Utility.
-    public defaultAttributes: Attribute[]; //This is the list of default attributes, like createdBy, Size, etc
+
+    // A list of multivalue attributes that is built by entity utility
+    public multiValueAttributes: Attribute[];
+
+    // A comprehnsive list of attributes( MultiValue + Regular ), that must be built by Entity Utility.
+    public comprehensiveAttributes: Attribute[];
+
+    // This is the list of default attributes, like createdBy, Size, etc
+    public defaultAttributes: Attribute[];
     public isMultiValueAttrBuilt: boolean;
     public isComprehensiveAttrBuilt: boolean;
     public isDefaultAttrBuilt: boolean;

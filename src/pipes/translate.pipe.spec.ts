@@ -1,10 +1,9 @@
 import { TestBed, ComponentFixture, async } from '@angular/core/testing';
-import { TestingModule } from "testing";
-import { TranslatePipe } from "pipes/translate.pipe";
-import { inject } from "@angular/core/testing";
+import { TestingModule } from 'testing';
+import { TranslatePipe } from 'pipes/translate.pipe';
+import { inject } from '@angular/core/testing';
 
 describe('Translate Pipe', () => {
-    let fixture: ComponentFixture<TranslatePipe>;
     let pipe: TranslatePipe;
 
     beforeAll(() => {
@@ -31,5 +30,4 @@ describe('Translate Pipe', () => {
         const translated: string = pipe.transform(key);
         expect(translated).toEqual('Loading ...');
     });
-
 });

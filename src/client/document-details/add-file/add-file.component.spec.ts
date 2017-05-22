@@ -37,5 +37,4 @@ describe('AddFileComponent', () => {
     expect(component.size).toEqual(testItem.resrs.res[0].size);
     expect(component.mimetype).toEqual(testItem.resrs.res[0].mimetype);
   });
-  
 });

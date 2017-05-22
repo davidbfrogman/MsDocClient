@@ -14,7 +14,7 @@ export class UserServiceMock extends UserService {
     super(http, cacheEventBus);
   }
 
-  search():  Observable<Array<any>>{
+  search():  Observable<Array<any>> {
     return Observable.of(UserUtility.BuildUsersFromResponse(UsersWithEmails));
   }
 }

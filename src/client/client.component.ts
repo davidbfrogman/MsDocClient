@@ -1,9 +1,9 @@
-import { 
-  Component, 
-  OnInit, 
-  ViewChild, 
-  ChangeDetectorRef, 
-  ViewContainerRef, 
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  ViewContainerRef,
   Input
 } from '@angular/core';
 import { SohoTabsComponent, SohoModalDialogService } from '@infor/sohoxi-angular';
@@ -31,7 +31,7 @@ export class ClientComponent {
 
   constructor(
     private xQueryEventBus: XQueryEventBus,
-    private changeDetectorRef: ChangeDetectorRef, 
+    private changeDetectorRef: ChangeDetectorRef,
     private itemTabsEventBus: ItemTabsEventBus,
     private documentsEventBus: DocumentsEventBus,
     private modalService: SohoModalDialogService,
@@ -67,16 +67,14 @@ export class ClientComponent {
     this.xQueryEventBus.initxQuery();
   }
 
-  onTabActivated(tab) {
-    
-  }
+  onTabActivated(tab) { }
 
   selectTab(id: string) {
     this.tabsComponent.select(id);
   }
 
   onTabClose(tab: any) {
-    let tabId = tab.tab.children.item("a").getAttribute("ng-reflect-tab-id");
+    const tabId = tab.tab.children.item('a').getAttribute('ng-reflect-tab-id');
     this.itemTabsEventBus.closeItemTab(tabId);
   }
 
@@ -84,16 +82,16 @@ export class ClientComponent {
     let dialogComponent: AddDocumentComponent;
     this.dialogRef = this.modalService
       .modal<AddDocumentComponent>(
-        AddDocumentComponent, 
+        AddDocumentComponent,
         this.addDocumentDialogPlaceholder
       )
       .buttons([
         {
-          text: 'Cancel', 
+          text: 'Cancel',
           click: (e, modal) => {
-            modal.isCancelled = true; 
+            modal.isCancelled = true;
             this.dialogRef.close();
-          } 
+          }
         },
         {
           text: 'Create',
@@ -112,10 +110,5 @@ export class ClientComponent {
         dialogComponent = component;
       })
       .open();
-
-    // Attach a listener to the afterClose event, which also gives you the result - if available.
-    this.dialogRef.afterClose((result, ref, dialogComponent) => {
-      // TODO: add cleanup routine, if required
-    });
   }
 }

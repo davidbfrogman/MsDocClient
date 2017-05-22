@@ -1,6 +1,6 @@
 import { BaseModel } from './';
 
 export class Property extends BaseModel  {
-	name: string;
+    name: string;
     value: string;
 }

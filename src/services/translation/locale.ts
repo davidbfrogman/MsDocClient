@@ -1,5 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
-import { URLSearchParams } from "@angular/http";
+import { URLSearchParams } from '@angular/http';
 import { Constants } from '../../constants';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class Locale {
 
     public detectLocale(urlSearchParams: URLSearchParams): string {
         let locale: string;
-        
+
         locale = this.getMingleLocale(urlSearchParams);
 
         if (!this.isValid(locale)) {
@@ -32,19 +32,19 @@ export class Locale {
     }
 
     private getMingleLocale(urlSearchParams: URLSearchParams): string {
-        let locale: string = urlSearchParams.get('inforCurrentLanguage');
+        const locale: string = urlSearchParams.get('inforCurrentLanguage');
         return locale;
     }
 
     private getIdmLocale(urlSearchParams: URLSearchParams): string {
-        let locale: string = urlSearchParams.get('$language') || urlSearchParams.get('%24language');
+        const locale: string = urlSearchParams.get('$language') || urlSearchParams.get('%24language');
         return locale;
     }
 
-    private getNavigatorLocale(){
-        let languages = (<any>navigator).languages;
-        let userLanguage = (<any>navigator).userLanguage;
-        let locale: string = languages ? languages[0] : (navigator.language || userLanguage);
+    private getNavigatorLocale() {
+        const languages = (<any>navigator).languages;
+        const userLanguage = (<any>navigator).userLanguage;
+        const locale: string = languages ? languages[0] : (navigator.language || userLanguage);
         return locale;
     }
 

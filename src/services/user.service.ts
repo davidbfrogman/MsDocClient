@@ -1,6 +1,6 @@
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { environment } from '../environments/environment';
 import { CacheEventBus } from 'event-buses';
@@ -11,9 +11,9 @@ import { UserUtility } from 'utility';
 @Injectable()
 export class UserService extends BaseService<User> {
   constructor(protected http: Http, protected cacheEventBus: CacheEventBus) {
-    super(http, User, { 
+    super(http, User, {
       rootApiUrl: environment.restUrls.ca,
-      urlSuffix: 'users', //Hardcoding this here  now.  I know this isn't right, but this service doesn't follow the standards.
+      urlSuffix: 'users', // Hardcoding this here  now.  I know this isn't right, but this service doesn't follow the standards.
       urlSuffixPlural: 'users',
       urlPrefix: 'admin',
       encodeId: true,
@@ -30,7 +30,7 @@ export class UserService extends BaseService<User> {
     if (cachedData) {
       return Observable.of(cachedData);
     } else {
-      //This user search is pretty non standard.  So we're going to override it here
+      // This user search is pretty non standard.  So we're going to override it here
       return this.http.get(url, this.reqOptions).map((res: Response) => {
         const data =  UserUtility.BuildUsersFromResponse(res.json());
         this.setCache(url, null, data, cacheConfig);

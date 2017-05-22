@@ -11,7 +11,7 @@ import { AddFileComponent } from './add-file/add-file.component';
 import { DocumentAttributesComponent } from './document-attributes/document-attributes.component';
 import { SharedClientModule } from '../shared-client/shared-client.module';
 import { DropdownAsyncComponent } from '../shared-client/dropdown/dropdown-async.component';
-import { PipesModule } from "pipes/pipes.module";
+import { PipesModule } from 'pipes/pipes.module';
 
 @NgModule({
   imports: [

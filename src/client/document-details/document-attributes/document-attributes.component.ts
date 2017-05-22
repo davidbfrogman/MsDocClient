@@ -1,7 +1,7 @@
-import { 
-  Component, 
+import {
+  Component,
   Input,
-  OnChanges, 
+  OnChanges,
 } from '@angular/core';
 import { Attribute, Item } from 'models';
 import { AttributeUtility, ItemUtility } from 'utility';
@@ -32,7 +32,7 @@ export class DocumentAttributesComponent implements OnChanges {
   }
 
   attributeVisible(attribute: Attribute): boolean {
-    switch(attribute.name) {
+    switch (attribute.name) {
       case Constants.TEMPLATE_ATTRIBUTE_ID:
       case Constants.TEMPLATE_ATTRIBUTE_NAME:
       case Constants.TEMPLATE_ATTRIBUTE_DESCRIPTION:

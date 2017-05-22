@@ -14,7 +14,7 @@ export class ErrorEventBus {
     this.created = Date.now();
     this.modalEventAdded = new EventEmitter();
   }
-  
+
   throw(error: AppError) {
     this.error = error;
     this.errorTriggerSource.next(error);

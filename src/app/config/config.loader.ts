@@ -1,5 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
-import { URLSearchParams } from "@angular/http";
+import { URLSearchParams } from '@angular/http';
 import { Property, TranslationDictionary } from 'models';
 import { Observable } from 'rxjs/Rx';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -19,7 +19,7 @@ export function ConfigurationLoader(
             configurationEventBus.setProperties(properties['property']);
         });
         return configurationServiceProperties$.toPromise();
-    }
+    };
 }
 
 export function TranslationLoader(
@@ -38,5 +38,5 @@ export function TranslationLoader(
                 .setTranslationDictionary(translationDictionary);
         });
         return translationsBasedOnLocal$.toPromise();
-    }
+    };
 }
