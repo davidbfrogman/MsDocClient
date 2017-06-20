@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, Output, OnInit, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 import { Constants } from '../../../constants';
 import { SearchStyleType, AttributeType, OperationType } from 'enumerations';
@@ -6,16 +6,18 @@ import { SearchStackEventBus } from 'event-buses';
 import { Attribute, Entity, SearchStack, User, Value } from 'models';
 import { XQueryBuilder } from 'utility';
 import { SearchOperationFactory } from '../search-operation-factory';
+import { Translator } from 'services';
 
 @Component({
   selector: 'idm-search-stack',
   templateUrl: './search-stack.component.html',
   styleUrls: ['./search-stack.component.scss']
 })
+
 export class SearchStackComponent {
 
   // The search stack event bus is where we get our current list of search stacks that we can bind to.
-  constructor(private searchStackEventBus: SearchStackEventBus) {
+  constructor(private searchStackEventBus: SearchStackEventBus,  public translator: Translator) {
   }
 
   public onDeleteStack(searchStack: SearchStack) {

@@ -4,7 +4,9 @@ import {
   OnChanges,
 } from '@angular/core';
 import { Attribute, Item } from 'models';
-import { AttributeUtility, ItemUtility } from 'utility';
+import { ActionUtility, AttributeUtility, ItemUtility } from 'utility';
+import { ActionEventBus } from 'event-buses';
+import { ActionsType } from 'enumerations';
 import { Constants } from '../../../constants';
 
 @Component({
@@ -19,16 +21,20 @@ export class DocumentAttributesComponent implements OnChanges {
 
   @Input() item: Item;
   attributes: Attribute[];
-  isItemEditable: boolean;
+  @Input() isItemEditable: boolean;
 
-  constructor() { }
+  constructor(private actionEventBus: ActionEventBus) { }
 
   ngOnChanges() {
     this.attributes = new Array<Attribute>();
-    this.isItemEditable = ItemUtility.editable(this.item);
     this.item.attrs.attr.forEach(attribute => {
       this.attributes.push(AttributeUtility.mapAttributeTypeEnumeration(attribute));
     });
+  }
+
+  onChange(value: string) {
+    this.actionEventBus.triggerItemDirtyChangeAction(
+      ActionUtility.createNewAction(ActionsType.Save, [this.item]));
   }
 
   attributeVisible(attribute: Attribute): boolean {

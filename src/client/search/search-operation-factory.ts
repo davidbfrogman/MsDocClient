@@ -29,6 +29,7 @@ export class SearchOperationFactory {
       case AttributeType.Double:
       case AttributeType.MultiValue:
       case AttributeType.GUID:
+      case AttributeType.Size:
         searchOperations.push(
           this.findOperationByType(OperationType.EqualTo),
           this.findOperationByType(OperationType.NotEqual),

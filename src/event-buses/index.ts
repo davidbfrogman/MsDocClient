@@ -8,6 +8,5 @@ export { XQueryEventBus } from './xquery.event-bus';
 export { SearchStackEventBus } from './search-stack.event-bus';
 export { ViewSelectorEventBus} from '../event-buses/view-selector.event-bus';
 export { ActionEventBus} from '../event-buses/action.event-bus';
-export { ResourceQueueEventBus } from './resource-queue.event-bus';
 export { SelectedItemsEventBus } from '../event-buses/selected-items.event-bus';
 

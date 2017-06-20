@@ -10,12 +10,16 @@ export { ItemTab } from './item-tab';
 export { Operation } from './operation';
 export { SearchStack } from './search-stack';
 export { Property } from './property';
+export { ResultListConfig, ResultListProperties, ResultListColumn } from './result-list-config';
 export { User } from './user';
 export { ActionButton } from './action-button';
 export { ResourceData } from './resource-data';
 export { AttributeCollection } from './attributes-collection';
 export { IAttributable } from './interfaces/IAttributable';
+export { ValidationRule, ValidationRuleDefinition } from './interfaces/IValidationRules';
 export { Action } from './action';
 export { Configuration } from './configuration';
-export { ResourceImageQueueItem } from './resource-image-queue-item';
 export { TranslationDictionary } from './translation-dictionary';
+export { BatchOperation } from './batch-operation';
+export { BatchOperations } from './batch-operations';
+

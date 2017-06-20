@@ -3,7 +3,7 @@ import * as moment from 'moment';
 import { Constants } from '../../constants';
 import { OperationType, AttributeType } from 'enumerations';
 import { Attribute, Entity, Operation, SearchStack } from 'models';
-import { AttributeUtility } from 'utility';
+import { AttributeUtility, EntityUtility } from 'utility';
 
 
 @Injectable()
@@ -14,6 +14,7 @@ export class XQueryBuilder {
     protected operand: string = null;
     protected freeTextSearchOperand: string = null;
     protected searchStacks = Array<SearchStack>();
+    protected entityList = Array<Entity>();
     protected searchOrganizers = Array<SearchOrganizer>();
 
     constructor() {
@@ -44,6 +45,10 @@ export class XQueryBuilder {
             // I'm going to modify the search stack array that's passed in so we want to create a copy.
             this.searchStacks = configuration.searchStacks.slice(0);
         }
+        if (configuration.entityList !== undefined) {
+            // I'm going to modify the entityList array that's passed in so we want to create a copy.
+            this.entityList = configuration.entityList.slice(0);
+        }
 
         return this;
     }
@@ -51,6 +56,8 @@ export class XQueryBuilder {
     build() {
         const xQueryParts: Array<string> = [];
         let xQuerySearchOrgParts: Array<string> = [];
+        let xQuerySearchOperatorParts: Array<string> = [];
+        let xQuerySearchAttributeParts: Array<string> = [];
         this.organizeSearchSummaries();
         // pattern = /entityNameWithUnderscores[@attribute = ""]
         // pattern = /entityNameWithUnderscores[@attribute != ""]
@@ -73,24 +80,18 @@ export class XQueryBuilder {
 
         this.searchOrganizers.forEach((so, soIndex) => {
             xQuerySearchOrgParts = [];
-            if (so.entity) {
-                xQuerySearchOrgParts.push(`/${so.entity.name}`);
-            }
+            xQuerySearchAttributeParts = [];
             so.attributeOrganizerList.forEach((ao, aoIndex) => {
+                xQuerySearchOperatorParts = [];
                 if (ao && ao.attribute && ao.operationType && ao.attribute.name && ao.attribute.name.length > 0) {
                     AttributeUtility.mapAttributeTypeEnumeration(ao.attribute);
-
-                    if (aoIndex === 0) {
-                        xQuerySearchOrgParts.push(`[`);
-                    }
-
                     if (!ao.attribute.isMultiValue) {
-                        xQuerySearchOrgParts.push(`@${ao.attribute.qual}`);
+                        xQuerySearchOperatorParts.push(`@${ao.attribute.qual}`);
                     } else {
                         // "DavesMVAttribute/Value" --> DavesMVAttribute/@Value
                         let mvName = ao.attribute.qual;
                         mvName = mvName.replace(`/`, `/@`);
-                        xQuerySearchOrgParts.push(`${mvName}`);
+                        xQuerySearchOperatorParts.push(`${mvName}`);
                     }
 
                     // If someone passed in null for the string operand, we want to search on empty string.
@@ -100,7 +101,7 @@ export class XQueryBuilder {
 
                     // We change the formatting for searching.
                     if (ao.attribute.attributeType === AttributeType.Timestamp) {
-                        ao.operand = this.getDateFormattedForSearch(ao.operand);
+                        ao.operand = this.getDateTimeFormattedForSearch(ao.operand);
                     }
 
                     if (ao.attribute.attributeType === AttributeType.Time) {
@@ -110,81 +111,129 @@ export class XQueryBuilder {
                     // Build out the operation, and operand
                     switch (ao.operationType) {
                         case OperationType.NotEqual:
-                            xQuerySearchOrgParts.push(` != "${ao.operand}"`);
+                            xQuerySearchOperatorParts.push(` != "${ao.operand}"`);
                             break;
                         case OperationType.EqualTo:
-                            xQuerySearchOrgParts.push(` = "${ao.operand}"`);
+                            xQuerySearchOperatorParts.push(` = "${ao.operand}"`);
                             break;
                         case OperationType.Like:
-                            xQuerySearchOrgParts.push(` LIKE "${ao.operand}"`);
+                            xQuerySearchOperatorParts.push(` LIKE "${ao.operand}"`);
                             break;
                         case OperationType.NotLike:
-                            xQuerySearchOrgParts.push(` NOT LIKE "${ao.operand}"`);
+                            xQuerySearchOperatorParts.push(` NOT LIKE "${ao.operand}"`);
                             break;
                         case OperationType.True:
-                            xQuerySearchOrgParts.push(` = true`);
+                            xQuerySearchOperatorParts.push(` = true`);
                             break;
                         case OperationType.False:
-                            xQuerySearchOrgParts.push(` = false`);
+                            xQuerySearchOperatorParts.push(` = false`);
                             break;
                         case OperationType.HasValue:
-                            xQuerySearchOrgParts.push(` IS NOT NULL`);
+                            xQuerySearchOperatorParts.push(` IS NOT NULL`);
                             break;
                         case OperationType.NoValue:
-                            xQuerySearchOrgParts.push(` IS NULL`);
+                            xQuerySearchOperatorParts.push(` IS NULL`);
                             break;
                         case OperationType.After:
-                            xQuerySearchOrgParts.push(` > "${ao.operand}"`);
+                            xQuerySearchOperatorParts.push(` > "${ao.operand}"`);
                             break;
                         case OperationType.AfterOrEqual:
-                            xQuerySearchOrgParts.push(` >= "${ao.operand}"`);
+                            xQuerySearchOperatorParts.push(` >= "${ao.operand}"`);
                             break;
                         case OperationType.Before:
-                            xQuerySearchOrgParts.push(` < "${ao.operand}"`);
+                            xQuerySearchOperatorParts.push(` < "${ao.operand}"`);
                             break;
                         case OperationType.BeforeOrEqual:
-                            xQuerySearchOrgParts.push(` <= "${ao.operand}"`);
+                            xQuerySearchOperatorParts.push(` <= "${ao.operand}"`);
                             break;
                         default:
                             break;
                     }
-                    // If we're in the middle of the loop put an 'and' in place.
-                    if (aoIndex !== so.attributeOrganizerList.length - 1) {
-                        xQuerySearchOrgParts.push(` AND `);
-                    }
-                    // If we're at the end of the attributes we wrap them in a closing bracket.
-                    if (aoIndex === so.attributeOrganizerList.length - 1) {
-                        xQuerySearchOrgParts.push(`]`);
-                    }
+                    const xQuerySearchOperatorPartsJoin = xQuerySearchOperatorParts.join(``);
+                    xQuerySearchAttributeParts.push(xQuerySearchOperatorPartsJoin);
                 }
             }); // End of loop for Attribute Search searchSummaries
+            if (so.entity) {
+                xQuerySearchOrgParts.push(`/${so.entity.name}`);
+            }
+            if (xQuerySearchAttributeParts.length > 0) {
+                xQuerySearchOrgParts.push(`[`);
+                const xQuerySearchAttributePartsJoin = xQuerySearchAttributeParts.join(` AND `);
+                xQuerySearchOrgParts.push(xQuerySearchAttributePartsJoin);
+                xQuerySearchOrgParts.push(`]`);
+            }
 
             if (so.freeTextSearchOperand && so.freeTextSearchOperand.length > 0) {
                 // (/WF_test[@CHECKEDOUTUSERID = "asdf"]) INTERSECT CONTAINS(/WF_test, "asdf")
                 // First we need to wrap what we have built at this point in parenthesis.
-                xQuerySearchOrgParts.splice(0, null, `(`);
-                xQuerySearchOrgParts.push(`)`);
-                xQuerySearchOrgParts.push(` INTERSECT CONTAINS(/${so.entity.name}, "${so.freeTextSearchOperand}") `);
+                const xQuerySearchOrgPartsLength = xQuerySearchOrgParts.length;
+                const xQueryFreeTextParts = [];
+                if (so.entity) {
+                    if (EntityUtility.isSearchable(so.entity)) {
+                        xQueryFreeTextParts.push(`/${so.entity.name}`);
+                    }
+                } else {
+                    if (this.entityList && this.entityList.length > 0) {
+                        this.entityList.forEach((entity: Entity) => {
+                            if (EntityUtility.isSearchable(entity)) {
+                                xQueryFreeTextParts.push(`/${entity.name}`);
+                            }
+                        });
+                    }
+                }
+                if (xQueryFreeTextParts.length > 0) {
+                    if (xQuerySearchOrgPartsLength > 0) {
+                        xQuerySearchOrgParts.splice(0, null, `(`);
+                        xQuerySearchOrgParts.push(`)`);
+                        xQuerySearchOrgParts.push(` INTERSECT`);
+                    }
+                    xQuerySearchOrgParts.push(` CONTAINS(`);
+                    xQuerySearchOrgParts.push(xQueryFreeTextParts.join('|'));
+                    xQuerySearchOrgParts.push(`, "${this.freeTextSearchOperand}")`);
+                }
             }
 
             // Then we wrap the whole thing
             if (soIndex !== this.searchOrganizers.length - 1 ) {
                 xQuerySearchOrgParts.splice(0, null, `(`);
                 xQuerySearchOrgParts.push(`) `);
-                xQuerySearchOrgParts.push(` UNION `);
             }
-            xQueryParts.push(xQuerySearchOrgParts.join(''));
+            const xQueryPartsJoin: string = xQuerySearchOrgParts.join('');
+            if (xQueryPartsJoin.length > 0) {
+                xQueryParts.push(xQueryPartsJoin);
+            }
         });
 
-        return xQueryParts.join('');
+        let xQueryPartsJoin: string;
+        if (xQueryParts.length <= 1) {
+            xQueryPartsJoin = xQueryParts.join('');
+        } else {
+            xQueryPartsJoin = xQueryParts.join(` UNION `);
+        }
+
+        return xQueryPartsJoin;
     }
 
     public organizeSearchSummaries() {
         if (!this.searchStacks) {
             this.searchStacks = new Array<SearchStack>();
         }
-        if (this.entity) {
+
+        if (this.getSearchStackFromConfig().entity) {
             this.searchStacks.push(this.getSearchStackFromConfig());
+        } else {
+            let foundSeachableEntity = false;
+            if (this.entityList && this.entityList.length > 0) {
+                this.entityList.forEach((entity: Entity) => {
+                    if (EntityUtility.isSearchable(entity)) {
+                        foundSeachableEntity = true;
+                    }
+                    return;
+                });
+            }
+            if (foundSeachableEntity) {
+                this.searchStacks.push(this.getSearchStackFromConfig());
+            }
         }
 
         this.searchStacks.forEach(searchStack => {
@@ -197,8 +246,10 @@ export class XQueryBuilder {
             if (!existingSearchSummary) {
                 this.searchOrganizers.push(SearchOrganizer.buildSearchOrganizer(searchStack));
             } else {
-                // Here we found an existing search summary, so we need to add properties to it's attributes
-                existingSearchSummary.attributeOrganizerList.push(AttributeOrganizer.buildAttributeOrganizer(searchStack));
+                if (searchStack.attribute !== null) {
+                    // Here we found an existing search summary, so we need to add properties to it's attributes
+                    existingSearchSummary.attributeOrganizerList.push(AttributeOrganizer.buildAttributeOrganizer(searchStack));
+                }
             }
         });
     }
@@ -214,26 +265,25 @@ export class XQueryBuilder {
         );
     }
 
-    public getDateFormattedForSearch(dateString: string): string {
+    public getDateTimeFormattedForSearch(dateString: string): string {
         // 03/21/2017 15:03:00 -> "2017-11-11T14:04:24.000Z"
-        const dt = moment(dateString, Constants.SOHO_DATEPICKER_DATETIME_FORMAT);
-        return dt.format(Constants.MOMENT_API_DATETIME_FORMAT); // Moment uses [] for escape chars.
+        return moment(dateString, Constants.MOMENT_FORM_DATETIME_FORMAT).format(Constants.MOMENT_API_DATETIME_FORMAT);
     }
 
     public getTimeFormattedForSearch(timeString: string): string {
         // 15:03:00 -> 15:03:00Z
-        const dt = moment(timeString, Constants.SOHO_DATEPICKER_TIME_FORMAT);
-        return dt.format(Constants.MOMENT_API_TIME_FORMAT);
+        return moment(timeString, Constants.MOMENT_FORM_TIME_FORMAT).format(Constants.MOMENT_API_TIME_FORMAT);
     }
 }
 
 export interface XQueryConfigType {
-    entity: Entity;  // we're putting the any here so we can unit test with mock data
-    attribute: Attribute;
-    operation: Operation;
+    entity?: Entity;  // we're putting the any here so we can unit test with mock data
+    attribute?: Attribute;
+    operation?: Operation;
     operand?: string;
     freeTextSearchOperand?: string;
     searchStacks?: Array<SearchStack>;
+    entityList?: Array<Entity>;
 };
 
 export class SearchOrganizer {

@@ -2,17 +2,19 @@
     <soho-toolbar class="toolbar"  maxVisibleButtons="20" 
             hasMoreButton="false" rightAlign="true" id="toolbar-{{tabId}}">
         <soho-toolbar-button-set id="toolbarButtonSet-{{tabId}}">
-            <idm-action-menu select="soho-toolbar-button-set" [actionView]="actionViewsType.Details" [item]="item" id="actionMenu-{{tabId}}"></idm-action-menu>
+            <idm-action-menu select="soho-toolbar-button-set" [actionView]="actionViewsType.Details" [selectedItems]="selectedItems" id="actionMenu-{{tabId}}" [isItemDirty]="isItemDirty" (isItemDirtyChanged)="isItemDirtyChanged($event)" ></idm-action-menu>
         </soho-toolbar-button-set>  
     </soho-toolbar>
 </div>
-
 <div class="details-container flexbox">
     <div class="image-container flex-grow-1">
+        <div class="checkedOutBadge" *ngIf="isItemEditable">
+            <span class="good badge">{{translator.constants.CHECKED_OUT_BY_ME | translate}}</span>
+        </div>
         <idm-resource-image [item]="item" type="Preview"></idm-resource-image>
         <div class="filename" *ngIf="item.size">{{item.filename}} ({{fileSize}})</div>
     </div>
     <div class="tabs-container flex-grow-1">
-        <idm-document-detail-tabs [item]="item" [entity]="entity"></idm-document-detail-tabs>
+        <idm-document-detail-tabs [item]="item" [entity]="entity" [isItemEditable]="isItemEditable" [tabId]="tabId"></idm-document-detail-tabs>
     </div>
 </div>

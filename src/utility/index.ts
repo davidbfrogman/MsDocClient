@@ -7,3 +7,4 @@ export { UserUtility } from './user.utility';
 export { ResourceDataUtility } from './resource-data.utility';
 export { ActionUtility } from './action.utility';
 export { ActionButtonUtility } from './action-button.utility';
+export { BatchUtility } from './batch.utility';

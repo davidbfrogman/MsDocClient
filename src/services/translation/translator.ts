@@ -4,14 +4,21 @@ import { TranslationDictionary } from 'models';
 import { Constants, TranslationConstants } from '../../constants';
 @Injectable()
 export class Translator {
+    private static instance: Translator;
+
     private translationDictionary: TranslationDictionary;
     private urlSearchParams: URLSearchParams;
     public constants = TranslationConstants;
     public currentLocale: string;
 
-    public constructor() {
-        return this;
+    public static getInstance() {
+        if (!this.instance) {
+            this.instance = new this();
+        }
+        return this.instance;
     }
+
+    public constructor() { }
 
     setCurrentLocale(locale: string) {
         this.currentLocale = locale;
@@ -35,6 +42,6 @@ export class Translator {
                 return translation;
             }
         }
-        return '<Missing translation = ' + name + '>';
+        return name;
     }
 }

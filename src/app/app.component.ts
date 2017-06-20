@@ -43,7 +43,7 @@ export class AppComponent implements OnInit  {
 
   protected subscribeToConfigurationChangedEvent() {
     this.configurationEventBus.configurationChangedEvent$.subscribe((configurationEvent) => {
-      this.cacheEventBus.removeAll();
+      this.cacheEventBus.clear();
       if (configurationEvent.counter > 1) {
         this.openConfigurationChangedInfoModal();
       }

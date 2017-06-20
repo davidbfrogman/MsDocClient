@@ -1,19 +1,18 @@
-<div *ngIf="item">
-    <div soho-tabs>
+<div *ngIf="item" class="tabs-container">
+    <div soho-tabs class="tabs-container">
         <ul soho-tab-list>
             <!-- Inserting tabId since soho-tab requires tabId to be unique -->
-            <li soho-tab selected="true"><a soho-tab-title tabId="tabs-properties-{{tabId}}">{{translator.constants.TAB_PROPERTIES | translate}}</a></li>
-            <li soho-tab><a soho-tab-title tabId="tabs-attributes-{{tabId}}">{{translator.constants.TAB_ATTRIBUTES | translate}}</a></li>
+            <li soho-tab><a soho-tab-title tabId="tabs-properties-{{tabId}}">{{translator.constants.TAB_PROPERTIES | translate}}</a></li>
+            <li soho-tab selected="true"><a soho-tab-title tabId="tabs-attributes-{{tabId}}">{{translator.constants.TAB_ATTRIBUTES | translate}}</a></li>
             <li soho-tab><a soho-tab-title tabId="tabs-file-{{tabId}}">{{translator.constants.FILE | translate}}</a></li>
             <li soho-tab><a soho-tab-title tabId="tabs-security-{{ tabId }}">{{translator.constants.TAB_SECURITY | translate}}</a></li>
-                    <li soho-tab (click)="retrieveVersions()" *ngIf="item.pid">
-                      <a soho-tab-title tabId="tabs-history-{{tabId}}">
-                        {{translator.constants.HISTORY | translate}}
-                      </a>
-                    </li>
+            <li soho-tab (click)="retrieveVersions()" *ngIf="item.pid">
+                <a soho-tab-title tabId="tabs-history-{{tabId}}">
+                {{translator.constants.HISTORY | translate}}
+                </a>
+            </li>
         </ul>
-        
-        <div soho-tab-panel tabId="tabs-properties-{{tabId}}">
+        <div soho-tab-panel tabId="tabs-properties-{{tabId}}" class="scroll-tab-container">
             <form id="example-summary-field-form">
                 <div class="row">
                     <!--<div class="full column">-->
@@ -36,7 +35,7 @@
                             </div>
 
                             <div class="field">
-                            <span class="label">{{translator.constants.LAST_CHANGED_BY | translate}}y</span>
+                            <span class="label">{{translator.constants.LAST_CHANGED_BY | translate}}</span>
                             <span class="data">{{item.lastChangedByName}}</span>
                             </div>
 
@@ -90,37 +89,42 @@
         </div>
         
 
-        <div soho-tab-panel tabId="tabs-attributes-{{tabId}}">
-            <idm-document-attributes [item]="item"></idm-document-attributes>
+        <div soho-tab-panel tabId="tabs-attributes-{{tabId}}" class="scroll-tab-container">
+            <idm-document-attributes [item]="item" [isItemEditable]="isItemEditable"></idm-document-attributes>
         </div>
 
-        <div soho-tab-panel tabId="tabs-file-{{tabId}}">
-            <idm-add-file [(item)]="item"></idm-add-file>
+        <div soho-tab-panel tabId="tabs-file-{{tabId}}" class="scroll-tab-container">
+            <idm-add-file [(item)]="item" [isItemEditable]="isItemEditable"></idm-add-file>
         </div>
 
-        <div soho-tab-panel tabId="tabs-security-{{tabId}}">
+        <div soho-tab-panel tabId="tabs-security-{{tabId}}" class="scroll-tab-container">
             <div class="row">
             <div class="four columns l-right-text">
                 <p class="acl-title">
-                <strong>{{translator.constants.ACCESS_CONTROL_LIST | translate}}</strong>
+                        {{translator.constants.ACCESS_CONTROL_LIST | translate}}
                 </p>
             </div>
             <div class="eight columns">
                 <idm-dropdown-async 
+                        *ngIf="isItemEditable"
                 [data]="acls" 
-                [model]="item.acl" 
-                [id]="item.pid"></idm-dropdown-async>
+                [model]="item.acl"
+                [change]="onAclChange"
+                [context]="this"
+                id="{{tabId}}"></idm-dropdown-async>
+                        <p *ngIf="!isItemEditable"title="{{item.acl?.description}}">{{item.acl?.name}}</p>
             </div>
             </div>                  
         </div>
 
-        <div soho-tab-panel tabId="tabs-history-{{tabId}}">
+        <div soho-tab-panel tabId="tabs-history-{{tabId}}" class="scroll-tab-container">
             <p>{{translator.constants.HISTORY | translate}}</p>
             <div *ngIf="itemVersions">
-                <div *ngFor="let version of itemVersions">
+                <div *ngFor="let version of itemVersions; let isFirst = first">
                     <div>
-                    <button soho-button (click)="showVersion(version.version)">{{translator.constants.VERSION | translate}} {{version.version}}</button>
-                    <p>Pid: {{version.pid}}</p>
+                        <button *ngIf="isFirst" soho-button (click)="showLatestVersion()">{{translator.constants.VERSION | translate}} {{version.version}}</button>
+                        <button *ngIf="!isFirst" soho-button (click)="showVersion(version.version)">{{translator.constants.VERSION | translate}} {{version.version}}</button>
+                        <p>Pid: {{version.pid}}</p>
                     </div>
                 </div>
             </div>

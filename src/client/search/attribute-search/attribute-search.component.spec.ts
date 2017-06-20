@@ -5,7 +5,7 @@ import { AttributeSearchComponent } from 'client/search/attribute-search/attribu
 import { UserService, EntityService } from 'services';
 import { SearchStack, Entity, Attribute } from 'models';
 import { SearchOperationFactory } from 'client/search/search-operation-factory';
-import { OperationType } from 'enumerations';
+import { OperationType, AttributeType } from 'enumerations';
 
 describe('AttributeSearchComponent', () => {
   let component: AttributeSearchComponent;
@@ -96,6 +96,7 @@ describe('AttributeSearchComponent', () => {
     component.onSelectedAttributeChanged(component.selectedAttribute);
     expect(component.operatorList).toBeTruthy();
     expect(component.operatorList.length).toBeGreaterThan(0);
+    expect(component.selectedOperation).toEqual(component.operatorList[0]);
   }));
 
   it('should reset all the UI controls when the selected entity is changed', async(() => {
@@ -166,4 +167,57 @@ describe('AttributeSearchComponent', () => {
     expect(component.usersList.length).toBeGreaterThan(0);
   }));
 
+  it('Should retain string values on attribute change', () => {
+    component.populateEntitiesList();
+    component.selectedEntity = component.entityList[2];
+
+    component.onSelectedEntityChanged(component.selectedEntity);
+    component.previouslySelectedAttribute = {
+      attributeType: AttributeType.String,
+      name: 'Test name',
+      qual: 'Test value',
+      type: '1',
+      value: 'Test value'
+    };
+
+    component.selectedEntity.comprehensiveAttributes.forEach(attribute => {
+      component.selectedAttribute = attribute;
+      component.onSelectedAttributeChanged(attribute);
+
+      if (attribute.attributeType === AttributeType.String) {
+        expect(component.selectedAttribute.value).toEqual(component.previouslySelectedAttribute.value);
+      }
+    });
+  });
+
+  it('Should retain number values on attribute change', () => {
+    component.populateEntitiesList();
+    component.selectedEntity = component.entityList[2];
+
+    component.onSelectedEntityChanged(component.selectedEntity);
+    component.previouslySelectedAttribute = {
+      attributeType: AttributeType.Short,
+      name: 'Test name',
+      qual: 'Test value',
+      type: '2',
+      value: '1'
+    };
+
+    const numberTypes = [
+      AttributeType.Short,
+      AttributeType.Long,
+      AttributeType.Decimal,
+      AttributeType.Double,
+      AttributeType.GUID
+    ];
+
+    component.selectedEntity.comprehensiveAttributes.forEach(attribute => {
+      component.selectedAttribute = attribute;
+      component.onSelectedAttributeChanged(attribute);
+
+      if (numberTypes.indexOf(attribute.attributeType) !== -1) {
+        expect(component.selectedAttribute.value).toEqual(component.previouslySelectedAttribute.value);
+      }
+    });
+  });
 });

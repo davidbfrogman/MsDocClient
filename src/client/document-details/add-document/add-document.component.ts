@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, Output, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { EnvironmentType } from 'enumerations';
@@ -7,6 +7,7 @@ import { Attribute, Entity, Item, Acl, AttributeCollection } from 'models';
 import { EntityService, ItemService } from 'services';
 import { AttributeUtility, EntityUtility, ItemUtility } from 'utility';
 import { Constants } from '../../../constants';
+import { Translator } from 'services';
 
 @Component({
   selector: 'idm-add-document',
@@ -15,7 +16,7 @@ import { Constants } from '../../../constants';
 })
 export class AddDocumentComponent implements OnInit {
   public entityList: Entity[];
-  public templateList: Item[];
+  public templateList: Item[] = [];
   public selectedTemplate: Item;
   public isDocumentSelected: boolean;
   public isSaveEnabled: boolean;
@@ -25,7 +26,8 @@ export class AddDocumentComponent implements OnInit {
     public itemService: ItemService,
     public errorEventBus: ErrorEventBus,
     private documentsEventBus: DocumentsEventBus,
-    private configuration: ConfigurationEventBus
+    private configuration: ConfigurationEventBus,
+    public translator: Translator
   ) { }
 
   public ngOnInit() {
@@ -81,7 +83,7 @@ export class AddDocumentComponent implements OnInit {
         type: attribute.type
       };
     });
-
+    ItemUtility.setUniqueId(blankTemplate);
     this.templateList.push(blankTemplate);
     this.selectedTemplate = blankTemplate;
   }

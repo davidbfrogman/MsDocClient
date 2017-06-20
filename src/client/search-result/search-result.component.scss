@@ -1,15 +1,15 @@
 :host {
-    .search-list {
-        height: calc(100% - 45px); //subtract top row height which is 45px
-        overflow: auto;
-    }
+  .top-row {
+    justify-content: flex-end;
+  }
 
-    .top-row {
-        justify-content: flex-end;
-    }
+  /deep/ .row {
+    // Apply to all row descendants
+    max-width: 100%; // Override Soho style
+  }
+}
 
-    /deep/ .row {
-        // Apply to all row descendants
-        max-width: 100%; // Override Soho style
-    }
+.no-text-search {
+  font-size: 20px;
+  text-align: center;
 }

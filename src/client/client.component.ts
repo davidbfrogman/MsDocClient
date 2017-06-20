@@ -8,11 +8,12 @@ import {
 } from '@angular/core';
 import { SohoTabsComponent, SohoModalDialogService } from '@infor/sohoxi-angular';
 import { environment } from '../environments/environment';
-import { XQueryEventBus, ItemTabsEventBus, DocumentsEventBus } from 'event-buses';
+import { XQueryEventBus, ItemTabsEventBus, DocumentsEventBus, ActionEventBus, ConfigurationEventBus } from 'event-buses';
 import { Item, ItemTab } from 'models';
 import { Translator } from 'services';
 
 import { AddDocumentComponent } from './document-details/add-document/add-document.component';
+import { Constants } from '../constants';
 
 @Component({
   selector: 'idm-client',
@@ -26,6 +27,7 @@ export class ClientComponent {
 
   public development: boolean = (environment.production === false);
   public xQuery: string;
+  public currentUser: string;
 
   private dialogRef;
 
@@ -34,13 +36,16 @@ export class ClientComponent {
     private changeDetectorRef: ChangeDetectorRef,
     private itemTabsEventBus: ItemTabsEventBus,
     private documentsEventBus: DocumentsEventBus,
+    private actionEventBus: ActionEventBus,
     private modalService: SohoModalDialogService,
-    public translator: Translator
+    public translator: Translator,
+    private configurationEventBus: ConfigurationEventBus
   ) {
     this.subscribeToxQueryChangedEvent();
     this.subscribeToItemTabAddedEvent();
     this.subscribeToCreateDocumentModal();
     this.initxQuery();
+    this.currentUser = configurationEventBus.getConfiguration(Constants.PROP_CONNECTION_USERNAME);
   }
 
   protected subscribeToxQueryChangedEvent() {
@@ -57,8 +62,8 @@ export class ClientComponent {
   }
 
   protected subscribeToCreateDocumentModal() {
-    this.documentsEventBus.onCreateDocumentModal.subscribe(item => {
-      this.itemTabsEventBus.openNewItemTab(item);
+    this.documentsEventBus.documentEventCreate$.subscribe(item => {
+      this.itemTabsEventBus.open(item);
       this.dialogRef.close();
     });
   }
@@ -74,8 +79,13 @@ export class ClientComponent {
   }
 
   onTabClose(tab: any) {
-    const tabId = tab.tab.children.item('a').getAttribute('ng-reflect-tab-id');
-    this.itemTabsEventBus.closeItemTab(tabId);
+    // Using href here since that's the only place where the full ID is
+    // stored in the soho-tab component
+    let tabId: string = tab.tab.children.item('a').getAttribute('href');
+    if (tabId.startsWith('#')) {
+      tabId = tabId.slice(1, tabId.length);
+    }
+    this.itemTabsEventBus.close(tabId);
   }
 
   openAddDocumentComponent() {
@@ -97,7 +107,7 @@ export class ClientComponent {
           text: 'Create',
           click: (e, modal) => {
             if (dialogComponent.isSaveEnabled) {
-              this.itemTabsEventBus.openItemTab(dialogComponent.selectedTemplate);
+              this.itemTabsEventBus.open(dialogComponent.selectedTemplate);
               this.dialogRef.close();
             }
           },

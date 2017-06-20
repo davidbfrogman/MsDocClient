@@ -1,0 +1,43 @@
+<ul class="pager-toolbar" *ngIf="active">
+    <li class="pager-first" tabindex="-1" [class.disabled]="prevDisabled">
+      <a href="#" class="hide-focus" tabindex="-1" [class.disabled]="prevDisabled" (click)="loadFirstPage()">
+        <svg class="icon" focusable="false" aria-hidden="true" role="presentation">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-first-page"></use>
+        </svg>
+        <span class="audible">{{ translator.constants.FIRST_PAGE | translate }}</span>
+      </a>
+    </li>
+    <li class="pager-prev" tabindex="-1" [class.disabled]="prevDisabled">
+      <a href="#" rel="prev" class="hide-focus" tabindex="-1" [class.disabled]="prevDisabled" (click)="loadPreviousPage()">
+        <svg class="icon" focusable="false" aria-hidden="true" role="presentation">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-previous-page"></use>
+        </svg>
+        <span class="audible">{{ translator.constants.PREVIOUS_PAGE | translate }}</span>
+      </a>
+    </li>
+    <li class="pager-count">
+      <label>{{ translator.constants.PAGE | translate }} 
+      <input name="page" [(ngModel)]="page" type="number" maxlength="{{ pagesCount | maxlength }}">&nbsp;
+      {{ translator.constants.OF | translate }}&nbsp;
+      <span class="pager-total-pages">
+        {{ pagesCount }}
+      </span>
+      </label>
+    </li>
+    <li class="pager-next" tabindex="0" [class.disabled]="nextDisabled">
+      <a href="#" rel="next" class="hide-focus" tabindex="0" [class.disabled]="nextDisabled" (click)="loadNextPage()">
+        <svg class="icon" focusable="false" aria-hidden="true" role="presentation">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-next-page"></use>
+        </svg>
+        <span class="audible">{{ translator.constants.NEXT_PAGE | translate }}</span>
+      </a>
+    </li>
+    <li class="pager-last" tabindex="0" [class.disabled]="nextDisabled">
+      <a href="#" class="hide-focus" tabindex="0" [class.disabled]="nextDisabled" (click)="loadLastPage()">
+        <svg class="icon" focusable="false" aria-hidden="true" role="presentation">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-last-page"></use>
+        </svg>
+        <span class="audible">{{ translator.constants.LAST_PAGE | translate }}</span>
+      </a>
+    </li>
+  </ul>

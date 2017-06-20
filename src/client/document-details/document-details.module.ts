@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { SohoComponentsModule } from '@infor/sohoxi-angular';
 
 import { DocumentDetailsComponent } from './document-details.component';
-import { PreviewComponent } from './preview/preview.component';
 import { DocumentDetailTabsComponent } from './document-detail-tabs/document-detail-tabs.component';
 import { AddFileComponent } from './add-file/add-file.component';
 import { DocumentAttributesComponent } from './document-attributes/document-attributes.component';
@@ -29,8 +28,7 @@ import { PipesModule } from 'pipes/pipes.module';
     DocumentAttributesComponent,
     DropdownAsyncComponent,
     DocumentDetailsComponent,
-    DocumentDetailTabsComponent,
-    PreviewComponent
+    DocumentDetailTabsComponent
   ],
   providers: []
 })

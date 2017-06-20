@@ -1,5 +1,5 @@
 export { CacheEvent } from './cache/cache.event';
-export { CacheServiceConfigType } from './cache/cache-service.config';
+export { CacheConfig } from './cache/cache.config';
 export { BaseService } from './base/base-service';
 export { ItemService } from './item.service';
 export { ItemServiceMock } from './mock/item.service.mock';
@@ -12,8 +12,16 @@ export { UserService } from './user.service';
 export { UserServiceMock } from './mock/user.service.mock';
 export { EntityData, ItemData, ItemDataInternalAtrributes } from './mock'
 export { ResourceService } from './resource.service';
+export { ResultListConfigService } from './result-list-config.service';
+export { ResultListConfigurator } from './result-list-configurator';
+export { ResultListConfiguratorMock } from './mock/result-list-configurator.mock';
+export { EntityConfigurator } from './entity-configurator';
+export { EntityConfiguratorMock } from './mock/entity-configurator.mock';
 export { TranslationService } from './translation/translation.service';
 export { Translator } from './translation/translator';
 export { TranslatorMock } from './translation/translator.mock';
 export { TranslationServiceMock } from './mock/translation.service.mock';
+export { TranslationDictionaryData } from './mock';
 export { Locale } from './translation/locale';
+export { BatchService } from './batch.service';
+export { BatchServiceMock } from './mock/batch.service.mock';

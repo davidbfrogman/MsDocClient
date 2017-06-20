@@ -4,10 +4,12 @@
         (onThumbnailSelected)="onThumbnailListSelected($event)">
     </idm-list-view-selector>
 </div>
-<div class="search-list">
-    <idm-card-list *ngIf="viewSelectorEventBus.selectedSearchResultView==searchResultListViews.Card" [(items)]=itemsList></idm-card-list>
-    <idm-detail-list *ngIf="viewSelectorEventBus.selectedSearchResultView==searchResultListViews.Detail"></idm-detail-list>
-    <idm-thumbnail-list  *ngIf="viewSelectorEventBus.selectedSearchResultView==searchResultListViews.Thumbnail"></idm-thumbnail-list>
+<div class="search-list" *ngIf="items.length > 0">
+  <idm-card-list *ngIf="viewSelectorEventBus.selectedSearchResultView==searchResultListViews.Card" [(items)]="items"></idm-card-list>
+  <idm-detail-list *ngIf="viewSelectorEventBus.selectedSearchResultView==searchResultListViews.Detail"></idm-detail-list>
+  <idm-thumbnail-list  *ngIf="viewSelectorEventBus.selectedSearchResultView==searchResultListViews.Thumbnail"></idm-thumbnail-list>
 </div>
-
-
+<idm-search-results-pager [items]="items" [totalSearchCount]="totalSearchCount"></idm-search-results-pager>
+<div class="no-text-search" *ngIf="noDocumentMatch">
+  {{ translator.constants.DOCUMENTS_MATCHING_SEARCH | translate:0 }}
+</div>

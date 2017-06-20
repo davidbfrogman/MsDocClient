@@ -1,11 +1,21 @@
 <div class="row">
   <form>
-    <span class="code-tag">{{ translator.constants.ADVANCED | translate }}</span>
-    <div class="field">
-      <textarea soho-textarea [attr.id]="advancedSearchTextarea" name="advancedSearchTextarea" [(ngModel)]="xQuery" [resizable]="true" name="taAdvancedSearchQuery"></textarea>
+    <div class="advanced-search">
+      <div class="advanced-left-align">
+        <p>{{ translator.constants.ADVANCED | translate }}</p>
+      </div>
+      <div class="arrow-right-align">
+        <button soho-button="icon" [icon]="advancedExpanderButtonName" (click)="onToggleAdvancedButton()"></button>
+      </div>
     </div>
-    <div class="row">
-      <button soho-button="primary" (click)="onClickSearch($event)">{{ translator.constants.SEARCH | translate }}</button>
+    <hr *ngIf="isToggleAdvancedLine">
+    <div *ngIf="isToggleAdvancedText" >
+      <div class="field">
+        <textarea soho-textarea [attr.id]="advancedSearchTextarea" name="advancedSearchTextarea" [(ngModel)]="xQuery" [resizable]="true"></textarea>
+      </div>
+      <div class="row topSpace">
+        <button soho-button="primary" (click)="onClickSearch($event)">{{ translator.constants.SEARCH | translate }}</button>
+      </div>
     </div>
   </form>
 </div>

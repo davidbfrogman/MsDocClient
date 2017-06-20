@@ -20,6 +20,8 @@ export class DropdownAsyncComponent implements AfterViewInit {
   @ViewChild(SohoDropDownComponent) dropdown: SohoDropDownComponent;
   @ViewChild(SohoBusyIndicatorDirective) busyIndicator: SohoBusyIndicatorDirective;
   @Input() model: DropdownItem;
+  @Input() change: Function;
+  @Input() context: any;
 
   private _id: string;
   private dropdownItemsData: DropdownItem[];
@@ -54,6 +56,12 @@ export class DropdownAsyncComponent implements AfterViewInit {
       this.updateDropdown();
     }
     this.dropdownRendered = true;
+  }
+
+  ngOnModelChange(): void {
+    if (this.change && this.context) {
+      this.change.call(this.context);
+    }
   }
 
   private updateDropdown(): void {

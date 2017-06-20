@@ -9,3 +9,6 @@ export {
     ResourceData200,
     ResourceData202
 } from './mock-data/resource-data';
+export { BatchOperationsData } from './mock-data/batch-operations.data';
+export { ItemsData } from './mock-data/items.data';
+export { ResultListConfigsData } from './mock-data/result-list-configs.data';

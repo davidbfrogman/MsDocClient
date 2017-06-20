@@ -25,7 +25,8 @@ import {
   ItemService, ItemServiceMock, Locale,
   TranslationService, TranslationServiceMock,
   UserService, UserServiceMock,
-  Translator, TranslatorMock
+  Translator, TranslatorMock,
+  BatchService, BatchServiceMock, EntityConfigurator, EntityConfiguratorMock, ResultListConfigurator, ResultListConfiguratorMock
 } from 'services';
 
 @NgModule({
@@ -56,7 +57,10 @@ import {
     { provide: ItemService, useClass: ItemServiceMock },
     { provide: TranslationService, useClass: TranslationServiceMock },
     { provide: Translator, useClass: TranslatorMock },
+    { provide: EntityConfigurator, useClass: EntityConfiguratorMock },
+    { provide: ResultListConfigurator, useClass: ResultListConfiguratorMock },
     { provide: UserService, useClass: UserServiceMock },
+    { provide: BatchService, useClass: BatchServiceMock},
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
   exports: [

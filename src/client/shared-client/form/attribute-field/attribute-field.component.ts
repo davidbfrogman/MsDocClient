@@ -13,7 +13,9 @@ export class AttributeFieldComponent implements OnChanges {
   @Input() editable: boolean;
   @Input() attribute: Attribute;
   @Input() placeholder: string;
-  @Input() disabled: boolean;
+  @Input() disabled: boolean = false;
+  @Input() change: Function;
+  @Input() context: any;
 
   public name: string;
   public type: number;
@@ -39,5 +41,9 @@ export class AttributeFieldComponent implements OnChanges {
 
   onChange(event: Event) {
     this.attribute.value = AttributeUtility.getApiValue(this.attribute, this.value);
+
+    if (this.change && this.context) {
+      this.change.call(this.context, this.value);
+    }
   }
 }

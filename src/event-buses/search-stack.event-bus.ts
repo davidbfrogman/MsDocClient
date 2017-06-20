@@ -23,14 +23,32 @@ export class SearchStackEventBus {
     public searchStackSaved$ = this.searchStackSavedSource.asObservable();
     public searchStackDeleted$ = this.searchStackDeletedSource.asObservable();
 
+    // Load pages
+    public searchReloadSource = new Subject<any>();
+    public searchReloaded$ = this.searchReloadSource.asObservable();
+
     addSearchStack(searchStack: SearchStack) {
         if (!this.searchStacks) {
             this.searchStacks = new Array<SearchStack>();
         }
-        searchStack.id = this.currentSearchStackID;
-        this.currentSearchStackID++;
-        this.searchStacks.push(searchStack);
-        this.searchStackAddedSource.next(searchStack);
+
+        // We have to replace the stack if the entity already exists. No duplicated stacks.
+        const indexToReplace = this.searchStacks.findIndex((searchStackFind) => {
+            if(searchStackFind.entity) {
+                return searchStackFind.entity.name === searchStack.entity.name;
+            } else {
+                return searchStackFind.id === searchStack.id;
+            }
+        });
+        if (indexToReplace !== -1) {
+            this.searchStacks[indexToReplace] = searchStack;
+            this.searchStackSavedSource.next(searchStack);
+        } else {
+            searchStack.id = this.currentSearchStackID;
+            this.currentSearchStackID++;
+            this.searchStacks.push(searchStack);
+            this.searchStackAddedSource.next(searchStack);
+        }
     }
 
     editSearchStack(searchStack: SearchStack) {
@@ -51,5 +69,13 @@ export class SearchStackEventBus {
             this.searchStacks.splice(indexOfItemToRemove, 1);
         }
         this.searchStackDeletedSource.next(searchStack);
+    }
+
+    clearSearchStack() {
+        this.searchStacks = Array<SearchStack>();
+    }
+
+    reloadSearch() {
+      this.searchReloadSource.next();
     }
 }

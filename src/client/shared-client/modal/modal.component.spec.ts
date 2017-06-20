@@ -1,23 +1,16 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { SohoMessageService, SohoMessageRef } from '@infor/sohoxi-angular';
+import { TestingModule } from 'testing';
+import { SohoMessageService, SohoMessageRef, SohoModalDialogService } from '@infor/sohoxi-angular';
 import { ModalComponent } from './modal.component';
 import { InfoEventBus, ErrorEventBus } from 'event-buses';
 
-describe('DocumentDetailsComponent', () => {
+describe('ModalComponent', () => {
   let fixture: ComponentFixture<ModalComponent>;
   let component: ModalComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [],
-      declarations: [
-        ModalComponent
-      ],
-      providers: [
-        SohoMessageService,
-        InfoEventBus,
-        ErrorEventBus
-      ]
+      imports: [ TestingModule ]
     });
   });
 
@@ -26,30 +19,16 @@ describe('DocumentDetailsComponent', () => {
     component = fixture.componentInstance;
   });
 
-  describe('Test simple operations', () => {
-    it('should create the component', () => {
-      expect(component).toBeTruthy();
-    });
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
 
-    it('open info modal', () => {
-      expect(component.dialog).toBeUndefined();
-      component.openInfo({
-        title: 'Title',
-        message: 'Message'
-      });
-      expect(component.dialog).toBeDefined();
+  it('open info modal', () => {
+    expect(component.dialog).toBeUndefined();
+    component.openInfo({
+      title: 'Title',
+      message: 'Message'
     });
-
-    it('open error modal', () => {
-      expect(component.dialog).toBeUndefined();
-      component.openError({
-        name: 'Title',
-        message: 'Message',
-        description: '',
-        statusCode: 1,
-        statusText: ''
-      });
-      expect(component.dialog).toBeDefined();
-    });
+    expect(component.dialog).toBeDefined();
   });
 });

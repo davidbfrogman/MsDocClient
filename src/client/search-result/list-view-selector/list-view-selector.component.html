@@ -1,7 +1,7 @@
 <soho-toolbar>
       <soho-toolbar-button-set>
-        <button soho-button="icon" icon="idm-detailList" id="detailButton" (click)="onDetailListSelected()">Detail</button><!--todo: Add translation: BUTTON_DETAILS-->
-        <button soho-button="icon" icon="idm-cardList" id="cardButton" (click)="onCardListSelected()">Card</button><!--todo: Add translation: BUTTON_THUMBNAILS-->
-        <button soho-button="icon" icon="idm-thumbnailList" id="thumbnailButton" (click)="onThumbnailListSelected()">Thumbnail</button><!--todo: Add translation: BUTTON_CARDS-->
+        <button soho-button="icon" icon="idm-detailList" id="detailButton" (click)="onDetailListSelected()">{{ translator.constants.BUTTON_DETAILS | translate }}</button>
+        <button soho-button="icon" icon="idm-cardList" id="cardButton" (click)="onCardListSelected()">{{ translator.constants.BUTTON_CARDS | translate }}</button>
+        <button soho-button="icon" icon="idm-thumbnailList" id="thumbnailButton" (click)="onThumbnailListSelected()">{{ translator.constants.BUTTON_THUMBNAILS | translate }}</button>
       </soho-toolbar-button-set>
 </soho-toolbar>

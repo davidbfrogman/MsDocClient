@@ -2,7 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { URLSearchParams } from '@angular/http';
 import { TranslationDictionary } from 'models';
 import { Constants, TranslationConstants } from '../../constants';
-import { TranslationDictionaryData } from 'services/mock';
+import { TranslationDictionaryData } from 'services';
 import { Translator } from 'services';
 
 @Injectable()

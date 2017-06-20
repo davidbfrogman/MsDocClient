@@ -2,7 +2,6 @@ import { TestBed, ComponentFixture, async } from '@angular/core/testing';
 import { TestingModule } from 'testing';
 
 import { AppComponent } from './app.component';
-import { ErrorComponent } from './error/error.component';
 import { PageNotFoundComponent } from './not-found.component';
 
 describe('AppComponent', () => {
@@ -13,7 +12,6 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         AppComponent,
-        ErrorComponent,
         PageNotFoundComponent
       ],
       imports: [

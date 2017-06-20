@@ -6,7 +6,12 @@
           {{ attribute.name }}
         </div>
         <div class="nine columns">
-          <idm-attribute-field [attribute]="attribute" [editable]="isItemEditable"></idm-attribute-field>
+          <idm-attribute-field 
+              [attribute]="attribute" 
+              [editable]="isItemEditable" 
+              [disabled]="!isItemEditable" 
+              [change]="onChange"
+              [context]="this"></idm-attribute-field>
         </div>
       </div>
     </div>

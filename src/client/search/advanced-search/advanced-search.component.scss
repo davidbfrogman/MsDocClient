@@ -2,7 +2,21 @@
     display: block;
 }
 
+div.advanced-left-align{
+    float: left;
+    padding-top: 7px;
+    padding-left: 10px;
+}
+
+div.arrow-right-align {
+    text-align: right;
+}
+
+div.advanced-search:hover {
+    background-color: #ccc;
+}
+
 // # TODO change textarea with to 100%
 textarea {
-    width: 300px;
+    width: 100%;
 }

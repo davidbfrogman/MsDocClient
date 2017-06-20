@@ -1,11 +1,11 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
 import { SohoToolbarModule } from '@infor/sohoxi-angular';
 import { SohoIconModule } from '@infor/sohoxi-angular';
-import { Item, ActionButton, Action, Configuration } from 'models';
+import { Item, ActionButton, Action, Configuration, BatchOperation, AppError } from 'models';
 import { ActionEventBus, SelectedItemsEventBus, ItemTabsEventBus, ErrorEventBus, ConfigurationEventBus } from 'event-buses';
 import { ActionsType, ActionViewsType } from 'enumerations';
-import { ItemUtility, ActionUtility, ActionButtonUtility } from 'utility';
-import { ItemService } from 'services';
+import { ItemUtility, ActionUtility, ActionButtonUtility, BatchUtility } from 'utility';
+import { ItemService, BatchService, Translator } from 'services';
 import { Constants } from '../../../constants';
 
 @Component({
@@ -15,10 +15,11 @@ import { Constants } from '../../../constants';
 })
 
 export class ActionMenuComponent implements OnChanges {
-  @Input() item: Item;
   @Input() actionView: ActionViewsType = ActionViewsType.SearchResult;
-  public actionButtons: ActionButton[] = [];
-  private selectedItems: Item[];
+  @Input() selectedItems: Item[];
+  @Input() isItemDirty: boolean;
+  @Output() isItemDirtyChanged:  EventEmitter<boolean> = new EventEmitter<boolean>();
+  public actionButtons: ActionButton[];
   public showButtonTitle: boolean;
   public buttonType: string;
   private currentUser;
@@ -26,47 +27,32 @@ export class ActionMenuComponent implements OnChanges {
   public actions = ActionsType; // Added to use the enums in the html
   public actionsViewType = ActionViewsType; // Added to use the enums in the html
 
-  constructor(public actionEventBus: ActionEventBus, private selectedItemsEventBus: SelectedItemsEventBus,
-    private itemTabsEventBus: ItemTabsEventBus, private itemService: ItemService, private errorEventBus: ErrorEventBus,
-    private configurationEventBus: ConfigurationEventBus) {
-    this.subscribeToSelectedItemsChanged();
-    this.currentUser = configurationEventBus.getConfiguration(Constants.PROP_CONNECTION_USERNAME);
-  }
+  constructor(
+    public actionEventBus: ActionEventBus,
+    private selectedItemsEventBus: SelectedItemsEventBus,
+    private itemTabsEventBus: ItemTabsEventBus,
+    private itemService: ItemService,
+    private errorEventBus: ErrorEventBus,
+    private configurationEventBus: ConfigurationEventBus,
+    private batchService: BatchService,
+    private translator: Translator
+  ) {
 
-  protected subscribeToSelectedItemsChanged() {
-    this.selectedItemsEventBus.selectedItemsChanged$.subscribe((selectedItems) => {
-      if (!this.item) {
-        this.selectedItems = null;
-        this.selectedItems = this.selectedItemsEventBus.selectedItems;
-        if (!this.actionButtons || this.actionButtons.length < 1) {
-          this.actionButtons = ActionButtonUtility.getActionButtons(this.actionView, 'list');
-        }
-        this.updateButtonVisability();
-      }
-    });
+    this.currentUser = configurationEventBus.getConfiguration(Constants.PROP_CONNECTION_USERNAME);
   }
 
   ngOnChanges() {
     this.setViewSpecificValues();
-    this.setItemAsSelectedItem(this.item);
-    if (!this.actionButtons || this.actionButtons.length < 1 && this.item) {
-      this.actionButtons = ActionButtonUtility.getActionButtons(this.actionView, this.item.entityName + '-' + this.item.id);
+    // Update for Detail view
+    if (!this.actionButtons || this.actionButtons.length < 1) {
+      if (this.actionView === ActionViewsType.Details) {
+        const item = this.selectedItems[0];
+        this.actionButtons = ActionButtonUtility.getActionButtons(this.actionView, item.uniqueId);
+      } else {
+        this.actionButtons = ActionButtonUtility.getActionButtons(this.actionView, 'list');
+      }
     }
-    this.updateButtonVisability();
-  }
-
-  private setItemAsSelectedItem(item: Item): void {
-    if (this.item) {
-      this.selectedItems = null;
-      this.selectedItems = [item];
-    }
-  }
-
-  public isVisible(): boolean {
-    if (this.selectedItems && this.selectedItems.length > 0) {
-      return true;
-    }
-    return false;
+    this.updateButtonBehaviour(this.isItemDirty);
   }
 
   public onAction(action: ActionsType): void {
@@ -86,87 +72,117 @@ export class ActionMenuComponent implements OnChanges {
       case ActionsType.DiscardCheckOut:
         this.onActionDiscardCheckOut();
         break;
-      default:
-        break;
     }
   }
 
   private onActionDisplay(): void {
     this.selectedItems.forEach(item => {
-      this.itemTabsEventBus.openItemTab(item);
+      this.itemTabsEventBus.open(item);
       this.actionEventBus.triggerAction(
         ActionUtility.createNewAction(ActionsType.Display, this.selectedItems));
     });
   }
 
   private onActionSave(): void {
-    if (this.item.pid) { // Update
-      this.itemService.update(this.item, this.item.pid, { checkout: false }).subscribe(resultItem => {
-        this.item = resultItem;
-        this.actionEventBus.triggerAction(
-          ActionUtility.createNewAction(ActionsType.Save, this.selectedItems));
-      }, error => {
-        this.errorEventBus.throw(error);
-      });
-    } else if (this.item) { // Create new
-      this.itemService.create(this.item).subscribe(resultItem => {
-        this.item = resultItem;
-        this.actionEventBus.triggerAction(
-          ActionUtility.createNewAction(ActionsType.Save, this.selectedItems));
-      }, error => {
-        this.errorEventBus.throw(error);
-      });
-    }
+    this.selectedItems.forEach(item => {
+      if (item.pid) { // Update
+        this.itemService.update(item, item.pid, { checkout: false }).subscribe(resultItem => {
+          this.updateAfterAction(ActionsType.Save, resultItem);
+        }, error => {
+          this.errorEventBus.throw(error);
+        });
+      } else if (item) { // Create new
+        this.itemService.create(item).subscribe(resultItem => {
+          this.updateAfterAction(ActionsType.Save, resultItem, item);
+        }, error => {
+          this.errorEventBus.throw(error);
+        });
+      }
+    });
   }
 
   private onActionCheckOut(): void {
-    if (this.selectedItems) {
-      // TODO: use batch operations
-      this.selectedItems.forEach(item => {
-        if (!ItemUtility.isCheckedOut(item)) {
-          this.itemService.checkOut(item.pid).subscribe((resultItem: Item) => {
-            this.updateAfterAction(ActionsType.DiscardCheckOut, item, resultItem);
-          }, error => {
-            this.errorEventBus.throw(error);
-          });
-        }
+    if (this.actionView === ActionViewsType.Details) {
+      const item = this.selectedItems[0];
+      this.itemService.checkOut(item.pid).subscribe((resultItem: Item) => {
+        this.updateAfterAction(ActionsType.CheckOut, resultItem);
+      }, error => {
+        this.errorEventBus.throw(error);
+      });
+    } else if (this.selectedItems) {
+      const currentSelectedItems = this.selectedItems.slice(); // Copy selected items
+      this.batchService.checkOutItems(currentSelectedItems).subscribe(batchOperations => {
+        this.handleBatchResult(currentSelectedItems, batchOperations, ActionsType.CheckOut);
       });
     }
   }
 
   private onActionCheckIn(): void {
-    if (this.selectedItems) {
-      // TODO: use batch operations
-      this.selectedItems.forEach(item => {
-        if (ItemUtility.isCheckedOut(item)) {
-          this.itemService.checkIn(item.pid).subscribe((resultItem: Item) => {
-            this.updateAfterAction(ActionsType.DiscardCheckOut, item, resultItem);
-          }, error => {
-            this.errorEventBus.throw(error);
-          });
-        }
+    if (this.actionView === ActionViewsType.Details) {
+      const item = this.selectedItems[0];
+      this.itemService.checkIn(item.pid).subscribe((resultItem: Item) => {
+        this.updateAfterAction(ActionsType.CheckIn, resultItem);
+      }, error => {
+        this.errorEventBus.throw(error);
+      });
+    } else if (this.selectedItems) {
+      const currentSelectedItems = this.selectedItems.slice(); // Copy selected items
+      this.batchService.checkInItems(currentSelectedItems).subscribe(batchOperations => {
+        this.handleBatchResult(currentSelectedItems, batchOperations, ActionsType.CheckIn);
       });
     }
   }
 
   private onActionDiscardCheckOut(): void {
-    if (this.selectedItems) {
-      // TODO: use batch operations
-      this.selectedItems.forEach(item => {
-        if (ItemUtility.isCheckedOut(item)) {
-          this.itemService.undoCheckOut(item.pid).subscribe((resultItem: Item) => {
-            this.updateAfterAction(ActionsType.DiscardCheckOut, item, resultItem);
-          }, error => {
-            this.errorEventBus.throw(error);
-          });
-        }
+    if (this.actionView === ActionViewsType.Details) {
+        const item = this.selectedItems[0];
+        this.itemService.undoCheckOut(item.pid).subscribe((resultItem: Item) => {
+            // Since undoCheckOut rest endpoint returns discarded item
+            // We need to retrieve latest one by new retrieve request
+            this.itemService.get(item.pid).subscribe((retrievedItem: Item) => {
+              this.updateAfterAction(ActionsType.DiscardCheckOut, retrievedItem);
+            }, error => {
+              this.errorEventBus.throw(error);
+            });
+        }, error => {
+          this.errorEventBus.throw(error);
+        });
+    } else if (this.selectedItems) {
+      const currentSelectedItems = this.selectedItems.slice(); // Copy selected items
+      this.batchService.undoCheckOutItems(currentSelectedItems).subscribe(batchOperations => {
+        // Since undoCheckOut rest endpoint returns discarded item
+        // We need to retrieve latest one by new retrieve request
+        this.batchService.retrieveItems(currentSelectedItems).subscribe(result => {
+          this.handleBatchResult(currentSelectedItems, result, ActionsType.DiscardCheckOut);
+        });
       });
     }
   }
 
-  private updateAfterAction(action: ActionsType, itemBefore: Item,  itemAfter: Item) {
-    this.actionEventBus.triggerAction(ActionUtility.createNewAction(action, [itemAfter]));
-    this.selectedItemsEventBus.updateSelectedItem(itemAfter);
+  private handleBatchResult(items: Item[], batchOperations: BatchOperation[], action: ActionsType) {
+    // Handle errors in batchOperations
+    if (BatchUtility.containsException(batchOperations)) {
+      const error = BatchUtility.createError(items, batchOperations, this.translator);
+      this.errorEventBus.throw(error);
+    }
+
+    // Update items
+    for (let i = 0; i < batchOperations.length; i++) {
+      if (batchOperations[i].output && batchOperations[i].output.item) {
+        this.updateAfterAction(action, batchOperations[i].output.item);
+      }
+    }
+  }
+
+  private updateAfterAction(action: ActionsType, resultItem: Item, itemBefore: Item = null, isItemDirty: boolean = true) {
+    // if the action have changed the item, document is no longer dirty save button should be disabled.
+    if (isItemDirty) {
+      this.isItemDirty = false;
+      this.isItemDirtyChanged.emit(this.isItemDirty);
+    }
+    this.actionEventBus.triggerAction(ActionUtility.createNewAction(action, [resultItem]));
+    this.selectedItemsEventBus.set(resultItem);
+    this.itemTabsEventBus.update(resultItem, itemBefore);
   }
 
   public setViewSpecificValues(): void {
@@ -179,74 +195,47 @@ export class ActionMenuComponent implements OnChanges {
     }
   }
 
-  private updateButtonVisability(): void {
+  private updateButtonBehaviour(isItemDirty: boolean = false): void {
     if (this.selectedItems && this.selectedItems.length > 0) {
-      this.toggleSaveEnablement();
-      this.toggleDiscardCheckoutVisability();
-      this.toggleCheckinCheckoutButtonsVisability();
-    }
-  }
+      let showCheckinSet, showCheckoutSet, showDiscardCheckoutButton, newItem = false;
 
-  private changeSingleButtonVisability(actionButtons: ActionButton[], action: ActionsType, visible: boolean): void {
-    actionButtons.forEach(button => {
-      if (button.action === action) {
-        button.visible = visible;
-      }
-    });
-  }
+      this.selectedItems.forEach(item => {
+        if (!item.id) {
+          newItem = true;
+        }
+        // CheckIn is shown only if document is checked out by current user
+        if (item.checkedOutBy === this.currentUser && !showCheckinSet) {
+          showCheckinSet = true;
+        }
+        // CheckOut is shown only if document is not checked out
+        if (!item.checkedOutBy && !showCheckoutSet) {
+          showCheckoutSet = true;
+        }
+        // Check if there is some document checked out
+        if (ItemUtility.isCheckedOut(item)) {
+          showDiscardCheckoutButton = true;
+        }
+      });
+      this.actionButtons.forEach(button => {
 
-  private changeSingleButtonEnable(actionButtons: ActionButton[], action: ActionsType, enabled: boolean): void {
-    actionButtons.forEach(button => {
-      if (button.action === action) {
-        button.enabled = enabled;
-      }
-    });
-  }
-
-  private toggleSaveEnablement(): void {
-    if (this.selectedItems && this.selectedItems.length === 1) {
-      if (this.selectedItems[0].checkedOutBy || !this.selectedItems[0].createdTimestamp) { // TODO: Change to use isDirty flag
-        this.changeSingleButtonEnable(this.actionButtons, ActionsType.Save, true);
-      } else {
-        this.changeSingleButtonEnable(this.actionButtons, ActionsType.Save, false);
-      }
-    }
-  }
-  private toggleDiscardCheckoutVisability(): void {
-    let showDiscardCheckoutButton = false;
-
-    // Check if there is some document checked out
-    this.selectedItems.forEach(item => {
-      if (ItemUtility.isCheckedOut(item)) {
-        showDiscardCheckoutButton = true;
-      }
-    });
-    if (showDiscardCheckoutButton) {
-      this.changeSingleButtonVisability(this.actionButtons, ActionsType.DiscardCheckOut, true);
-    } else {
-      this.changeSingleButtonVisability(this.actionButtons, ActionsType.DiscardCheckOut, false);
-    }
-  }
-  private toggleCheckinCheckoutButtonsVisability(): void {
-    let showCheckinSet, showCheckoutSet = false;
-
-    this.selectedItems.forEach(item => {
-      // CheckIn is shown only if document is checked out by current user
-      if (item.checkedOutBy === this.currentUser && !showCheckinSet) {
-        this.changeSingleButtonVisability(this.actionButtons, ActionsType.CheckIn, true);
-        showCheckinSet = true;
-      }
-      // CheckOut is shown only if document is not checked out
-      if (!item.checkedOutBy && !showCheckoutSet) {
-        this.changeSingleButtonVisability(this.actionButtons, ActionsType.CheckOut, true);
-        showCheckoutSet = true;
-      }
-    });
-    if (!showCheckinSet) {
-      this.changeSingleButtonVisability(this.actionButtons, ActionsType.CheckIn, false);
-    }
-    if (!showCheckoutSet) {
-      this.changeSingleButtonVisability(this.actionButtons, ActionsType.CheckOut, false);
+        switch (button.action) {
+          case ActionsType.Save:
+              button.enabled = isItemDirty || newItem;
+            break;
+          case ActionsType.CheckIn:
+              button.visible = showCheckinSet;
+              button.enabled = !newItem;
+            break;
+          case ActionsType.CheckOut:
+              button.visible = showCheckoutSet;
+              button.enabled = !newItem;
+            break;
+          case ActionsType.DiscardCheckOut:
+              button.visible = showDiscardCheckoutButton;
+              button.enabled = !newItem;
+            break;
+        }
+      });
     }
   }
 }

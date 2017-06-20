@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { environment } from '../environments/environment';
 import { Constants } from '../constants';
 import { CacheEventBus } from 'event-buses';
 import { Item } from 'models';
-import { BaseService, CacheServiceConfigType } from 'services';
+import { BaseService, CacheConfig } from 'services';
 import { ItemUtility } from 'utility';
+import { MimeType } from 'enumerations';
 
 @Injectable()
 export class ItemService extends BaseService<Item> {
@@ -19,8 +20,9 @@ export class ItemService extends BaseService<Item> {
       encodeId: true,
       listUsesPlural: false,
       cacheConfig: {
-        tag: 'ItemService',
-        cache: false
+        tag: Constants.ITEM_SERVICE_CACHE_TAG,
+        isCacheable: false,
+        relatedTags: [Constants.RESOURCE_SERVICE_CACHE_TAG]
       }
     }, cacheEventBus);
   }
@@ -41,33 +43,42 @@ export class ItemService extends BaseService<Item> {
     return super.executeSingleOperation(id, `versions/${version}`);
   }
 
-  getVersions(id: string, cacheConfig?: CacheServiceConfigType): Observable<Item[]> {
+  getVersions(id: string, cacheConfig?: CacheConfig): Observable<Item[]> {
     return super.executeListOperation(id, 'versions', cacheConfig);
+  }
+
+  public retrieve(id: string): Observable<Item> {
+    return super.executeSingleOperation(id);
   }
 
   public revertVersion(id: string, version: number): Observable<Item> {
     return super.executeSingleOperation(id, `versions/${version}/revert`);
   }
 
-  search(query: string, offset: number, limit: number, cacheConfig?: CacheServiceConfigType): Observable<Item[]> {
-    return super.executeListOperation(null, 'search', {'$query': query, '$offset': offset, '$limit': limit}, cacheConfig);
-  }
-
-  // This is an example of how to cache the result of a searchPost
-  // TODO: implement corectly the Items search that POST an object with query options
-  searchPost(query: string, offset: number, limit: number, cacheConfig?: CacheServiceConfigType): Observable<Item[]> {
-    const url = this.buildUrl({operation: 'search', query: {'$offset': offset, '$limit': limit}});
-    const body = {queries: {query: '$query'}};
-    const cachedData: any = this.getCache(url, body, cacheConfig);
+  public search(
+    query: string, offset: number, limit: number, includeCount: boolean = true,
+    cacheConfig?: CacheConfig
+  ): Observable<Item[]> {
+    const url = this.buildUrl({
+      operation: 'search',
+      query: { '$offset': offset, '$limit': limit, '$includeCount': includeCount.toString() }
+    });
+    const body = query;
+    const cachedData: any = this.getCachedData(url, body, cacheConfig);
     if (cachedData) {
-        return Observable.of(cachedData);
+      return Observable.of(cachedData);
     } else {
-        return this.http.post(url, body, this.reqOptions).map((res: Response) => {
-              const responseObject = res.json();
-              const data: Item[] = responseObject[Object.keys(responseObject)[0]];
-              this.setCache(url, body, data, cacheConfig);
-          })
-          .catch(this.handleError);
+      const reqOptions: RequestOptions = new RequestOptions({
+        headers: new Headers({ 'Content-Type': MimeType.TEXT }),
+        withCredentials: true
+      });
+      return this.http.post(url, body, reqOptions).map((res: Response) => {
+        const responseObject = res.json();
+        const data: Item[] = responseObject.items;
+        this.setCachedData(url, body, data, cacheConfig);
+        return data;
+      })
+        .catch(this.handleError);
     }
   }
 
@@ -76,10 +87,10 @@ export class ItemService extends BaseService<Item> {
       throw new Error('Supplied item was undefined. Item should not be null to create from a template item.');
     }
     item.id = null;
-     item.pid = null;
-     item.version = null;
-     ItemUtility.getAttributeBasedOnName(item, Constants.TEMPLATE_ATTRIBUTE_NAME).value = null;
-     ItemUtility.getAttributeBasedOnName(item, Constants.TEMPLATE_ATTRIBUTE_DESCRIPTION).value = null;
-     return this.create(item);
+    item.pid = null;
+    item.version = null;
+    ItemUtility.getAttributeBasedOnName(item, Constants.TEMPLATE_ATTRIBUTE_NAME).value = null;
+    ItemUtility.getAttributeBasedOnName(item, Constants.TEMPLATE_ATTRIBUTE_DESCRIPTION).value = null;
+    return this.create(item);
   }
 }

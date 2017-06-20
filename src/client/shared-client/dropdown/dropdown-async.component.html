@@ -5,6 +5,7 @@
     displayDelay="0"
     noSearch
     [(ngModel)]="model.name"
+    (ngModelChange)="ngOnModelChange()"
     [name]="name">
     <option *ngFor="let item of (dropdownItemsSource | async)" [value]="item.name">
       {{ item.name }}

@@ -1,7 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { SohoToolbarComponent } from '@infor/sohoxi-angular';
 import { ViewSelectorEventBus} from 'event-buses';
 import { SearchResultListViewsType } from 'enumerations';
+import { Translator } from 'services';
 
 @Component({
   selector: 'idm-list-view-selector',
@@ -10,7 +11,7 @@ import { SearchResultListViewsType } from 'enumerations';
 })
 export class ListViewSelectorComponent implements OnInit {
 
-  constructor(private viewSelectorEventBus: ViewSelectorEventBus) { }
+  constructor(private viewSelectorEventBus: ViewSelectorEventBus, public translator: Translator) { }
   ngOnInit() {
     this.onCardListSelected();
    }

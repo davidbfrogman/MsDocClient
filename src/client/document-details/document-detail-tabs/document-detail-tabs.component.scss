@@ -24,3 +24,11 @@
   font-size: 10px;
 }
 
+.scroll-tab-container {
+  height: calc(85% - 150px);
+  overflow: auto;
+}
+
+.tabs-container {
+  height: calc(100%);
+}

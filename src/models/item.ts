@@ -1,7 +1,7 @@
 import { BaseModel } from './';
 import { Attribute } from './attribute';
 import { AttributeType } from '../enumerations';
-import { AttributeCollection, Acl } from 'models';
+import { AttributeCollection, Acl, ResultListColumn } from 'models';
 import { IAttributable } from 'models/interfaces/IAttributable';
 
 export class Item extends BaseModel implements IAttributable  {
@@ -28,6 +28,11 @@ export class Item extends BaseModel implements IAttributable  {
     public templateName?: string;
     public templateDescription?: string;
     public templateThumbnail?: string;
+
+    // Unique id is used only on client side to indetify the item.
+    public uniqueId?: string;
+    // Result list columns used only on client side
+    public resultListProperties?: Array<String> = [];
 
     public constructor() {
         super();

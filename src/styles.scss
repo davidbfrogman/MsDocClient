@@ -1,16 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 
 /*** Global variables ***/
+$soho-graphite-1: #f0f0f0;
 $color-white: rgba(255, 255, 255, 1);
+$color-red: #e84f4f;
 $font-color: rgba(102, 102, 102, 1);
 $font-color-lighter: rgba(140, 140, 140, 1);
 $font-size-label: 13px;
 $font-family-label: Helvetica, Arial, sans-serif;
-$color-off-white: #f0f0f0;
 $color-border-grey:  #bdbdbd;
-$color-hide-details: #991f00;
-$color-border-error: #AAA;
-$color-close-error:#004d66;
+$color-link-disabled: #d8d8d8;
 /************************/
 
 .flexbox {
@@ -27,4 +26,10 @@ $color-close-error:#004d66;
 
 .text-right {
   text-align: right;
+}
+
+.modal-error {
+  .modal-title {
+    color: $color-red;
+  }
 }

@@ -1,15 +1,15 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AppInfoModal, AppInfoAction } from 'models';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class InfoEventBus {
-  public modalEventAdded: EventEmitter<AppInfoModal>;
+  private modalEventSource = new Subject<AppInfoModal>();
+  public modalEventOpen$ = this.modalEventSource.asObservable();
 
-  constructor () {
-    this.modalEventAdded = new EventEmitter();
-  }
+  constructor () { }
 
   throwModal(info: AppInfoModal) {
-    this.modalEventAdded.emit(info);
+    this.modalEventSource.next(info);
   }
 }

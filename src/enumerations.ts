@@ -42,7 +42,10 @@ export enum AttributeType {
     Double = 8,
     Boolean = 9,
     MultiValue = 10,
-    GUID = 11
+    GUID = 11,
+
+    // Virtual type so we can calculate form value and api value
+    Size = 12
 }
 
 export enum FormFieldType {
@@ -68,8 +71,8 @@ export const ItemResourceType = {
 export enum CacheEventType {
     Set = 1,
     Get = 2,
-    RemoveTag = 3,
-    RemoveAll = 4
+    RemoveAllByTag = 3,
+    Clear = 4
 }
 
 export enum ConfigurationEventType {
@@ -77,7 +80,7 @@ export enum ConfigurationEventType {
 }
 
 export const enum CacheStorageType {
-    Memory = 1
+    Memory = 1,
 }
 
 export enum SearchResultListViewsType {
@@ -105,4 +108,28 @@ export enum ActionsType {
 export enum ActionViewsType {
     SearchResult = 1,
     Details = 2
+}
+
+export const MimeType = {
+    JSON: 'application/json',
+    TEXT: 'text/plain'
+};
+
+export enum BatchOperationType {
+    ADD_ITEM = 0,
+    UPDATE_ITEM = 1,
+    RETRIEVE_ITEM = 2,
+    RETRIEVE_ITEMS = 3,
+    DELETE_ITEM = 4,
+    DELETE_ITEMS = 5,
+    CHECKIN_ITEM = 6,
+    CHECKIN_ITEMS = 7,
+    CHECKOUT_ITEM = 8,
+    CHECKOUT_ITEMS = 9,
+    SEARCH_ITEMS = 10,
+    SEARCH_COUNT = 11,
+    UNDO_CHECKOUT_ITEM = 12,
+    UNDO_CHECKOUT_ITEMS = 13,
+    COPY_ITEM = 14,
+    COPY_ITEMS = 15
 }

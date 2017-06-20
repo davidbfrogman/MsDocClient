@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, Output, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -31,6 +31,7 @@ export class AttributeSearchComponent implements OnInit {
 
   public selectedEntity: Entity;
   public selectedAttribute: Attribute;
+  public previouslySelectedAttribute: Attribute;
   public selectedAttributeEmpty: Attribute = this.buildDefaultAttribute();
   public selectedOperation: Operation;
   public searchUserFormControl = new FormControl();
@@ -142,6 +143,7 @@ export class AttributeSearchComponent implements OnInit {
       operand: this.getOperand(), // this will get the value out of dropdown/textbox/datepicker for us
       freeTextSearchOperand: this.freeTextSearch,
       searchStacks: this.searchStackEventBus.searchStacks,
+      entityList: this.entityList
     }).build();
     this.xQueryEventBus.changexQuery(this.xQuery);
   }
@@ -152,12 +154,14 @@ export class AttributeSearchComponent implements OnInit {
 
     this.searchStackEventBus.saveSearchStack(stackToSave);
     this.isEditingSearchStack = false;
-    this.onSelectedEntityChanged();
+    this.resetAllControls();
   }
 
   public onClickAddStack() {
-    this.searchStackEventBus.addSearchStack(this.getSearchStackFromUI());
-    this.resetAllControls();
+    if (this.getSearchStackFromUI().entity) {
+      this.searchStackEventBus.addSearchStack(this.getSearchStackFromUI());
+      this.resetAllControls();
+    }
   }
 
   public getSearchStackFromUI(): SearchStack {
@@ -166,13 +170,15 @@ export class AttributeSearchComponent implements OnInit {
       this.selectedAttribute,
       this.selectedOperation,
       this.getOperand(),
-      this.freeTextSearch,
+      '',
       '',
     );
   }
 
   public onClickReset() {
     this.resetAllControls();
+    this.searchStackEventBus.clearSearchStack();
+    this.xQueryEventBus.changexQuery('');
   }
 
   public onClickCancel() {
@@ -182,13 +188,9 @@ export class AttributeSearchComponent implements OnInit {
   public onSelectedEntityChanged(entity?: Entity) {
     this.resetAttributeControlls();
     if (entity && entity.attrs) {
+      const isComprehensiveAttrBuilt = entity.isComprehensiveAttrBuilt;
       // Here we need to load the attr list from the entity, and populate the attribute drop down list
       this.attributeList = EntityUtility.BuildComprehensiveAttributes(entity).comprehensiveAttributes;
-      this.attributeList.forEach(attribute => {
-        if (attribute.isDefault) {
-          attribute.name = this.translator.translate(attribute.name);
-        }
-      });
     }
   }
 
@@ -197,9 +199,11 @@ export class AttributeSearchComponent implements OnInit {
       this.selectDefaultAttributeValue();
       this.operatorList = null;
       this.operatorList = new SearchOperationFactory().getOperations(attribute);
+      this.selectedOperation = this.operatorList[0];
       if (attribute.isUserForSearching) {
         this.isUserSearchingActive = false;
       }
+      this.previouslySelectedAttribute = this.selectedAttribute;
     }
   }
 
@@ -237,7 +241,7 @@ export class AttributeSearchComponent implements OnInit {
   }
 
   public getOperand(): string {
-    return (this.selectedAttribute !== undefined) ? this.selectedAttribute.value : null;
+    return (this.selectedAttribute !== undefined) ? AttributeUtility.getFormValue(this.selectedAttribute) : null;
   }
 
   public setOperand(operand: string) {
@@ -256,6 +260,13 @@ export class AttributeSearchComponent implements OnInit {
   }
 
   private selectDefaultAttributeValue() {
-    this.selectedAttribute.value = AttributeUtility.computeDefaultValue(this.selectedAttribute);
+    const oldAttr = this.previouslySelectedAttribute;
+    const newAttr = this.selectedAttribute;
+
+    if (this.previouslySelectedAttribute && AttributeUtility.attributesTypeMatch(oldAttr, newAttr)) {
+      this.selectedAttribute.value = AttributeUtility.computeDefaultValue(this.selectedAttribute, oldAttr.value);
+    } else {
+      this.selectedAttribute.value = AttributeUtility.computeDefaultValue(this.selectedAttribute);
+    }
   }
 }

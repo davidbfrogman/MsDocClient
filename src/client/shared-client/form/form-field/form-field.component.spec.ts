@@ -1,5 +1,5 @@
 import { TestingModule } from 'testing';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, tick, TestBed } from '@angular/core/testing';
 import { FormFieldComponent } from 'client/shared-client';
 import { FormFieldType } from 'enumerations';
 
@@ -101,5 +101,4 @@ describe('FormFieldComponent', () => {
     expect(component.showDateTimePicker).toEqual(true);
     expect(component.showReadonly).toEqual(false);
   }));
-
 });

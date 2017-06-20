@@ -16,17 +16,47 @@ export class Constants {
     public static SEARCH_INITIAL_XQUERY: string = '/MDS_GenericDocument';
     public static SEARCH_QUERY_CHECKOUT_BY_ME = '/MDS_File';
     public static SEARCH_QUERY_CREATED_BY_ME = '/MDS_GenericDocument';
+    public static SEARCH_PAGE_SIZE: number = 5;
     public static TEMPLATE_ATTRIBUTE_ID = 'MDS_ID';
     public static TEMPLATE_ATTRIBUTE_NAME = 'MDS_TemplateName';
     public static TEMPLATE_ATTRIBUTE_DESCRIPTION = 'MDS_TemplateDetails';
 
+    public static RESOURCE_SERVICE_CACHE_TAG: string = 'ResourceService';
+    public static ITEM_SERVICE_CACHE_TAG: string = 'ItemService';
+
     // Configuration
     public static PROP_CONNECTION_USERNAME = 'Username';
+    public static SEARCH_RESULT_PAGE_SIZE = 'SearchResultPageSize';
+
+    // Result list available properties
+    public static ITEM_PROP_ID = 'id';
+    public static ITEM_PROP_PID = 'pid';
+    public static ITEM_PROP_VERSION = 'version';
+    public static ITEM_PROP_ENTITY_NAME = 'entityName';
+    public static ITEM_PROP_CREATED_BY = 'createdBy';
+    public static ITEM_PROP_CREATED_TS = 'createdTS';
+    public static ITEM_PROP_CHECKEd_OUT_BY = 'checkedOutBy';
+    public static ITEM_PROP_CHECKED_OUT_TS = 'checkedOutTS';
+    public static ITEM_PROP_LAST_CHANGED_BY = 'lastChangedBy';
+    public static ITEM_PROP_LAST_CHANGED_TS = 'lastChangedTS';
+    public static ITEM_PROP_SIZE = 'size';
+    public static ITEM_PROP_DISPLAY_NAME = 'displayName';
+    public static ITEM_PROP_FILENAME = 'filename';
+    public static ITEM_PROP_ITEMID = 'itemid';
+    public static RESULT_LIST_DEFAULT_PROPS = ['prop:entityName', 'prop:createdBy', 'prop:createdTS', 'prop:lastChangedTS'];
 
     public static LOCALE_DEFAULT_LOCALE = 'en';
 }
 
 export class TranslationConstants {
+
+//  TO DO TranslationConstants - send for translation
+
+    public static MAIN_WINDOW_TAB_CONTROL_CENTER: string = 'MainWindowTabControlCenter';
+    public static EDIT: string = 'Edit';
+    public static REMOVE: string = 'Remove';
+    public static TEMPLATES: string = 'Templates';
+
     // PreLoading
     public static LOADING: string = 'AnnotationsLoading';
     public static FAILED: string = 'Failed';
@@ -125,6 +155,7 @@ export class TranslationConstants {
     public static VERSION: string = 'Version';
     public static HISTORY: string = 'History';
     public static ID: string = 'ID';
+    public static PID: string = 'PID';
     public static CHECKED_OUT_TIMESTAMP: string = 'CheckedOutTS';
     public static LAST_CHANGED_BY: string = 'LastChangedBy';
     public static ACCESS_CONTROL_LIST: string = 'AccessControlList';
@@ -183,6 +214,12 @@ export class TranslationConstants {
     public static PRINT: string = 'Print';
     public static SAVE_TO_IDM: string = 'SaveToIdm';
 
+    // Pagination
+    public static FIRST_PAGE: string = 'FirstPage';
+    public static PREVIOUS_PAGE: string = 'PreviousPage';
+    public static NEXT_PAGE: string = 'NextPage';
+    public static LAST_PAGE: string = 'LastPage';
+
     // Tabs
     public static CLOSE: string = 'MenuItemClose';
     public static MORE: string = 'More';
@@ -217,6 +254,9 @@ export class TranslationConstants {
     public static CREATE_BLANK_DOCUMENT: string = 'CreateBlankDocument';
     public static CREATE_DOCUMENT: string = 'CreateDocument';
 
-    // Error message
+    // Error messages
     public static ERROR_RETRIEVE_ITEM: string = 'ErrorApiRetrieveItem';
+    public static ERROR_INVALID_NUMBER: string = 'ErrorInvalidNumber';
+    public static ERROR_INVALID_TIME: string = 'ErrorInvalidTime';
+    public static ERROR_STRING_LONG: string = 'ErrorStringLong';
 }

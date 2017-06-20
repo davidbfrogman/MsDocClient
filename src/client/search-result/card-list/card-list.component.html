@@ -5,24 +5,22 @@
   (selected)="onSelected($event)">
   
   <soho-toolbar  class="contextual-toolbar" maxVisibleButtons="20" id="ListToolbar"
-        hasMoreButton="false" rightAlign="true"  [class.is-hidden]="!isActionMenuVisible()"><!--*ngIf="isActionMenuVisible()"-->
-            <soho-toolbar-button-set id="ListToolbarButtonset">
-              <idm-action-menu select="soho-toolbar-button-set" [actionView]="actionViewsType.SearchResult" id="ListActionMenu"></idm-action-menu>
-            </soho-toolbar-button-set>
-          </soho-toolbar>
-    
-    <li soho-listview-item *ngFor="let item of items; trackBy: trackItems;" [id]="item.pid" >
+    [ngClass]="{'selectedToolbar': isActionMenuVisible()}"
+    hasMoreButton="false" rightAlign="true"  [class.is-hidden]="!isActionMenuVisible()"><!--*ngIf="isActionMenuVisible()"-->
+        <soho-toolbar-button-set id="ListToolbarButtonset">
+          <idm-action-menu select="soho-toolbar-button-set" [actionView]="actionViewsType.SearchResult" [selectedItems]="selectedItemsEventBus.items" id="ListActionMenu"></idm-action-menu>
+        </soho-toolbar-button-set>
+      </soho-toolbar>
+  <li soho-listview-item *ngFor="let item of items" [id]="item.uniqueId" 
+      [ngClass]="{'is-selected': isItemSelected(item) }" aria-selected="isItemSelected(item)">
         <div class="row">
           <div class="card-list-row">
             <div class="image-content">
               <idm-resource-image [item]="item" type="Thumbnail" useQueue="true"></idm-resource-image>
             </div>
             <div class="card-list-columns">
-              <p soho-listview-micro> {{item.pid}}</p>
               <p soho-listview-header><a href="#" (click)="openItem(item)">{{getDisplayName(item)}}</a></p>
-              <p soho-listview-subheader>{{item.entityName}}</p>
-              <p soho-listview-micro> {{item.createdBy}}</p>
-              <p soho-listview-micro> {{item.checkedOutByName}}</p>
+              <div *ngFor="let property of item.resultListProperties"><idm-list-view-property [item]="item" [property]="property"></idm-list-view-property></div>
             </div>
           </div>
         </div>

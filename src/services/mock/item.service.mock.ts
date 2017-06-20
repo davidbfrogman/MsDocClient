@@ -19,6 +19,13 @@ export class ItemServiceMock extends ItemService {
     item.entityName = 'MDS_File';
     return item;
   }
+  public static getMockItemEditable(): Item {
+    const item = this.getMockItem();
+    item.entityName = 'MDS_File';
+    item.checkedOutBy = 'TestUser';
+    item.checkedOutTimestamp = '2017-04-10T13:05:51Z';
+    return item;
+  }
   constructor(protected http: Http, protected cacheEventBus: CacheEventBus) {
     super(http, cacheEventBus);
   }

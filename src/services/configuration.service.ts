@@ -5,23 +5,23 @@ import 'rxjs/add/operator/map';
 import { environment } from '../environments/environment';
 import { CacheEventBus } from 'event-buses';
 import { Property } from 'models';
-import { BaseService, CacheServiceConfigType } from 'services';
+import { BaseService, CacheConfig } from 'services';
 
 @Injectable()
 export class ConfigurationService extends BaseService<Property> {
-  constructor(protected http: Http) {
+  constructor(protected http: Http, protected cacheEventBus: CacheEventBus) {
     super(http, Property, {
       rootApiUrl: environment.restUrls.ca,
       urlSuffix: 'connection',
       urlSuffixPlural: 'connection',
       cacheConfig: {
         tag: 'ConfigurationService',
-        cache: false
+        isCacheable: false
       }
-    }, null);
+    }, cacheEventBus);
   }
 
-  properties(cacheConfig?: CacheServiceConfigType): Observable<Property[]> {
-    return super.executeListOperation(null, 'properties', cacheConfig);
+  properties(): Observable<Property[]> {
+    return super.executeListOperation(null, 'properties');
   }
 }

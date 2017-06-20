@@ -1,36 +1,67 @@
+<soho-header>
+  <soho-toolbar hasMoreButton="true">
+    <soho-toolbar-title>
+      <h1>
+        <span soho-page-title>Document Management</span>
+      </h1>
+    </soho-toolbar-title>
+    <soho-toolbar-button-set>
+        <button soho-button="tertiary" icon="add" (click)="openAddDocumentComponent()">{{ translator.constants.ADD_NEW_DOCUMENT | translate }}</button>
+    </soho-toolbar-button-set>
+  </soho-toolbar>
+</soho-header>
+
 <div soho-tabs (activated)="onTabActivated($event)" (afterClose)="onTabClose($event)">
+
   <ul soho-tab-list>
-        <li soho-tab selected="true"><a soho-tab-title tabId="tabs-documents">{{ translator.constants.MAIN_WINDOW_TAB_DOCUMENTS | translate }}</a></li>
-    <li soho-tab *ngFor="let item of itemTabsEventBus.openTabs" dismissible="true">
-      <a soho-tab-title [tabId]="item.tabId">{{item.title}}</a> <!--IF no display name use translation NoName-->
+    <li soho-tab selected="true"><a soho-tab-title tabId="tabs-documents">{{ translator.constants.MAIN_WINDOW_TAB_DOCUMENTS | translate }}</a></li>
+    <li soho-tab *ngFor="let itemTab of itemTabsEventBus.openTabs" dismissible="true">
+      <a soho-tab-title [tabId]="itemTab.tabId">
+        <div class="idm-tab-title">
+          <div *ngIf="itemTab.item?.checkedOutBy" soho-tooltip title="{{translator.constants.CHECKED_OUT_BY | translate}} {{itemTab.item.checkedOutByName}}"
+            class="idm-tab-icon">
+            <svg *ngIf="itemTab.item.checkedOutBy == currentUser" soho-icon icon="unlocked" class="idm-tab-icon"></svg>
+            <svg *ngIf="itemTab.item.checkedOutBy != currentUser" soho-icon icon="locked" class="idm-tab-icon"></svg>
+          </div>
+          <div soho-tooltip title="{{itemTab.title}}" class="idm-tab-name">{{itemTab.title}}</div> <!--IF no display name use translation NoName-->
+          <div *ngIf="!itemTab.latestVersion" class="idm-tab-version" soho-tooltip title="{{translator.constants.VERSION | translate}}"> ({{itemTab.item?.version}})</div>
+        </div>
+      </a>
     </li>
-    <li soho-tab dismissible="true"><a soho-tab-title tabId="tabs-dismissible-cc">Control Center</a></li>
+    <li soho-tab dismissible="true">
+      <a soho-tab-title tabId="tabs-dismissible-cc">{{ translator.constants.MAIN_WINDOW_TAB_CONTROL_CENTER | translate }}</a>
+    </li>
   </ul>
 
   <div soho-tab-panel tabId="tabs-documents" id="search-tab">
     <div class="container">
-        <div class="search-container">
-            <button id="add-btn" soho-button="primary" (click)="openAddDocumentComponent()">{{ translator.constants.ADD_NEW_DOCUMENT | translate }}</button>
-            <idm-search></idm-search>
-        </div>
-        <div class="result-container">
-          <idm-search-result></idm-search-result>
-        </div>
+      <div class="search-container">
+       <idm-search></idm-search>
+      </div>
+      <div class="result-container">
+        <idm-search-result></idm-search-result>
+      </div>
     </div>
   </div>
-  
-  <div soho-tab-panel *ngFor="let item of itemTabsEventBus.openTabs" [tabId]="item.tabId">
-    <idm-document-details [item]="item.item"></idm-document-details>
+
+  <div soho-tab-panel *ngFor="let itemTab of itemTabsEventBus.openTabs" [tabId]="itemTab.tabId">
+    <idm-document-details [item]="itemTab.item" [tabId]="itemTab.tabId"></idm-document-details>
   </div>
+  
   <div soho-tab-panel tabId="tabs-dismissible-cc">
     <idm-control-center></idm-control-center>
   </div>
+  
 </div>
 
 <div #addDocumentDialogPlaceholder>
 
-<!--<div class="row">
+  <idm-soho-modal></idm-soho-modal>
+
+  <!--<div class="row">
   <div class="columns">
     <idm-service-utility></idm-service-utility>
   </div>
 </div>-->
+
+</div>

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { AttributeSearchComponent } from './attribute-search/attribute-search.component';
 import { SearchStackEventBus, XQueryEventBus } from '../../event-buses/';
 

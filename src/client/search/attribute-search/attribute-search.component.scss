@@ -22,11 +22,10 @@
 }
 
 .user-list-view{
-    position: absolute;
+    position: relative;
     width: 300px;
     z-index: 20;
-    left: 20px;
-    background-color: $color-off-white;
+    background-color: $soho-graphite-1;
 }
 
 .user-item{

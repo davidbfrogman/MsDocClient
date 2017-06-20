@@ -5,6 +5,7 @@ export const ItemData = {
   acl: {
     name: 'Default'
   },
+  id: '1',
   pid: 'MDS_File-1-3-LATEST',
   filename: '12-13-16 Windows 10 Quick Start Guide 1.0 12-13-16 (1).pdf',
   displayName: 'My document',

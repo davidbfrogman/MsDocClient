@@ -1,3 +1,4 @@
+
 #add-btn {
   margin-bottom: 18px;
 }
@@ -14,8 +15,10 @@
   }
 
   .result-container {
+    height: 100%;
     width: 100%;
     margin-left: 20px;
+    overflow: auto;
 
     idm-search-result {
       width: 100%;
@@ -28,11 +31,40 @@
 }
 
 .tab-container.horizontal { // Soho tab-container
-  height: 100%;
+  height: calc(100% - 60px); // Minus Soho header
   overflow: hidden;
   margin-bottom: 0px;
 
   div[soho-tab-panel] {
-    height: 100%;
+   height: 100%;
+  }
+
+  .tab-list > .tab a {
+    // Override SoHo style
+    // Total height of tab should be 50px
+    padding: 18px 11px 16px; 
+    line-height: 16px;
+    div {
+      pointer-events: auto;
+      white-space: nowrap;
+    }
+  }
+}
+
+.idm-tab-title {
+  display: flex;
+
+  .idm-tab-icon {
+    height: 16px;
+  }
+
+  .idm-tab-name {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .idm-tab-version {
+    margin-left: 5px;
   }
 }

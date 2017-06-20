@@ -7,11 +7,15 @@ import { SearchOperationFactory } from 'client/search/search-operation-factory';
 import { OperationType } from 'enumerations';
 import { Entity, Operation, Attribute, SearchStack } from 'models';
 import { EntityUtility } from 'utility';
+import { TranslatorMock, Translator } from 'services';
 
 describe('xQueryBuilder', () => {
 
+  const translator: Translator = new TranslatorMock();
   let mvEntity: Entity = Object.assign(new Entity(), EntitiesWithAttributes.entities.entity[2]);
+  mvEntity = EntityUtility.BuildComprehensiveAttributes(mvEntity);
   let mdsGenericDocument: Entity = Object.assign(new Entity(), EntitiesWithAttributes.entities.entity[0]);
+  const mdsFile: Entity = Object.assign(new Entity(), EntitiesWithAttributes.entities.entity[1]);
   const defaultAttributeIndex = 1; // This will allow us to find this attribute later in tests
   const searchStackForTesting = new SearchStack(
     mvEntity,
@@ -19,6 +23,16 @@ describe('xQueryBuilder', () => {
     new SearchOperationFactory().findOperationByType(OperationType.EqualTo),
     'searchStack Test',
     'searchStack FTS',
+    null
+  );
+  const searchStackForTestingSize = new SearchStack(
+    mvEntity,
+    mvEntity.comprehensiveAttributes.find((value: Attribute) => {
+      return value.qual === 'RESOURCESIZE';
+    }),
+    new SearchOperationFactory().findOperationByType(OperationType.EqualTo),
+    '10',
+    null,
     null
   );
   const searchStacksArray = new Array<SearchStack>();
@@ -103,7 +117,7 @@ describe('xQueryBuilder', () => {
     const queryBuilder = new XQueryBuilder().withConfig({
       entity: mvEntity,
       attribute: mvEntity.comprehensiveAttributes.find((value: Attribute) => {
-        return value.name === 'Size';
+        return value.qual === 'RESOURCESIZE';
       }), // Which is a value set attribute and 0 = draft
       operation: new SearchOperationFactory().findOperationByType(OperationType.EqualTo),
       operand: '10',
@@ -119,7 +133,7 @@ describe('xQueryBuilder', () => {
     const queryBuilder = new XQueryBuilder().withConfig({
       entity: mvEntity,
       attribute: mvEntity.comprehensiveAttributes.find((value: Attribute) => {
-        return value.name === 'Size';
+        return value.qual === 'RESOURCESIZE';
       }), // Which is a value set attribute and 0 = draft
       operation: new SearchOperationFactory().findOperationByType(OperationType.EqualTo),
       operand: '10',
@@ -136,7 +150,7 @@ describe('xQueryBuilder', () => {
     const queryBuilder = new XQueryBuilder().withConfig({
       entity: mvEntity,
       attribute: mvEntity.comprehensiveAttributes.find((value: Attribute) => {
-        return value.name === 'Size';
+        return value.qual === 'RESOURCESIZE';
       }),
       operation: new SearchOperationFactory().findOperationByType(OperationType.EqualTo),
       operand: '10X',
@@ -146,7 +160,7 @@ describe('xQueryBuilder', () => {
 
     const xQueryTemplate =
       `(/${mvEntity.name}[@${mvEntity.attrs.attr[defaultAttributeIndex].name} = ` +
-      `"${searchStacksArray[0].operand}" AND @RESOURCESIZE = "10X"]) INTERSECT CONTAINS(/${mvEntity.name}, "searchStack FTS")`;
+      `"${searchStacksArray[0].operand}" AND @RESOURCESIZE = "10X"]) INTERSECT CONTAINS(/${mvEntity.name}, "test")`;
     // I don't really care about spacing in the test.
     expect(xQueryTemplate.replace(/\s+/g, '')).toEqual(queryBuilder.build().replace(/\s+/g, ''));
   }));
@@ -157,7 +171,7 @@ describe('xQueryBuilder', () => {
     const queryBuilder = new XQueryBuilder().withConfig({
       entity: mdsGenericDocument,
       attribute: mdsGenericDocument.comprehensiveAttributes.find((value: Attribute) => {
-        return value.name === 'Size';
+        return value.qual === 'RESOURCESIZE';
       }),
       operation: new SearchOperationFactory().findOperationByType(OperationType.EqualTo),
       operand: '10X',
@@ -168,6 +182,78 @@ describe('xQueryBuilder', () => {
     const xQueryTemplate =
       `(/${mvEntity.name}[@${mvEntity.attrs.attr[defaultAttributeIndex].name} = ` +
       `"${searchStacksArray[0].operand}"]) UNION /${mdsGenericDocument.name}[@RESOURCESIZE = "10X"]`;
+    // I don't really care about spacing in the test.
+    expect(xQueryTemplate.replace(/\s+/g, '')).toEqual(queryBuilder.build().replace(/\s+/g, ''));
+  }));
+
+  it(`Use simple search test across all entities`, async(() => {
+    mdsGenericDocument.search = 'true';
+    mdsFile.search = 'true';
+    const queryBuilder = new XQueryBuilder().withConfig({
+      entityList: [mdsGenericDocument, mdsFile],
+      freeTextSearchOperand: 'test'
+    });
+
+    const xQueryTemplate =
+      `CONTAINS (/${mdsGenericDocument.name}|/${mdsFile.name}, "test")`;
+    // I don't really care about spacing in the test.
+    expect(xQueryTemplate.replace(/\s+/g, '')).toEqual(queryBuilder.build().replace(/\s+/g, ''));
+  }));
+
+  it(`Use simple search test with only one searchable entity`, async(() => {
+    mdsGenericDocument.search = 'false';
+    mdsFile.search = 'true';
+    const queryBuilder = new XQueryBuilder().withConfig({
+      entityList: [mdsGenericDocument, mdsFile],
+      freeTextSearchOperand: 'test'
+    });
+
+    const xQueryTemplate =
+      `CONTAINS (/${mdsFile.name}, "test")`;
+    // I don't really care about spacing in the test.
+    expect(xQueryTemplate.replace(/\s+/g, '')).toEqual(queryBuilder.build().replace(/\s+/g, ''));
+  }));
+
+  it(`Use simple search test with no seachable entities`, async(() => {
+    mdsGenericDocument.search = 'false';
+    mdsFile.search = 'false';
+    const queryBuilder = new XQueryBuilder().withConfig({
+      entityList: [mdsGenericDocument, mdsFile],
+      freeTextSearchOperand: 'test'
+    });
+
+    const xQueryTemplate = ``;
+    // I don't really care about spacing in the test.
+    expect(xQueryTemplate.replace(/\s+/g, '')).toEqual(queryBuilder.build().replace(/\s+/g, ''));
+  }));
+
+  it(`Use simple search test with no seachable entity and size operand`, async(() => {
+    mvEntity = EntityUtility.BuildComprehensiveAttributes(mvEntity);
+    mvEntity.search = 'false';
+    const queryBuilder = new XQueryBuilder().withConfig({
+      entity: mvEntity,
+      attribute: mvEntity.comprehensiveAttributes.find((value: Attribute) => {
+        return value.qual === 'RESOURCESIZE';
+      }), // Which is a value set attribute and 0 = draft
+      operation: new SearchOperationFactory().findOperationByType(OperationType.EqualTo),
+      operand: '10',
+      freeTextSearchOperand: 'test'
+    });
+
+    const xQueryTemplate = `/${mvEntity.name}[@RESOURCESIZE = "10"]`;
+    // I don't really care about spacing in the test.
+    expect(xQueryTemplate.replace(/\s+/g, '')).toEqual(queryBuilder.build().replace(/\s+/g, ''));
+  }));
+
+  it(`Use simple search 'test' with one item with size on stack`, async(() => {
+    mvEntity = EntityUtility.BuildComprehensiveAttributes(mvEntity);
+    mvEntity.search = 'false';
+    const queryBuilder = new XQueryBuilder().withConfig({
+      freeTextSearchOperand: 'test',
+      searchStacks: [searchStackForTestingSize]
+    });
+
+    const xQueryTemplate = `/${mvEntity.name}[@RESOURCESIZE = "10"]`;
     // I don't really care about spacing in the test.
     expect(xQueryTemplate.replace(/\s+/g, '')).toEqual(queryBuilder.build().replace(/\s+/g, ''));
   }));

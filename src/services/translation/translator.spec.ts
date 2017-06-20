@@ -1,12 +1,13 @@
 import {} from 'jasmine';
 import { TestBed, async, inject } from '@angular/core/testing';
 import { Translator } from 'services';
-import { TranslationDictionaryData } from 'services/mock';
+import { TranslationDictionaryData } from '../mock';
 import { Constants, TranslationConstants } from '../../constants';
 
 describe('Translator', () => {
   let translator: Translator;
   let translationDictionaryMock: TranslationDictionaryData;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -28,7 +29,7 @@ describe('Translator', () => {
   it('should translate missing translation ...', () => {
     const name = 'MissingTranslationKey';
     const translated: string = translator.translate(name);
-    expect(translated).toEqual('<Missing translation = MissingTranslationKey>');
+    expect(translated).toEqual('MissingTranslationKey');
   });
 
   it('should translate loading ...', () => {

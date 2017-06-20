@@ -1,11 +1,12 @@
-import { Component, Input, ViewChild, OnInit, QueryList, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewChild, QueryList, ViewEncapsulation, OnChanges } from '@angular/core';
 import { SohoDropDownComponent, SohoBusyIndicatorDirective } from '@infor/sohoxi-angular';
 import { Subject } from 'rxjs/Rx';
 import { Entity, Item, Acl } from 'models';
 import { EntityService, ItemService } from 'services';
-import { ItemTabsEventBus, ErrorEventBus } from 'event-buses';
-import { ItemUtility } from 'utility';
+import { ActionEventBus, ItemTabsEventBus, ErrorEventBus } from 'event-buses';
+import { ActionUtility, ItemUtility } from 'utility';
 import { Translator } from 'services';
+import { ActionsType } from 'enumerations';
 
 @Component({
   selector: 'idm-document-detail-tabs',
@@ -13,17 +14,17 @@ import { Translator } from 'services';
   styleUrls: ['./document-detail-tabs.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-
-export class DocumentDetailTabsComponent implements OnInit {
+export class DocumentDetailTabsComponent implements OnChanges {
   @Input() item: Item;
+  @Input() isItemEditable: boolean;
+  @Input() tabId: string;
   private _entity: Entity;
-
-  public itemVersions: Item[];
-  public tabId: string;
+  public itemVersions: Item[] = [];
   public acls: Acl[];
   public fileSize;
 
   constructor(
+    private actionEventBus: ActionEventBus,
     private itemService: ItemService,
     private itemTabsEventBus: ItemTabsEventBus,
     private errorEventBus: ErrorEventBus,
@@ -43,8 +44,7 @@ export class DocumentDetailTabsComponent implements OnInit {
     return this._entity;
   }
 
-  ngOnInit() {
-    this.tabId = this.item.entityName + '-' + this.item.id;
+  ngOnChanges() {
     if (this.item.size) {
       this.fileSize = ItemUtility.formatBytes(Number(this.item.size));
     }
@@ -60,9 +60,22 @@ export class DocumentDetailTabsComponent implements OnInit {
     }
   }
 
+  showLatestVersion() {
+    this.itemService.retrieve(this.item.pid).subscribe((itemResult: Item) => {
+      ItemUtility.setUniqueId(itemResult);
+      this.itemTabsEventBus.open(itemResult);
+    });
+  }
+
   showVersion(version) {
     this.itemService.getVersion(this.item.pid, version).subscribe((itemResult: Item) => {
-      this.itemTabsEventBus.openItemTab(itemResult);
+      ItemUtility.setUniqueId(itemResult);
+      this.itemTabsEventBus.open(itemResult);
     });
+  }
+
+  onAclChange(): void {
+    this.actionEventBus.triggerItemDirtyChangeAction(
+      ActionUtility.createNewAction(ActionsType.Save, [this.item]));
   }
 }

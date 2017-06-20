@@ -1,4 +1,4 @@
-import { CacheServiceConfigType } from 'services';
+import { CacheConfig } from 'services';
 
 export class ServiceConfig {
     rootApiUrl: string;
@@ -11,7 +11,7 @@ export class ServiceConfig {
     encodeId: boolean = false;
     listUsesPlural: boolean = true;
 
-    cacheConfig: CacheServiceConfigType;
+    serviceCacheConfig: CacheConfig;
 
     constructor(config: ServiceConfigType) {
         this.rootApiUrl = config.rootApiUrl;
@@ -20,44 +20,11 @@ export class ServiceConfig {
         this.urlPrefix = config.urlPrefix !== undefined ? config.urlPrefix : this.urlPrefix;
         this.encodeId = config.encodeId !== undefined ? config.encodeId : this.encodeId;
         this.listUsesPlural = config.listUsesPlural !== undefined ? config.listUsesPlural : this.listUsesPlural;
-        this.setDefaultCacheConfig().withCacheConfig(config.cacheConfig);
 
+        // We're going to send in the config that we have, and merge it with default values so we can 
+        // have a fully filled out object with defaults for anything that wasn't passed in.
+        this.serviceCacheConfig = CacheConfig.overwriteCacheConfig(CacheConfig.getCacheConfigDefault(), config.cacheConfig);
         return this;
-    }
-
-    setDefaultCacheConfig() {
-        this.cacheConfig = {
-            cache: true,
-            tag: 'BaseService',
-            // we cache data for 3 days
-            maxAge: 3 * 24 * 60 * 60
-        };
-        return this;
-    }
-
-    withCacheConfig(config?: CacheServiceConfigType) {
-        this.overwriteCacheConfig(this.cacheConfig, config);
-        return this;
-    }
-
-    overwriteCacheConfig(cacheConfig: CacheServiceConfigType, config?: CacheServiceConfigType) {
-        if (config !== undefined) {
-            cacheConfig.cache = config.cache !== undefined ? config.cache : cacheConfig.cache;
-            cacheConfig.tag = config.tag !== undefined ? config.tag : cacheConfig.tag;
-            cacheConfig.expires = config.expires !== undefined ? config.expires : cacheConfig.expires;
-            cacheConfig.maxAge = config.maxAge !== undefined ? config.maxAge : cacheConfig.maxAge;
-        }
-    }
-
-    getMethodCacheConfig(config?: CacheServiceConfigType) {
-        const cacheConfig = {
-            cache: this.cacheConfig.cache,
-            tag: this.cacheConfig.tag,
-            expires: this.cacheConfig.expires,
-            maxAge: this.cacheConfig.maxAge
-        };
-        this.overwriteCacheConfig(cacheConfig, config);
-        return cacheConfig;
     }
 }
 
@@ -68,5 +35,5 @@ export interface ServiceConfigType {
     urlPrefix?: string;
     encodeId?: boolean;
     listUsesPlural?: boolean;
-    cacheConfig?: CacheServiceConfigType;
+    cacheConfig?: CacheConfig;
 };

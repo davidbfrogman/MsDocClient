@@ -5,27 +5,27 @@ import 'rxjs/add/operator/map';
 import { environment } from '../environments/environment';
 import { CacheEventBus } from 'event-buses';
 import { Property } from 'models';
-import { BaseService, CacheServiceConfigType } from 'services';
+import { BaseService, CacheConfig } from 'services';
 
 @Injectable()
 export class AuthenticationService extends BaseService<Property> {
-  constructor(protected http: Http) {
+  constructor(protected http: Http, cacheEventBus: CacheEventBus) {
     super(http, Property, {
       rootApiUrl: environment.restUrls.ca,
       urlSuffix: 'connection',
       urlSuffixPlural: 'connection',
       cacheConfig: {
         tag: 'AuthenticationService',
-        cache: false
+        isCacheable: false
       }
-    }, null);
+    }, cacheEventBus);
   }
 
-  login(cacheConfig?: CacheServiceConfigType): Observable<Property[]> {
+  login(cacheConfig?: CacheConfig): Observable<Property[]> {
     return super.executeListOperation(null, 'login', cacheConfig);
   }
 
-  logout(cacheConfig?: CacheServiceConfigType): Observable<Property[]> {
+  logout(cacheConfig?: CacheConfig): Observable<Property[]> {
     return super.executeListOperation(null, 'logout', cacheConfig);
   }
 }

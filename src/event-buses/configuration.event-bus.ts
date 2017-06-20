@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Subject } from 'rxjs/Subject';
-import { CacheServiceConfigType } from 'services';
+import { CacheConfig } from 'services';
 import { ConfigurationEventType } from 'enumerations';
 import { ConfigurationEvent } from '../services/configuration.event';
 import { Configuration, Property } from 'models';
@@ -17,7 +17,7 @@ export class ConfigurationEventBus {
 
     public constructor() { }
 
-    setProperties(properties: Property[]) {
+    public setProperties(properties: Property[]): this {
         let propertiesAreDirty = false;
         this.properties = properties;
         this.properties.forEach(property => {
@@ -32,12 +32,20 @@ export class ConfigurationEventBus {
         return this;
     }
 
-    getConfiguration(name: string): string {
+    public getConfiguration(name: string): string {
         if (this.configuration.hasOwnProperty(name)) {
             return this.configuration[name];
         } else {
             return null;
         }
+    }
+
+    public getConfigurationAsNumber(name: string, fallback: number = 0): number {
+      const configuration: string = this.getConfiguration(name);
+      if (configuration === null) {
+        return fallback;
+      }
+      return parseInt(configuration, 10);
     }
 
     private triggerConfigurationChangedEvent(configurationEventType: ConfigurationEventType) {

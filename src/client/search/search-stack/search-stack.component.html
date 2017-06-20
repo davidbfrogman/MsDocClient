@@ -1,10 +1,26 @@
 <div *ngFor="let searchStack of searchStackEventBus.searchStacks" class="row search-stack-item">
-  <label>Free Text Search: {{searchStack?.freeTextSearchOperand}}</label>
-  <label>Entity: {{searchStack?.entity?.name}}</label>
-  <label>attribute: {{searchStack?.attribute?.name}}</label>
-  <label>operator: {{searchStack?.operation?.name }}</label>
+  <div class="search-stack-container">
+    <label *ngIf="searchStack.freeTextSearchOperand">
+      {{searchStack.freeTextSearchName !== null ? searchStack.freeTextSearchOperand : searchStack.freeTextSearchName }}
+    </label>
+    <label>{{searchStack.entity.name}}</label>
+    <label *ngIf="searchStack.attribute">
+      {{searchStack.ddlAttributesName !== null ? searchStack.attribute.name : searchStack.ddlAttributesName }}
+      <span *ngIf="searchStack.operation">
+        {{ searchStack.operation.sign }} 
+      </span>
+      <span *ngIf="!searchStack.operation">
+        {{ searchStack.operation.name | translate | uppercase }}
+      </span>
   <!--You only want to show the operand if there is one, for example bools don't use an operand-->
-  <label *ngIf="searchStack?.operand">operand: {{searchStack?.operandName?.length <= 0 ? searchStack?.operand : searchStack?.operandName}}</label>
-  <button soho-button (click)="onEditStack(searchStack)">Edit</button>
-  <button soho-button (click)="onDeleteStack(searchStack)">Remove</button>
+      <span *ngIf="searchStack.operand">
+        {{searchStack.operandName.length <= 0 ? searchStack.operand : searchStack.operandName}}
+      </span>  
+    </label>
+  </div>
+<!--
+  <button soho-button (click)="onEditStack(searchStack)">{{ translator.constants.EDIT | translate }}</button>
+  <button soho-button (click)="onDeleteStack(searchStack)">{{ translator.constants.REMOVE | translate }}</button>
+-->
+  <button soho-button="icon" icon="close" title="Close" (click)="onDeleteStack(searchStack)"></button>
 </div>

@@ -20,7 +20,7 @@ export class EntityService extends BaseService<Entity> {
       encodeId: true,
       cacheConfig: {
         tag: 'EntityService',
-        cache: true,
+        isCacheable: true,
       }
     },
     cacheEventBus);

@@ -1,0 +1,8 @@
+<div class="error-container">
+	<p class="message"> {{errorMessage}} </p>
+	<a soho-hyperlink class="hide-details" *ngIf="!showDetails  && errorDescription" (click)="changeShowDetails()">{{ translator.constants.SHOW_DETAILS_ERROR | translate }}</a>
+	<a soho-hyperlink class="hide-details" *ngIf="showDetails" (click)="changeShowDetails()">{{ translator.constants.HIDE_DETAILS_ERROR | translate }}</a>
+	<div class="error-description message" *ngIf="showDetails && errorDescription">
+		{{errorDescription}}
+	</div>
+</div>

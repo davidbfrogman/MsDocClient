@@ -1,0 +1,12 @@
+@import '../../../styles.scss';
+
+:host {
+  li.disabled, a.disabled {
+    pointer-events: none;
+    cursor: default;
+  }
+
+  li.disabled .icon {
+    fill: $color-link-disabled;
+  }
+}

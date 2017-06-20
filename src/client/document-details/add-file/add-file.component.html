@@ -1,19 +1,20 @@
 <div class="row">
   <div class="summary-form">
-    <div class="field">
-        <soho-fileupload [name]="name" [label]="text" (change)="onFileUploadChange($event)" ngDefaultControl></soho-fileupload>
+    <div class="field" *ngIf="isItemEditable">
+        <soho-fileupload [name]="name" [label]="translator.constants.FILE | translate" 
+        (change)="onFileUploadChange($event)" ngDefaultControl title="{{translator.constants.FILE | translate}}" ></soho-fileupload>
+    </div>
+    <div class="field" *ngIf="!isItemEditable" >
+      <span class="label" title="{{translator.constants.FILE | translate}}">{{translator.constants.FILE | translate}}</span>
+      <span class="data" title="{{filename}}">{{filename}}</span>
     </div>
     <div class="field">
-      <span class="label">Filename</span>
-      <span class="data">{{filename}}</span>
+      <span class="label" title="{{translator.constants.SIZE | translate}}">{{translator.constants.SIZE | translate}}</span>
+      <span class="data" title="{{size}}">{{size}}</span>
     </div>
     <div class="field">
-      <span class="label">Size</span>
-      <span class="data">{{size}} KB</span>
-    </div>
-    <div class="field">
-      <span class="label">MIME Type</span>
-      <span class="data">{{mimetype}}</span>
+      <span class="label" title="{{translator.constants.MIME_TYPE | translate}}">{{translator.constants.MIME_TYPE | translate}}</span>
+      <span class="data" title="{{filename}}">{{mimetype}}</span>
     </div>
   </div>
 </div>

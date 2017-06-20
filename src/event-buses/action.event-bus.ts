@@ -2,18 +2,24 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { ActionsType } from 'enumerations';
 import { Action } from 'models';
+import { ItemUtility } from 'utility';
 
 @Injectable()
 export class ActionEventBus {
 
-    // Observable Search xQuery Sources
+    // Actions change events
     private actionSource = new Subject<Action>();
-
-    // Observable Search xQuery Streams
     public actionChanged$ = this.actionSource.asObservable();
+
+    // Document change events
+    private itemDirtyChangedSource = new Subject<Action>();
+    public itemDirtyChanged$ = this.itemDirtyChangedSource.asObservable();
 
     triggerAction(selected: Action) {
         this.actionSource.next(selected);
-        console.log( 'Selected action: ' + ActionsType[selected.action]); // TODO: use the right logging
+    }
+
+    triggerItemDirtyChangeAction(action: Action) {
+        this.itemDirtyChangedSource.next(action);
     }
 }

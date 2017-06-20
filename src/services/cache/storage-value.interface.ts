@@ -1,6 +1,6 @@
-import { CacheServiceConfigType } from 'services';
+import { CacheConfig } from 'services';
 
-export interface StorageValueInterface {
+export interface IStorageValue {
 
     /**
      * Cached data
@@ -10,5 +10,5 @@ export interface StorageValueInterface {
     /**
      * Cached options
      */
-    options: CacheServiceConfigType;
+    cacheConfig: CacheConfig;
 }

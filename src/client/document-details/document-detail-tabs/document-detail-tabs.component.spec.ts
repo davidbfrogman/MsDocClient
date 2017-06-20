@@ -11,7 +11,7 @@ describe('DocumentDetailTabsComponent', () => {
   let fixture: ComponentFixture<DocumentDetailTabsComponent>;
   let component: DocumentDetailTabsComponent;
   let compiled: any;
-  const testItem: Item = ItemServiceMock.getMockItem();
+  const testItem: Item = ItemServiceMock.getMockItemEditable();
   const testEntity: Entity = EntityServiceMock.getMockEntity();
 
   beforeAll(() => {
@@ -25,8 +25,10 @@ describe('DocumentDetailTabsComponent', () => {
     component = fixture.componentInstance;
     component.entity = testEntity;
     component.item = testItem;
+    component.isItemEditable = true;
+    component.tabId = component.item.entityName + '-' + component.item.id;
     fixture.detectChanges();
-    component.ngOnInit();
+    component.ngOnChanges();
     compiled = fixture.debugElement.nativeElement;
   });
 
@@ -40,7 +42,7 @@ describe('DocumentDetailTabsComponent', () => {
   });
 
   it('Should update model on ACL list select', () => {
-    const select = fixture.debugElement.query(By.css('select[id^=acl-dropdown]'));
+    const select = fixture.debugElement.query(By.css('select[id^=acl-dropdown-' + component.tabId + ']'));
     const option = select.query(By.css('option'));
     option.nativeElement.selected = true;
     select.nativeElement.dispatchEvent(new Event('change'));

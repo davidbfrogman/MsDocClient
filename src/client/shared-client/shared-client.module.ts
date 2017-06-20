@@ -8,7 +8,9 @@ import { ResourceImageComponent } from './resource-image/resource-image.componen
 import { IdmIconsComponent } from './idm-icons.component';
 import { FormFieldComponent  } from './form/form-field/form-field.component';
 import { AttributeFieldComponent  } from './form/attribute-field/attribute-field.component';
+import { SearchResultsPagerComponent } from './search-results-pager/search-results-pager.component';
 import { PipesModule } from 'pipes/pipes.module';
+import { ValidatedDirective } from './validator/validator.directive';
 
 @NgModule({
   imports: [
@@ -21,7 +23,9 @@ import { PipesModule } from 'pipes/pipes.module';
    ActionMenuComponent,
    IdmIconsComponent,
    AttributeFieldComponent,
-   ResourceImageComponent
+   ResourceImageComponent,
+   SearchResultsPagerComponent,
+   ValidatedDirective
   ],
   declarations: [
     ActionMenuComponent,
@@ -29,7 +33,9 @@ import { PipesModule } from 'pipes/pipes.module';
     FormFieldComponent,
     AttributeFieldComponent,
     ResourceImageComponent,
-    IdmIconsComponent
+    IdmIconsComponent,
+    SearchResultsPagerComponent,
+    ValidatedDirective
   ]
 })
 export class SharedClientModule { }

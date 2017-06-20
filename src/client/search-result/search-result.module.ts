@@ -8,6 +8,7 @@ import { CardListComponent } from './card-list/card-list.component';
 import { DetailListComponent } from './detail-list/detail-list.component';
 import { ThumbnailListComponent } from './thumbnail-list/thumbnail-list.component';
 import { ListViewSelectorComponent } from './list-view-selector/list-view-selector.component';
+import { ListViewPropertyComponent } from './list-view-property/list-view-property.component';
 import { ViewSelectorEventBus } from 'event-buses';
 import { PipesModule } from 'pipes/pipes.module';
 
@@ -27,7 +28,9 @@ import { PipesModule } from 'pipes/pipes.module';
     CardListComponent,
     DetailListComponent,
     ThumbnailListComponent,
-    ListViewSelectorComponent],
+    ListViewSelectorComponent,
+    ListViewPropertyComponent
+  ],
   providers: [ViewSelectorEventBus]
 })
 export class SearchResultModule { }

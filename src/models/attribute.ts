@@ -22,6 +22,7 @@ export class Attribute {
     isAttributeTypeMapped?: boolean;
     isMultiValue?: boolean;
     isUserForSearching?: boolean;
+    isNameTranslated?: boolean;
 
     // used to check if this attribute is build as a default attribute
     isDefault?: boolean;

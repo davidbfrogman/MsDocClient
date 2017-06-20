@@ -1,10 +1,10 @@
 <div class="row" id="new-document-modal-header">
-  <h3>New Document</h3>
+  <h3>{{ translator.constants.NEW_DOCUMENT | translate }}</h3>
 </div>
 <div class="row" id="new-document-modal-content">
   <div class="add-document-container">
     <div class="document-types four columns">
-      <h3>Document Types</h3>
+      <h3>{{ translator.constants.SELECT_DOCUMENT_TYPES | translate }}</h3>
       <soho-listview [dataset]="entityList" [searchable]="true" selectable="single">
         <input soho-searchfield placeholder="Document Types" [clearable]="true">
         <!--The bottom border here should be on only the last item.-->
@@ -17,10 +17,10 @@
     </div>
     <div class="eight columns">
       <div class="empty-templates-contaner" *ngIf="!isDocumentSelected">
-        <h3>Select a document type</h3>
+        <h3>{{ translator.constants.SELECT_A_DOCUMENT_TYPE | translate }}</h3>
       </div>
       <div class="templates-container" *ngIf="isDocumentSelected">
-        <h3>Templates</h3>
+        <h3>{{ translator.constants.TEMPLATES | translate }}</h3>
         <soho-listview [dataset]="templateList" [searchable]="true" selectable="single">
           <input soho-searchfield placeholder="Templates" [clearable]="true">
           <!--The bottom border here should be on only the last item.-->
@@ -30,11 +30,11 @@
             </div>
             <div class="ten columns">
               <span soho-listview-header class="titleText">
-                <a href="" title="{{ template.templateName }}" (click)="onItemOpened($event, template)">
+                <a href="" title="{{ template.templateName | translate }}" (click)="onItemOpened($event, template)">
                   {{ template.templateName }}
                 </a>
               </span><br>
-              <span soho-listview-subheader style="max-width:100%;overflow:hidden;">{{template.templateDescription}}</span>
+              <span soho-listview-subheader style="max-width:100%;overflow:hidden;">{{ template.templateDescription }}</span>
             </div>
           </li>
         </soho-listview>

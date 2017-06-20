@@ -14,4 +14,13 @@
             margin-left: 20px;
         }
     }
+
+    p:last-of-type {
+     margin-bottom: 5px;   
+    }
+}
+.selectedToolbar{
+    display: block;
+    height: 40px; // 40px
+    color: black;
 }

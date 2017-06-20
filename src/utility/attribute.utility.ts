@@ -1,9 +1,86 @@
 import { Attribute, IAttributable, Valueset } from 'models';
 import { AttributeType, FormFieldType } from 'enumerations';
-import { Constants } from '../constants';
+import { Constants, TranslationConstants } from '../constants';
 import * as moment from 'moment';
+import { Translator } from 'services';
+import { ItemUtility } from 'utility';
 
 export class AttributeUtility {
+    public static buildDefaultAttributeByProp(property: string) {
+        switch(property) {
+            case Constants.ITEM_PROP_ID:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.ID),
+                    'Id', 'ID', true, AttributeType.String, false
+                );
+            case Constants.ITEM_PROP_PID:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.PID),
+                    'Pid', 'PID', true, AttributeType.String, false
+                );
+            case Constants.ITEM_PROP_VERSION:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.VERSION),
+                    'Version', 'VERSION', true, AttributeType.String, false
+                );
+            case Constants.ITEM_PROP_ENTITY_NAME:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.ENTITY_NAME),
+                    'EntityName', 'ENTITYNAME', true, AttributeType.String, false
+                );
+            case Constants.ITEM_PROP_CREATED_BY:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.CREATED_BY),
+                    'CreatedBy', 'CREATEUSERID', true, AttributeType.String, false
+                );
+            case Constants.ITEM_PROP_CREATED_TS:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.CREATED_TIMESTAMP),
+                    'CreatedTS', 'CREATETS', false, AttributeType.Timestamp, false
+                );
+            case Constants.ITEM_PROP_CHECKEd_OUT_BY:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.CHECKED_OUT_BY),
+                    'CheckedOutBy', 'CHECKEDOUTUSERID', true, AttributeType.String, false
+                );
+            case Constants.ITEM_PROP_CHECKED_OUT_TS:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.CHECKED_OUT_TIMESTAMP),
+                    'CheckedOutTS', 'CHECKEDOUTTS', false, AttributeType.Timestamp, false
+                );
+            case Constants.ITEM_PROP_LAST_CHANGED_BY:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.LAST_CHANGED_BY),
+                    'LastChangedBy', 'LASTCHANGEDUSERID', true, AttributeType.String, false
+                );
+            case Constants.ITEM_PROP_LAST_CHANGED_TS:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.LAST_CHANGED_TIMESTAMP),
+                    'LastChangedTS', 'LASTCHANGEDTS', false, AttributeType.Timestamp, false
+                );
+            case Constants.ITEM_PROP_SIZE:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.SIZE),
+                    'Size', 'RESOURCESIZE', false, AttributeType.Size, false
+                );
+            case Constants.ITEM_PROP_DISPLAY_NAME:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.DISPLAYNAME),
+                    'DisplayName', 'displayName', false, AttributeType.String, false
+                );
+            case Constants.ITEM_PROP_FILENAME:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.FILE_NAME),
+                    'Filename', 'RESOURCENAME', false, AttributeType.String, false
+                );
+            case Constants.ITEM_PROP_ITEMID:
+                return AttributeUtility.buildDefaultAttribute(
+                    Translator.getInstance().translate(TranslationConstants.INTERNAL_ID),
+                    'InternalId', 'ITEMID', false, AttributeType.String, false
+                );
+        }
+        return null;
+    }
 
     public static mapAttributeTypeEnumeration(attribute: Attribute): Attribute {
         // TODO: Figure out what short should map to.
@@ -74,7 +151,7 @@ export class AttributeUtility {
         return attribute;
     }
 
-    public static computeDefaultValue(attribute: Attribute): any {
+    public static computeDefaultValue(attribute: Attribute, defaultValue: string | number = null): any {
         let attributeValue: any = null;
         switch (attribute.attributeType) {
             case AttributeType.Boolean:
@@ -84,16 +161,20 @@ export class AttributeUtility {
             case AttributeType.Double:
             case AttributeType.String:
             case AttributeType.MultiValue:
-                attributeValue = '';
+                attributeValue = defaultValue;
                 break;
             case AttributeType.Date:
                 attributeValue = moment().format(Constants.MOMENT_API_DATE_FORMAT);
-            break;
+                break;
             case AttributeType.Time:
                 attributeValue = moment().format(Constants.MOMENT_API_TIME_FORMAT);
-            break;
+                break;
             case AttributeType.Timestamp:
                 attributeValue = moment().format(Constants.MOMENT_API_DATETIME_FORMAT);
+                break;
+            default:
+                attributeValue = defaultValue;
+                break;
         }
 
         return attributeValue;
@@ -118,6 +199,7 @@ export class AttributeUtility {
             case AttributeType.Long:
             case AttributeType.Decimal:
             case AttributeType.Double:
+            case AttributeType.Size:
                 attributeFieldType = FormFieldType.Number;
                 break;
             case AttributeType.String:
@@ -166,6 +248,9 @@ export class AttributeUtility {
             case AttributeType.Timestamp:
                 stringValue = moment(value, Constants.MOMENT_FORM_DATETIME_FORMAT).format(Constants.MOMENT_API_DATETIME_FORMAT);
                 return stringValue;
+            case AttributeType.Size:
+                stringValue = value;
+                return stringValue;
             default:
                 return undefined;
         }
@@ -200,6 +285,47 @@ export class AttributeUtility {
                 return stringValue;
             case AttributeType.Timestamp:
                 stringValue = moment(attributeValue, Constants.MOMENT_API_DATETIME_FORMAT).format(Constants.MOMENT_FORM_DATETIME_FORMAT);
+                return stringValue;
+            case AttributeType.Size:
+                stringValue = attributeValue;
+                return stringValue;
+            default:
+                return undefined;
+        }
+    }
+
+    public static getViewValue(attribute: Attribute): string {
+        let stringValue: string = undefined;
+        let attributeValue: string = undefined;
+        if (attribute.value === undefined) {
+            attributeValue = attribute.default;
+        } else {
+            attributeValue = attribute.value;
+        }
+        switch (attribute.attributeType) {
+            case AttributeType.Boolean:
+                stringValue = attributeValue;
+                return stringValue;
+            case AttributeType.Decimal:
+            case AttributeType.Double:
+            case AttributeType.Long:
+            case AttributeType.MultiValue:
+            case AttributeType.Short:
+            case AttributeType.String:
+            case AttributeType.GUID:
+                stringValue = attributeValue;
+                return stringValue;
+            case AttributeType.Date:
+                stringValue = moment(attributeValue, Constants.MOMENT_API_DATE_FORMAT).format(Constants.MOMENT_FORM_DATE_FORMAT);
+                return stringValue;
+            case AttributeType.Time:
+                stringValue = moment(attributeValue, Constants.MOMENT_API_TIME_FORMAT).format(Constants.MOMENT_FORM_TIME_FORMAT);
+                return stringValue;
+            case AttributeType.Timestamp:
+                stringValue = moment(attributeValue, Constants.MOMENT_API_DATETIME_FORMAT).format(Constants.MOMENT_FORM_DATETIME_FORMAT);
+                return stringValue;
+            case AttributeType.Size:
+                stringValue = ItemUtility.formatBytes(Number(attributeValue));
                 return stringValue;
             default:
                 return undefined;
@@ -236,5 +362,9 @@ export class AttributeUtility {
             return attribute.valueset;
         }
         return undefined;
+    }
+
+    public static attributesTypeMatch(leftAttribute: Attribute, rightAttribute: Attribute): boolean {
+        return leftAttribute.attributeType === rightAttribute.attributeType;
     }
 }

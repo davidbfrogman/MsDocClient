@@ -1,6 +1,6 @@
 <div class="row">
   <div class="field">
-    <input soho-searchfield [attr.id]="freeTextSearch" type="text " name="freeTextSearch" [(ngModel)]="freeTextSearch" placeholder="{{ translator.constants.FREE_TEXT_SEARCH | translate }}" /> 
+    <input soho-searchfield type="text" name="freeTextSearch" [(ngModel)]="freeTextSearch" placeholder="{{ translator.constants.FREE_TEXT_SEARCH | translate }}" (keyup.enter)="onClickSearch()" /> 
   </div>
 </div>
 <div class="row">
@@ -26,8 +26,17 @@
   </select>
 </div>
 <div class="row">
-  <idm-attribute-field *ngIf="selectedAttribute && !selectedAttribute.isUserForSearching" [attribute]="selectedAttribute" [editable]="true" [placeholder]="attributeFieldPlaceholder"></idm-attribute-field> 
-  <idm-attribute-field *ngIf="!selectedAttribute" [attribute]="selectedAttributeEmpty" [editable]="true" [placeholder]="attributeFieldPlaceholder"></idm-attribute-field>
+  <idm-attribute-field 
+      *ngIf="selectedAttribute && !selectedAttribute.isUserForSearching" 
+      [attribute]="selectedAttribute" 
+      [editable]="true" 
+      [placeholder]="attributeFieldPlaceholder"
+      [disabled]="searchAttributeDisabled"
+      (keyup.enter)="onClickSearch()">
+  </idm-attribute-field> 
+  <idm-attribute-field *ngIf="!selectedAttribute" [attribute]="selectedAttributeEmpty" 
+      [editable]="true" [placeholder]="attributeFieldPlaceholder" [disabled]="false">
+  </idm-attribute-field>
   <soho-listview *ngIf="selectedAttribute && selectedAttribute.isUserForSearching" class="user-list-view"  [dataset]="userList" [searchable]="true" [selectable]="single" [selectOnFocus]="true" >
     <input soho-searchfield [formControl]="searchUserFormControl"  placeholder="Users" [clearable]="true"  [(ngModel)]="selectedAttribute.value" >
     <!--The bottom border here should be on only the last item.-->

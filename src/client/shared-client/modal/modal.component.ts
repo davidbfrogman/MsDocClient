@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { SohoMessageService, SohoMessageRef } from '@infor/sohoxi-angular';
+import { Component, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
+import { SohoMessageService, SohoMessageRef, SohoModalDialogService } from '@infor/sohoxi-angular';
 import { InfoEventBus, ErrorEventBus } from 'event-buses';
 import { AppInfoModal, AppInfoAction, AppError } from 'models';
+import { ErrorComponent } from '../error/error.component';
+import { Translator } from 'services';
 
 class AppInfoActionClickable extends AppInfoAction {
  public click: (message, modal) => void;
@@ -9,9 +11,11 @@ class AppInfoActionClickable extends AppInfoAction {
 
 @Component({
   selector: 'idm-soho-modal',
-  template: ''
+  template: `<div #errorPlaceholder></div>`
 })
 export class ModalComponent implements OnInit {
+  @ViewChild('errorPlaceholder', { read: ViewContainerRef})
+  errorPlaceholder: ViewContainerRef;
 
   dialog: SohoMessageRef;
   private defaultButton: AppInfoActionClickable;
@@ -19,6 +23,8 @@ export class ModalComponent implements OnInit {
 
   constructor(
     private messageService: SohoMessageService,
+    private modalService: SohoModalDialogService,
+    private translator: Translator,
     private infoEventBus: InfoEventBus,
     private errorEventBus: ErrorEventBus
   ) {
@@ -27,9 +33,9 @@ export class ModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.infoEventBus.modalEventAdded
+    this.infoEventBus.modalEventOpen$
       .subscribe(info => this.openInfo(info));
-    this.errorEventBus.modalEventAdded
+    this.errorEventBus.errorTrigger$
       .subscribe(error => this.openError(error));
   }
 
@@ -58,8 +64,8 @@ export class ModalComponent implements OnInit {
     this.activateActionButtons(info.actions);
     this.dialog = this.messageService
       .message()
-      .title(['<span>', info.title, '</span>'].join(''))
-      .message(['<span class="longer-message">', info.message, '</span>'].join(''))
+      .title(`<span>${info.title}</span>`)
+      .message(`<span class="longer-message">${info.message}</span>`)
       .buttons(this.buttons)
       .beforeClose(() => {
          if (info.beforeClose) {
@@ -80,12 +86,24 @@ export class ModalComponent implements OnInit {
   }
 
   openError(error: AppError) {
-    this.activateActionButtons([]);
-    this.dialog = this.messageService
-      .error()
-      .title(['<span>', error.name, '</span>'].join(''))
-      .message(error.message)
-      .buttons(this.buttons)
-      .open();
+    let dialogComponent: ErrorComponent;
+    const dialogRef = this.modalService
+      .modal<ErrorComponent>(ErrorComponent, this.errorPlaceholder)
+      .cssClass('modal-error')
+      .buttons([
+        {
+          text: this.translator.translate(this.translator.constants.CLOSE),
+          click: (e, modal) => {
+              dialogRef.close();
+          },
+          isDefault: true
+        }
+      ])
+      .title(this.translator.translate(this.translator.constants.OPERATION_ERROR))
+      .apply((component) => {
+        dialogComponent = component;
+      });
+      dialogComponent.setError(error);
+      dialogRef.open();
   }
 }

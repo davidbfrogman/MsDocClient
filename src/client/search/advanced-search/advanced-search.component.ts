@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, ViewChild, Input, Output, OnInit } from '@angular/core';
 import { SohoTextAreaComponent } from '@infor/sohoxi-angular';
 import { XQueryEventBus } from 'event-buses';
 import { Constants, TranslationConstants } from '../../../constants';
@@ -13,6 +13,9 @@ import { Translator } from 'services';
 export class AdvancedSearchComponent implements OnInit {
   public xQuery: string;
   @ViewChild(SohoTextAreaComponent) textarea: SohoTextAreaComponent;
+  public isToggleAdvancedLine: boolean = true;
+  public isToggleAdvancedText: boolean = false;
+  public advancedExpanderButtonName: any = 'caret-down';
 
   constructor(private xQueryEventBus: XQueryEventBus, public translator: Translator) {  }
 
@@ -29,5 +32,13 @@ export class AdvancedSearchComponent implements OnInit {
   public onClickSearch(): void {
     this.xQueryEventBus.changexQuery(this.xQuery);
   }
-}
 
+  public onToggleAdvancedButton(): void {
+    this.isToggleAdvancedLine = !this.isToggleAdvancedLine;
+    if (this.isToggleAdvancedText === false) {
+      this.advancedExpanderButtonName = 'caret-up';
+    } else { this.advancedExpanderButtonName = 'caret-down';
+  }
+    this.isToggleAdvancedText = !this.isToggleAdvancedText;
+  }
+}

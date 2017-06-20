@@ -2,6 +2,7 @@ import { Constants, TranslationConstants } from '../constants';
 import { AttributeType } from 'enumerations';
 import { Attribute, Entity } from 'models';
 import { AttributeUtility } from 'utility';
+import { Translator } from 'services';
 
 export class EntityUtility {
     public static BuildMultiValueAttributes(entity: Entity): Entity {
@@ -40,56 +41,16 @@ export class EntityUtility {
             if (!entity.defaultAttributes) {
                 entity.defaultAttributes = new Array<Attribute>();
             }
-            entity.defaultAttributes.push(
-                AttributeUtility.buildDefaultAttribute(
-                    TranslationConstants.CREATED_BY, 'CreatedBy', 'CREATEUSERID', true, AttributeType.String, false
-                )
-            );
-            entity.defaultAttributes.push(
-                AttributeUtility.buildDefaultAttribute(
-                    TranslationConstants.CREATED_TIMESTAMP, 'CreatedTS', 'CREATETS', false, AttributeType.Timestamp, false
-                )
-            );
-            entity.defaultAttributes.push(
-                AttributeUtility.buildDefaultAttribute(
-                    TranslationConstants.CHECKED_OUT_BY, 'CheckedOutBy', 'CHECKEDOUTUSERID', true, AttributeType.String, false
-                )
-            );
-            entity.defaultAttributes.push(
-                AttributeUtility.buildDefaultAttribute(
-                    TranslationConstants.CHECKED_OUT_TIMESTAMP, 'checkedOutTS', 'CHECKEDOUTTS', false, AttributeType.Timestamp, false
-                )
-            );
-            entity.defaultAttributes.push(
-                AttributeUtility.buildDefaultAttribute(
-                    TranslationConstants.LAST_CHANGED_BY, 'ModifiedBy', 'LASTCHANGEDUSERID', true, AttributeType.String, false
-                )
-            );
-            entity.defaultAttributes.push(
-                AttributeUtility.buildDefaultAttribute(
-                    TranslationConstants.LAST_CHANGED_TIMESTAMP, 'ModifiedTS', 'LASTCHANGEDTS', false, AttributeType.Timestamp, false
-                )
-            );
-            entity.defaultAttributes.push(
-                AttributeUtility.buildDefaultAttribute(
-                    TranslationConstants.SIZE, 'RESOURCESIZE', 'RESOURCESIZE', false, AttributeType.Long, false
-                )
-            );
-            entity.defaultAttributes.push(
-                AttributeUtility.buildDefaultAttribute(
-                    TranslationConstants.DISPLAYNAME, 'displayName', 'displayName', false, AttributeType.String, false
-                )
-            );
-            entity.defaultAttributes.push(
-                AttributeUtility.buildDefaultAttribute(
-                    TranslationConstants.FILE_NAME, 'RESOURCENAME', 'RESOURCENAME', false, AttributeType.String, false
-                )
-            );
-            entity.defaultAttributes.push(
-                AttributeUtility.buildDefaultAttribute(
-                    TranslationConstants.INTERNAL_ID, 'ITEMID', 'ITEMID', false, AttributeType.String, false
-                )
-            );
+            entity.defaultAttributes.push(AttributeUtility.buildDefaultAttributeByProp(Constants.ITEM_PROP_CREATED_BY));
+            entity.defaultAttributes.push(AttributeUtility.buildDefaultAttributeByProp(Constants.ITEM_PROP_CREATED_TS));
+            entity.defaultAttributes.push(AttributeUtility.buildDefaultAttributeByProp(Constants.ITEM_PROP_CHECKEd_OUT_BY));
+            entity.defaultAttributes.push(AttributeUtility.buildDefaultAttributeByProp(Constants.ITEM_PROP_CHECKED_OUT_TS));
+            entity.defaultAttributes.push(AttributeUtility.buildDefaultAttributeByProp(Constants.ITEM_PROP_LAST_CHANGED_BY));
+            entity.defaultAttributes.push(AttributeUtility.buildDefaultAttributeByProp(Constants.ITEM_PROP_LAST_CHANGED_TS));
+            entity.defaultAttributes.push(AttributeUtility.buildDefaultAttributeByProp(Constants.ITEM_PROP_SIZE));
+            entity.defaultAttributes.push(AttributeUtility.buildDefaultAttributeByProp(Constants.ITEM_PROP_DISPLAY_NAME));
+            entity.defaultAttributes.push(AttributeUtility.buildDefaultAttributeByProp(Constants.ITEM_PROP_FILENAME));
+            entity.defaultAttributes.push(AttributeUtility.buildDefaultAttributeByProp(Constants.ITEM_PROP_ITEMID));
             entity.isDefaultAttrBuilt = true;
         }
         return entity;
@@ -131,5 +92,13 @@ export class EntityUtility {
             entity.isComprehensiveAttrBuilt = true;
         }
         return entity;
+    }
+
+    public static isSearchable(entity: Entity) {
+        if (entity.search === 'true') {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -1,7 +1,7 @@
 import { } from 'jasmine';
 import { TestBed, async, inject, fakeAsync, tick } from '@angular/core/testing';
 import { CacheService } from '../services/cache/cache.service';
-import { CacheServiceConfigType } from 'services';
+import { CacheConfig } from 'services';
 import { CacheEventType } from 'enumerations';
 import { CacheEventBus } from 'event-buses';
 
@@ -16,8 +16,8 @@ describe('CacheEventBus', () => {
   it('should set a key', async(() => {
     const key: string = 'key';
     const setValue: string = 'value';
-    const options: CacheServiceConfigType = {
-        cache: true
+    const options: CacheConfig = {
+        isCacheable: true
     };
 
     const result: boolean = cacheEventBus.set(key, setValue, options);
@@ -30,7 +30,7 @@ describe('CacheEventBus', () => {
   it('should not set a key with a tag', async(() => {
     const key: string = 'key';
     const setValue: string = 'value';
-    const options: CacheServiceConfigType = { cache: true, tag: 'tag' };
+    const options: CacheConfig = { isCacheable: true, tag: 'tag' };
     const result: boolean = cacheEventBus.set(key, setValue, options);
     expect(result).toEqual(true);
     const getValue: any = cacheEventBus.get(key, options);
@@ -42,8 +42,8 @@ describe('CacheEventBus', () => {
     const key2: string = 'key1';
     const setValue1: string = 'value1';
     const setValue2: string = 'value2';
-    const options1: CacheServiceConfigType = { cache: true, tag: 'tag1'};
-    const options2: CacheServiceConfigType = { cache: true, tag: 'tag2'};
+    const options1: CacheConfig = { isCacheable: true, tag: 'tag1'};
+    const options2: CacheConfig = { isCacheable: true, tag: 'tag2'};
     let result: boolean;
     let getValue: string;
 
@@ -63,7 +63,7 @@ describe('CacheEventBus', () => {
   it('should not set a key when options.cache is off', async(() => {
     const key: string = 'key';
     const setValue: string = 'value';
-    const options: CacheServiceConfigType = { cache: false };
+    const options: CacheConfig = { isCacheable: false };
 
     const result: boolean = cacheEventBus.set(key, setValue, options);
     expect(result).toEqual(null);
@@ -75,7 +75,7 @@ describe('CacheEventBus', () => {
   it('should not set a key when options.cache is undefined', async(() => {
     const key: string = 'key';
     const setValue: string = 'value';
-    const options: CacheServiceConfigType = { cache: undefined };
+    const options: CacheConfig = { isCacheable: undefined };
     const result: boolean = cacheEventBus.set(key, setValue, options);
     expect(result).toEqual(null);
     const getValue: any = cacheEventBus.get(key, options);
@@ -85,12 +85,12 @@ describe('CacheEventBus', () => {
   it('should not get a key when removeTag', async(() => {
     const key: string = 'key';
     const setValue: string = 'value';
-    const options: CacheServiceConfigType = { cache: true, tag: 'tag' };
+    const options: CacheConfig = { isCacheable: true, tag: 'tag' };
     const result: boolean = cacheEventBus.set(key, setValue, options);
     expect(result).toEqual(true);
     let getValue: any = cacheEventBus.get(key, options);
     expect(getValue).toEqual(setValue);
-    cacheEventBus.removeTag(options.tag);
+    cacheEventBus.removeByTag(options.tag);
     getValue = cacheEventBus.get(key, options);
     expect(getValue).toEqual(null);
   }));
@@ -98,12 +98,12 @@ describe('CacheEventBus', () => {
   it('should not get a key when removeAll', async(() => {
     const key: string = 'key';
     const setValue: string = 'value';
-    const options: CacheServiceConfigType = { cache: true, tag: 'tag' };
+    const options: CacheConfig = { isCacheable: true, tag: 'tag' };
     const result: boolean = cacheEventBus.set(key, setValue, options);
     expect(result).toEqual(true);
     let getValue: any = cacheEventBus.get(key, options);
     expect(getValue).toEqual(setValue);
-    cacheEventBus.removeAll();
+    cacheEventBus.clear();
     getValue = cacheEventBus.get(key, options);
     expect(getValue).toEqual(null);
   }));
@@ -111,7 +111,7 @@ describe('CacheEventBus', () => {
   it('should not get a key when key expired', async(() => {
     const key: string = 'key';
     const setValue: string = 'value';
-    const options: CacheServiceConfigType = { cache: true, tag: 'tag', expires: (Date.now() - 1) };
+    const options: CacheConfig = { isCacheable: true, tag: 'tag', expires: (Date.now() - 1) };
     const result: boolean = cacheEventBus.set(key, setValue, options);
     expect(result).toEqual(true);
 
@@ -122,7 +122,7 @@ describe('CacheEventBus', () => {
   it('should not get a key for maxAge 1 second', ((done) => {
     const key: string = 'key';
     const setValue: string = 'value';
-    const options: CacheServiceConfigType = { cache: true, tag: 'tag', maxAge: 100 };
+    const options: CacheConfig = { isCacheable: true, tag: 'tag', maxAge: 100 };
     const result: boolean = cacheEventBus.set(key, setValue, options);
     expect(result).toEqual(true);
     let getValue: any = cacheEventBus.get(key, options);

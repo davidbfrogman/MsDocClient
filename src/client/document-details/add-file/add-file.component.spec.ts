@@ -3,6 +3,7 @@ import { TestingModule } from 'testing';
 import { AddFileComponent } from 'client/document-details/add-file/add-file.component';
 import { Item } from 'models';
 import { ItemService, ItemServiceMock } from 'services';
+import { ItemUtility } from 'utility';
 
 describe('AddFileComponent', () => {
   let fixture: ComponentFixture<AddFileComponent>;
@@ -32,9 +33,8 @@ describe('AddFileComponent', () => {
   });
 
   it('Should display file properties', () => {
-    component.ngOnInit();
+    component.ngOnChanges();
     expect(component.filename).toEqual(testItem.resrs.res[0].filename);
-    expect(component.size).toEqual(testItem.resrs.res[0].size);
-    expect(component.mimetype).toEqual(testItem.resrs.res[0].mimetype);
+    expect(component.size).toEqual('1.26 MB');
   });
 });
